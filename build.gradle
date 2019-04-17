@@ -1,6 +1,8 @@
 plugins {
     id 'org.springframework.boot' version '2.1.4.RELEASE'
     id 'java'
+    id 'nu.studer.jooq' version '3.0.3'
+    id 'org.flywaydb.flyway' version '5.2.4'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -14,8 +16,12 @@ configurations {
         extendsFrom annotationProcessor
     }
 }
+configurations {
+    flywayRuntime
+}
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -23,11 +29,61 @@ springBoot {
     buildInfo()
 }
 
+jooq {
+    accounting(sourceSets.main) {
+        // logging = 'TRACE'
+        logging = 'WARN'
+        jdbc {
+            driver = "${database_driver}"
+            url = "${database_url}"
+            user = "${database_user}"
+            password = "${database_password}"
+            schema = "${database_schema}"
+        }
+        generator {
+            database {
+                name = 'org.jooq.meta.postgres.PostgresDatabase'
+                includes = '.*'
+                inputSchema = 'accounting'
+                // outputSchemaToDefault = true
+                schemaVersionProvider = 'SELECT \'accounting_\' || MAX(version) FROM accounting.flyway_schema_history'
+            }
+            generate {
+                deprecated = false
+            //     relations = true
+            //     records = true
+            //     immutablePojos = true
+            //     fluentSetters = true
+            }
+            target {
+                packageName = 'be.lghs.accounting.model'
+                // should those be committed as sources?
+                directory = "${buildDir}/generated/sources/jooq/java"
+            }
+        }
+    }
+}
+
+flyway {
+    // driver = "${database_driver}"
+    url = "${database_url}"
+    user = "${database_user}"
+    password = "${database_password}"
+    schemas = [ "${database_schema}" ]
+    configurations = [ 'flywayRuntime' ]
+}
+
+task jooq(type: GradleBuild) {
+    tasks = ['flywayMigrate', 'generateAccountingJooqSchemaSource']
+}
+
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-jooq'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.security:spring-security-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     // I'm not sold on templating just yet...
     // implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
@@ -40,4 +96,6 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     runtimeOnly 'org.postgresql:postgresql'
+    jooqRuntime 'org.postgresql:postgresql'
+    flywayRuntime 'org.postgresql:postgresql'
 }

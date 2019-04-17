@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean class="org.jooq.impl.DataSourceConnectionProvider" name="connectionProvider">
+    <constructor-arg ref="dataSource" />
+  </bean>
+
+  <!-- Configure the DSL object, optionally overriding jOOQ Exceptions with Spring Exceptions -->
+  <bean id="dsl" class="org.jooq.impl.DefaultDSLContext">
+    <constructor-arg ref="config" />
+  </bean>
+
+  <bean id="exceptionTranslator" class="be.lghs.accounting.repositories.ExceptionTranslator" />
+
+  <bean class="org.jooq.impl.DefaultConfiguration" name="config">
+    <property name="SQLDialect">
+      <value type="org.jooq.SQLDialect">POSTGRES_10</value>
+    </property>
+    <property name="connectionProvider" ref="connectionProvider" />
+    <property name="executeListenerProvider">
+      <array>
+        <bean class="org.jooq.impl.DefaultExecuteListenerProvider">
+          <constructor-arg index="0" ref="exceptionTranslator"/>
+        </bean>
+      </array>
+    </property>
+  </bean>
+</beans>
