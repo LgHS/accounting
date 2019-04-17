@@ -4,12 +4,17 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @SpringBootApplication
+@EnableTransactionManagement
 @EnableWebMvc
 @EnableWebSecurity
-@ImportResource("classpath:spring-config.xml")
+@ImportResource({
+    "classpath:spring-security.xml",
+    "classpath:spring-database.xml",
+})
 public class AccountingApplication {
 
     public static void main(String... args) {
