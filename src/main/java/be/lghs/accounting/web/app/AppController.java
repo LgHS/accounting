@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/app")
 public class AppController {
 
-    @GetMapping(value = "/", produces = "text/html")
+    @GetMapping
     public String dashboard() {
         return "app/dashboard";
     }

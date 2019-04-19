@@ -32,3 +32,15 @@ jooq's codegen. The generated code is located in `build/generated/sources/jooq/j
 
 I recommend creating a folder in the root of the repository named `run` and adding a file named `application-dev.yml`
 in it that will contain the local configuration of the application (keys, passwords and the likes can go there).
+
+
+### OAuth2 configuration
+
+The configuration for the members oauth endpoint need to be manually provided in your local configuration. You can ask
+an admin to get the dev credentials.
+
+```yaml
+spring.security.oauth2.client.registration.members:
+  client-id: x
+  client-secret: azertyuiopqsdfghjklm
+```

@@ -1,12 +1,14 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <title>Accounting</title>
-</head>
-<body>
-    <main>
-        hello world
+{{#partial "title"}}
+    LgHS Accounting Application
+{{/partial}}
+
+{{#partial "content"}}
+    hello world
+    {{#logged}}
+        <a href="/app">Go to app</a>
+    {{else}}
         <a href="/login">login</a>
-    </main>
-</body>
-</html>
+    {{/logged}}
+{{/partial}}
+
+{{> layout}}

@@ -12,7 +12,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableWebMvc
 @EnableWebSecurity
 @ImportResource({
-    "classpath:spring-security.xml",
     "classpath:spring-database.xml",
 })
 public class AccountingApplication {

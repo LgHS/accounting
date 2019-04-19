@@ -4,6 +4,8 @@ import be.lghs.accounting.model.tables.records.AccountsRecord;
 import be.lghs.accounting.repositories.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Result;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
