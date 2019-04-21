@@ -3,11 +3,13 @@
 {{/partial}}
 
 {{#partial "content"}}
-    <form action="." method="post">
+    <form method="post">
+        <input type="hidden" name="{{#csrf_param}}{{/csrf_param}}" value="{{#csrf_token}}{{/csrf_token}}">
         <label for="name">Name</label>
         <input type="text" id="name" name="name">
         <label for="description">Description</label>
         <textarea id="description" name="description"></textarea>
+        <input type="submit">
     </form>
 {{/partial}}
 
