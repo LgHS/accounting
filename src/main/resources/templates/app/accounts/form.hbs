@@ -6,9 +6,9 @@
     <form method="post">
         <input type="hidden" name="{{#csrf_param}}{{/csrf_param}}" value="{{#csrf_token}}{{/csrf_token}}">
         <label for="name">Name</label>
-        <input type="text" id="name" name="name">
+        <input type="text" id="name" name="name" value="{{ account.name }}">
         <label for="description">Description</label>
-        <textarea id="description" name="description"></textarea>
+        <textarea id="description" name="description">{{ account.description }}</textarea>
         <input type="submit">
     </form>
 {{/partial}}

@@ -4,7 +4,9 @@ import be.lghs.accounting.model.tables.records.AccountsRecord;
 import be.lghs.accounting.repositories.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Result;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +20,7 @@ public class AccountsController {
     private final AccountRepository accountRepository;
 
     @GetMapping
+    @Transactional(readOnly = true)
     public String accounts(Model model) {
         Result<AccountsRecord> accounts = accountRepository.findAll();
         model.addAttribute("accounts", accounts);
@@ -25,23 +28,29 @@ public class AccountsController {
     }
 
     @GetMapping("/new")
-    public String accountForm(Model model) {
-        Result<AccountsRecord> accounts = accountRepository.findAll();
-        model.addAttribute("accounts", accounts);
+    public String accountForm() {
         return "app/accounts/form";
     }
 
-    @PostMapping("/new")
-    public String createAccount(@RequestParam("name") String name,
+    @PostMapping({"/new", "/{id}"})
+    @Transactional
+    public String createAccount(@PathVariable(value = "id", required = false) UUID accountId,
+                                @RequestParam("name") String name,
                                 @RequestParam("description") String description) {
-        accountRepository.createOne(name, description);
+        if (accountId == null) {
+            accountRepository.createOne(name, description);
+        } else {
+            accountRepository.update(accountId, name, description);
+        }
         return "redirect:/app/accounts";
     }
 
     @GetMapping("/{id}")
+    @Transactional
     public String accountForm(@PathVariable("id") UUID id, Model model) {
-        Result<AccountsRecord> accounts = accountRepository.findAll();
-        model.addAttribute("accounts", accounts);
+        AccountsRecord account = accountRepository.findOne(id)
+                .orElseThrow(() -> new EmptyResultDataAccessException(1));
+        model.addAttribute("account", account);
         return "app/accounts/form";
     }
 }

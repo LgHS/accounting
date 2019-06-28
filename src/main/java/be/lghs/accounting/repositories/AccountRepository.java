@@ -6,6 +6,9 @@ import org.jooq.DSLContext;
 import org.jooq.Result;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import static be.lghs.accounting.model.Tables.ACCOUNTS;
 
 @Repository
@@ -28,5 +31,19 @@ public class AccountRepository {
             .values(name, description)
             .execute();
 
+    }
+
+    public Optional<AccountsRecord> findOne(UUID id) {
+        return dsl.selectFrom(ACCOUNTS)
+                .where(ACCOUNTS.ID.eq(id))
+                .fetchOptional();
+    }
+
+    public int update(UUID accountId, String name, String description) {
+        return dsl.update(ACCOUNTS)
+                .set(ACCOUNTS.NAME, name)
+                .set(ACCOUNTS.DESCRIPTION, description)
+                .where(ACCOUNTS.ID.eq(accountId))
+                .execute();
     }
 }
