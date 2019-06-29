@@ -6,6 +6,7 @@ import org.jooq.DSLContext;
 import org.jooq.Result;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -45,5 +46,12 @@ public class AccountRepository {
                 .set(ACCOUNTS.DESCRIPTION, description)
                 .where(ACCOUNTS.ID.eq(accountId))
                 .execute();
+    }
+
+    public void updateBalance(UUID accountId, BigDecimal added) {
+        dsl.update(ACCOUNTS)
+            .set(ACCOUNTS.CURRENT_AMOUNT, ACCOUNTS.CURRENT_AMOUNT.plus(added))
+            .where(ACCOUNTS.ID.eq(accountId))
+            .execute();
     }
 }

@@ -1,0 +1,20 @@
+{{#partial "title"}}
+    Coda form
+{{/partial}}
+
+{{#partial "content"}}
+    <form method="post" enctype="multipart/form-data">
+        <input type="hidden" name="{{#csrf_param}}{{/csrf_param}}" value="{{#csrf_token}}{{/csrf_token}}">
+        <label for="account">Account</label>
+        <select id="account" name="account_id">
+            {{#each accounts}}
+                <option value="{{this.id}}">{{this.name}}</option>
+            {{/each}}
+        </select>
+        <label for="codas"></label>
+        <input type="file" multiple id="codas" name="codas">
+        <input type="submit">
+    </form>
+{{/partial}}
+
+{{> layout}}

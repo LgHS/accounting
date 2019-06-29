@@ -8,5 +8,3 @@ create table accounting.accounts (
     current_amount numeric(10, 2) not null default 0
 );
 grant select, insert, update, delete on table accounting.accounts to lghs_accounting_app;
-
-grant select, insert, update, delete on table accounting.accounts to lghs_accounting_app

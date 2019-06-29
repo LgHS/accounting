@@ -1,0 +1,32 @@
+{{#partial "title"}}
+    Movement list
+{{/partial}}
+
+{{#partial "content"}}
+    <table>
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>from</th>
+            <th>amount</th>
+            <th>communication</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each movements}}
+            <tr>
+                <td>{{this.id}}</td>
+                <td>{{this.counterPartyName}} ({{this.counterPartyAccountNumber}})</td>
+                <td>{{this.amount}}</td>
+                <td>{{this.communication}}</td>
+            </tr>
+        {{else}}
+            <tr>
+                <td colspan="2">no data yet</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+{{/partial}}
+
+{{> layout}}
