@@ -20,6 +20,7 @@ public class AccountRepository {
 
     public Result<AccountsRecord> findAll() {
         return dsl.selectFrom(ACCOUNTS)
+            .orderBy(ACCOUNTS.NAME)
             .fetch();
     }
 
@@ -50,7 +51,7 @@ public class AccountRepository {
 
     public void updateBalance(UUID accountId, BigDecimal added) {
         dsl.update(ACCOUNTS)
-            .set(ACCOUNTS.CURRENT_AMOUNT, ACCOUNTS.CURRENT_AMOUNT.plus(added))
+            .set(ACCOUNTS.CURRENT_BALANCE, ACCOUNTS.CURRENT_BALANCE.plus(added))
             .where(ACCOUNTS.ID.eq(accountId))
             .execute();
     }

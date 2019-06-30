@@ -2,7 +2,7 @@
 <configuration>
   <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
-  <logger name="org.springframework" level="ALL"/>
+  <logger name="org.springframework" level="DEBUG"/>
   <logger name="org.flywaydb" level="WARN"/>
   <logger name="org.postgresql" level="INFO"/>
 </configuration>

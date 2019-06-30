@@ -18,6 +18,7 @@ public class CodaRepository {
 
     public Result<CodasRecord> findAll() {
         return dsl.selectFrom(CODAS)
+            .orderBy(CODAS.FILENAME.desc())
             .fetch();
     }
 

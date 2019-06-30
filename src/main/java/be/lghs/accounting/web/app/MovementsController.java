@@ -1,4 +1,4 @@
-package be.lghs.movementing.web.app;
+package be.lghs.accounting.web.app;
 
 import be.lghs.accounting.model.tables.records.MovementsRecord;
 import be.lghs.accounting.repositories.MovementRepository;

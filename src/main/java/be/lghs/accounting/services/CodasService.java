@@ -63,10 +63,10 @@ public class CodasService {
             if (record.getType() == RecordType.OLD_BALANCE) {
                 OldBalanceRecord oldBalanceRecord = (OldBalanceRecord) record;
 
-                BigDecimal currentAmount = account.getCurrentAmount();
-                long currentAmountInteger = currentAmount.toBigInteger().longValueExact();
-                long currentAmountDecimals = currentAmount
-                    .subtract(new BigDecimal(currentAmountInteger))
+                BigDecimal currentBalance = account.getCurrentBalance();
+                long currentBalanceInteger = currentBalance.toBigInteger().longValueExact();
+                long currentBalanceDecimals = currentBalance
+                    .subtract(new BigDecimal(currentBalanceInteger))
                     .multiply(new BigDecimal(100))
                     .longValueExact();
 
@@ -74,9 +74,9 @@ public class CodasService {
                                                                                               // only keep two positions
                 long oldBalanceDecimals = Long.parseLong(oldBalanceRecord.getBalanceDecimals().substring(0, 2));
 
-                if (currentAmountInteger != oldBalance || currentAmountDecimals != oldBalanceDecimals) {
+                if (currentBalanceInteger != oldBalance || currentBalanceDecimals != oldBalanceDecimals) {
                     throw new IllegalStateException(String.format("missing transactions, current balance is %s, coda %s says it should be %s.%s",
-                        currentAmount,
+                        currentBalance,
                         filename,
                         oldBalance,
                         oldBalanceDecimals));

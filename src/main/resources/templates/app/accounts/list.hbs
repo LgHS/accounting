@@ -9,6 +9,7 @@
         <tr>
             <th>id</th>
             <th>name</th>
+            <th>balance</th>
             <th>action</th>
         </tr>
         </thead>
@@ -17,6 +18,7 @@
             <tr>
                 <td>{{this.id}}</td>
                 <td>{{this.name}}</td>
+                <td>{{this.currentBalance}}</td>
                 <td><a href="/app/accounts/{{this.id}}">Edit</a></td>
             </tr>
         {{else}}

@@ -16,6 +16,7 @@ public class MovementRepository {
 
     public Result<MovementsRecord> findAll() {
         return dsl.selectFrom(MOVEMENTS)
+            .orderBy(MOVEMENTS.ENTRY_DATE.desc())
             .fetch();
     }
 

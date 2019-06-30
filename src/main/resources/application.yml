@@ -2,6 +2,8 @@ server.error:
   include-stacktrace: always
   include-exception: true
 
+logging.config: classpath:logback-spring.xml
+
 spring:
   profiles:
     active: dev
@@ -35,6 +37,7 @@ spring:
 
 handlebars:
   cache: false
+
 ---
 spring:
   profiles: prd
