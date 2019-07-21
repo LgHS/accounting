@@ -1,6 +1,9 @@
 package be.lghs.accounting.configuration;
 
 import com.github.jknack.handlebars.Options;
+import com.github.jknack.handlebars.helper.ConditionalHelpers;
+import com.github.jknack.handlebars.springmvc.HandlebarsViewResolver;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,11 +13,20 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import pl.allegro.tech.boot.autoconfigure.handlebars.HandlebarsHelper;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Optional;
 
 @HandlebarsHelper
+@RequiredArgsConstructor
 public class HandlebarsConfiguration {
+
+    private final HandlebarsViewResolver handlebarsViewResolver;
+
+    @PostConstruct
+    public void postConstruct() {
+        handlebarsViewResolver.getHandlebars().registerHelpers(ConditionalHelpers.class);
+    }
 
     private static Optional<OAuth2User> getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -38,6 +50,7 @@ public class HandlebarsConfiguration {
             return options.inverse();
         }
     }
+
 
 
     public String csrf_token() {

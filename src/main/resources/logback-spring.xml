@@ -5,4 +5,5 @@
   <logger name="org.springframework" level="DEBUG"/>
   <logger name="org.flywaydb" level="WARN"/>
   <logger name="org.postgresql" level="INFO"/>
+  <logger name="org.jooq" level="DEBUG"/>
 </configuration>

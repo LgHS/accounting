@@ -1,0 +1,12 @@
+table {
+  width: 100%;
+  /*table-layout: fixed;*/
+  border-collapse: collapse;
+}
+tr:nth-child(2n) td {
+  background-color: #eee;
+}
+td {
+  /*border-bottom: 1px solid #aaa;*/
+  padding: 0.2em 1ch;
+}

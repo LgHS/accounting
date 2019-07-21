@@ -2,6 +2,7 @@ package be.lghs.accounting.web.app;
 
 import be.lghs.accounting.model.tables.records.AccountsRecord;
 import be.lghs.accounting.repositories.AccountRepository;
+import be.lghs.accounting.repositories.MovementRepository;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Result;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -18,6 +19,7 @@ import java.util.UUID;
 public class AccountsController {
 
     private final AccountRepository accountRepository;
+    private final MovementRepository movementRepository;
 
     @GetMapping
     @Transactional(readOnly = true)
@@ -52,5 +54,16 @@ public class AccountsController {
                 .orElseThrow(() -> new EmptyResultDataAccessException(1));
         model.addAttribute("account", account);
         return "app/accounts/form";
+    }
+
+    @GetMapping("/{account_id}/movements")
+    @Transactional(readOnly = true)
+    public String movementsByAccount(@PathVariable("account_id") UUID accountId,
+                                     Model model) {
+        var movements = movementRepository.findByAccount(accountId);
+        var categories = movementRepository.categories();
+        model.addAttribute("movements", movements);
+        model.addAttribute("categories", categories);
+        return "app/movements/list";
     }
 }

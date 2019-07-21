@@ -1,14 +1,13 @@
 package be.lghs.accounting.web.app;
 
-import be.lghs.accounting.model.tables.records.MovementsRecord;
 import be.lghs.accounting.repositories.MovementRepository;
 import lombok.RequiredArgsConstructor;
-import org.jooq.Result;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/app/movements")
@@ -20,8 +19,21 @@ public class MovementsController {
     @GetMapping
     @Transactional(readOnly = true)
     public String movements(Model model) {
-        Result<MovementsRecord> movements = movementRepository.findAll();
+        var movements = movementRepository.findAll();
+        var categories = movementRepository.categories();
         model.addAttribute("movements", movements);
+        model.addAttribute("categories", categories);
         return "app/movements/list";
+    }
+
+    @Transactional
+    @PostMapping("/{movement_id}/category")
+    public String setCategory(@PathVariable("movement_id") UUID movementId,
+                              @RequestParam("category_id") UUID categoryId) {
+        if (categoryId == null) {
+            return "redirect:/app/movements";
+        }
+        movementRepository.setCategory(movementId, categoryId);
+        return "redirect:/app/movements#"+movementId;
     }
 }

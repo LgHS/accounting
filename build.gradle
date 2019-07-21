@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.1.4.RELEASE'
+    id 'org.springframework.boot' version '2.1.6.RELEASE'
     id 'java'
     id 'nu.studer.jooq' version '3.0.3'
     id 'org.flywaydb.flyway' version '5.2.4'
@@ -85,9 +85,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.security:spring-security-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    // I'm not sold on templating just yet...
+    // handlerbars sucks, I'd love rocker back... If only there was an IntelliJ plugin :(
     // implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'pl.allegro.tech.boot:handlebars-spring-boot-starter:0.3.0'
+    implementation 'pl.allegro.tech.boot:handlebars-spring-boot-starter:0.3.1'
+    implementation 'com.github.jknack:handlebars:4.1.2' // force newer version
+    implementation 'com.github.jknack:handlebars-springmvc:4.1.2' // force newer version
+    implementation 'org.apache.commons:commons-lang3:3.9' // missing transitive dependency
     implementation 'org.flywaydb:flyway-core'
     implementation 'be.lghs:coda-parser:0.0.1'
 

@@ -7,7 +7,7 @@
     <table>
         <thead>
         <tr>
-            <th>id</th>
+            <!--<th>id</th>-->
             <th>name</th>
             <th>balance</th>
             <th>action</th>
@@ -16,10 +16,13 @@
         <tbody>
         {{#each accounts}}
             <tr>
-                <td>{{this.id}}</td>
+                <!--<td>{{this.id}}</td>-->
                 <td>{{this.name}}</td>
                 <td>{{this.currentBalance}}</td>
-                <td><a href="/app/accounts/{{this.id}}">Edit</a></td>
+                <td>
+                    <a href="/app/accounts/{{this.id}}/movements">Movements</a>
+                    <a href="/app/accounts/{{this.id}}">Edit</a>
+                </td>
             </tr>
         {{else}}
             <tr>

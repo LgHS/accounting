@@ -4,9 +4,11 @@ server.error:
 
 logging.config: classpath:logback-spring.xml
 
+
 spring:
   profiles:
     active: dev
+
   datasource:
     url: jdbc:postgresql:lghs_accounting
     username: lghs_accounting_app
@@ -37,6 +39,9 @@ spring:
 
 handlebars:
   cache: false
+  resolver:
+    field: true
+    method: true
 
 ---
 spring:

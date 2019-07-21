@@ -113,6 +113,7 @@ public class CodasService {
             }
 
             MovementsRecord movement = new MovementsRecord();
+            movement.setAccountId(accountId);
             movement.setAmount(amount.getNumberStripped());
             movement.setCodaId(codaId);
             movement.setCodaSequenceNumber(record1.getSequenceNumber());

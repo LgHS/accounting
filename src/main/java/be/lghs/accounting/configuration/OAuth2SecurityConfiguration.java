@@ -11,9 +11,11 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
             .mvcMatchers("/").permitAll()
-            // .anyRequest().authenticated() // nocommit
+            .antMatchers("/main.css").permitAll()
+            .antMatchers("/public/**").permitAll()
+            .anyRequest().authenticated()
 
-            // .and().oauth2Login() // nocommit
+            .and().oauth2Login()
         ;
     }
 }

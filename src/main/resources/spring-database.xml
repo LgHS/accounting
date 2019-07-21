@@ -29,6 +29,11 @@
         <bean class="org.jooq.impl.DefaultExecuteListenerProvider">
           <constructor-arg index="0" ref="exceptionTranslator"/>
         </bean>
+        <bean class="org.jooq.impl.DefaultExecuteListenerProvider">
+          <constructor-arg index="0">
+            <bean class="org.jooq.tools.LoggerListener" />
+          </constructor-arg>
+        </bean>
       </array>
     </property>
   </bean>
