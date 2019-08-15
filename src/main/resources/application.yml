@@ -40,8 +40,11 @@ spring:
 handlebars:
   cache: false
   resolver:
-    field: true
-    method: true
+    field: false
+    method: true # i.e. used to call signum on BigDecimal
+    java-bean: true
+    map: true
+  expose-spring-macro-helpers: false
 
 ---
 spring:
