@@ -1,11 +1,13 @@
 package be.lghs.accounting.web.app;
 
+import be.lghs.accounting.configuration.Roles;
 import be.lghs.accounting.model.tables.records.AccountsRecord;
 import be.lghs.accounting.repositories.AccountRepository;
 import be.lghs.accounting.repositories.MovementRepository;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Result;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -23,6 +25,7 @@ public class AccountsController {
 
     @GetMapping
     @Transactional(readOnly = true)
+    @Secured(Roles.ROLE_ADMIN)
     public String accounts(Model model) {
         Result<AccountsRecord> accounts = accountRepository.findAll();
         model.addAttribute("accounts", accounts);
@@ -30,12 +33,14 @@ public class AccountsController {
     }
 
     @GetMapping("/new")
+    @Secured(Roles.ROLE_TREASURER)
     public String accountForm() {
         return "app/accounts/form";
     }
 
     @PostMapping({"/new", "/{id}"})
     @Transactional
+    @Secured(Roles.ROLE_TREASURER)
     public String createAccount(@PathVariable(value = "id", required = false) UUID accountId,
                                 @RequestParam("name") String name,
                                 @RequestParam("description") String description) {
@@ -49,6 +54,7 @@ public class AccountsController {
 
     @GetMapping("/{id}")
     @Transactional
+    @Secured(Roles.ROLE_TREASURER)
     public String accountForm(@PathVariable("id") UUID id, Model model) {
         AccountsRecord account = accountRepository.findOne(id)
                 .orElseThrow(() -> new EmptyResultDataAccessException(1));
@@ -58,6 +64,7 @@ public class AccountsController {
 
     @GetMapping("/{account_id}/movements")
     @Transactional(readOnly = true)
+    @Secured(Roles.ROLE_ADMIN)
     public String movementsByAccount(@PathVariable("account_id") UUID accountId,
                                      Model model) {
         var movements = movementRepository.findByAccount(accountId);

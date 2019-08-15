@@ -1,11 +1,20 @@
 package be.lghs.accounting.configuration;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @Configuration
+@EnableGlobalMethodSecurity(
+    securedEnabled = true,
+    prePostEnabled = true
+)
+@RequiredArgsConstructor
 public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    private final UserService userService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -15,7 +24,8 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/public/**").permitAll()
             .anyRequest().authenticated()
 
-            .and().oauth2Login()
+            .and()
+                .oauth2Login().userInfoEndpoint().userService(userService)
         ;
     }
 }

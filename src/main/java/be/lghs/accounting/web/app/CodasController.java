@@ -1,5 +1,6 @@
 package be.lghs.accounting.web.app;
 
+import be.lghs.accounting.configuration.Roles;
 import be.lghs.accounting.model.tables.records.AccountsRecord;
 import be.lghs.accounting.model.tables.records.CodasRecord;
 import be.lghs.accounting.repositories.AccountRepository;
@@ -7,6 +8,7 @@ import be.lghs.accounting.repositories.CodaRepository;
 import be.lghs.accounting.services.CodasService;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Result;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -33,6 +35,7 @@ public class CodasController {
 
     @GetMapping
     @Transactional(readOnly = true)
+    @Secured(Roles.ROLE_ADMIN)
     public String codas(Model model) {
         Result<CodasRecord> codas = codaRepository.findAll();
         model.addAttribute("codas", codas);
@@ -41,6 +44,7 @@ public class CodasController {
 
     @GetMapping("/new")
     @Transactional(readOnly = true)
+    @Secured(Roles.ROLE_ADMIN)
     public String codaForm(Model model) {
         Result<CodasRecord> codas = codaRepository.findAll();
         Result<AccountsRecord> accounts = accountRepository.findAll();
@@ -50,6 +54,7 @@ public class CodasController {
     }
 
     @PostMapping("/new")
+    @Secured(Roles.ROLE_ADMIN)
     public String createCoda(@RequestParam("account_id") UUID accountId,
                              @RequestParam("codas") List<MultipartFile> files) {
         files.sort(Comparator.comparing(MultipartFile::getOriginalFilename));

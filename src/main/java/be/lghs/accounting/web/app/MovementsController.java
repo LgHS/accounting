@@ -1,7 +1,9 @@
 package be.lghs.accounting.web.app;
 
+import be.lghs.accounting.configuration.Roles;
 import be.lghs.accounting.repositories.MovementRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -18,6 +20,7 @@ public class MovementsController {
 
     @GetMapping
     @Transactional(readOnly = true)
+    @Secured(Roles.ROLE_ADMIN)
     public String movements(Model model) {
         var movements = movementRepository.findAll();
         var categories = movementRepository.categories();
@@ -28,6 +31,7 @@ public class MovementsController {
 
     @Transactional
     @PostMapping("/{movement_id}/category")
+    @Secured(Roles.ROLE_TREASURER)
     public String setCategory(@PathVariable("movement_id") UUID movementId,
                               @RequestParam("category_id") UUID categoryId) {
         if (categoryId == null) {
