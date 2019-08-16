@@ -11,13 +11,14 @@
             <th>amount</th>
             <th>communication</th>
             <th>category</th>
+            <th>actions</th>
         </tr>
         </thead>
         <tbody>
         {{#each movements}}
             <tr id="{{this.id}}" {{#lt this.amount.signum 0}}class="bg-light-red"{{/lt}}>
                 <td>{{this.entryDate}}</td>
-                <td>{{this.counterPartyName}} ({{this.counterPartyAccountNumber}})</td>
+                <td>{{this.counterPartyName}} (<a href="/app/movements/by-iban/{{this.counterPartyAccountNumber}}">{{this.counterPartyAccountNumber}}</a>)</td>
                 <td class="align-right">{{this.amount}}</td>
                 <td>{{this.communication}}</td>
                 <td>
@@ -26,7 +27,7 @@
                         {{#each categories}}
                             {{!-- this is highly inefficient, I blame handlebar's terrible syntax. --}}
                             {{#eq @../this.categoryId this.id}}
-                                {{this.name}}
+                                <a href="/app/movements/by-category/{{this.id}}">{{this.name}}</a>
                             {{/eq}}
                         {{/each}}
                     {{else}}
@@ -50,6 +51,10 @@
                             <input type="submit">
                         </form>
                     {{/if}}
+                </td>
+                <td>
+                    <a href="/app/movements/{{this.id}}">view</a>
+                    <a href="/app/movements/{{this.id}}/split">split</a>
                 </td>
             </tr>
         {{else}}

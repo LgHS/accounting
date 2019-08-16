@@ -26,7 +26,6 @@ public class MovementRepository {
     }
 
     private Result<MovementsRecord> find(Condition... conditions) {
-    // public Result<MovementsRecord> findAll() {
     //     return dsl
     //        .select(
     //            MOVEMENTS.ID,
@@ -46,7 +45,11 @@ public class MovementRepository {
     //        .fetch();
         return dsl.selectFrom(MOVEMENTS)
             .where(conditions)
-            .orderBy(MOVEMENTS.ENTRY_DATE.desc())
+            .orderBy(
+                MOVEMENTS.ENTRY_DATE.desc(),
+                MOVEMENTS.CODA_SEQUENCE_NUMBER.desc(),
+                MOVEMENTS.AMOUNT.desc(),
+                MOVEMENTS.COMMUNICATION)
             .fetch();
     }
 
@@ -99,5 +102,43 @@ public class MovementRepository {
 
     public Result<MovementsRecord> findByAccount(UUID accountId) {
         return find(MOVEMENTS.ACCOUNT_ID.eq(accountId));
+    }
+
+    public MovementsRecord getOne(UUID movementId) {
+        return dsl.selectFrom(MOVEMENTS)
+            .where(MOVEMENTS.ID.eq(movementId))
+            .fetchOne();
+    }
+
+    public Result<MovementCategoriesRecord> credits() {
+        return dsl.selectFrom(MOVEMENT_CATEGORIES)
+            .where(MOVEMENT_CATEGORIES.TYPE.eq("CREDIT"))
+            .fetch();
+    }
+
+    public Result<MovementCategoriesRecord> debits() {
+        return dsl.selectFrom(MOVEMENT_CATEGORIES)
+            .where(MOVEMENT_CATEGORIES.TYPE.eq("DEBIT"))
+            .fetch();
+    }
+
+    public void insertFromTemplate(MovementsRecord originMovement,
+                                   String communication,
+                                   BigDecimal amount,
+                                   UUID categoryId) {
+        MovementsRecord copy = originMovement.copy();
+        copy.setCommunication(communication);
+        copy.setAmount(amount);
+        copy.setCategoryId(categoryId);
+
+        copy.insert();
+    }
+
+    public Result<MovementsRecord> findFromCounterParty(String iban) {
+        return find(MOVEMENTS.COUNTER_PARTY_ACCOUNT_NUMBER.eq(iban));
+    }
+
+    public Result<MovementsRecord> findByCategory(UUID categoryId) {
+        return find(MOVEMENTS.CATEGORY_ID.eq(categoryId));
     }
 }

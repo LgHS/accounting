@@ -54,6 +54,10 @@ td {
   /*border-bottom: 1px solid #aaa;*/
   padding: 0.2em 1ch; }
 
+.form-grid {
+  display: grid;
+  grid-template: auto / 30ch 40ch; }
+
 .align-right {
   text-align: right; }
 

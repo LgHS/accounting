@@ -84,7 +84,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.security:spring-security-oauth2-client'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
     // handlerbars sucks, I'd love rocker back... If only there was an IntelliJ plugin :(
     // implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'pl.allegro.tech.boot:handlebars-spring-boot-starter:0.3.1'
