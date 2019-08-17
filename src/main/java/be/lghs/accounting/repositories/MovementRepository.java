@@ -71,14 +71,13 @@ public class MovementRepository {
             .execute();
     }
 
-    public Result<Record5<Integer, String, String, String, BigDecimal>> legalSummary() {
+    public Result<Record4<Integer, String, String, BigDecimal>> legalSummary() {
         Field<Integer> entryDate = extract(MOVEMENTS.ENTRY_DATE, DatePart.YEAR);
         return dsl
             .select(
                 entryDate.as("year"),
                 MOVEMENT_CATEGORIES.TYPE,
                 MOVEMENT_CATEGORIES.NAME.as("category"),
-                ACCOUNTS.NAME,
                 sum(MOVEMENTS.AMOUNT).as("amount")
             )
             .from(
@@ -89,8 +88,7 @@ public class MovementRepository {
             .groupBy(
                 entryDate,
                 MOVEMENT_CATEGORIES.TYPE,
-                MOVEMENT_CATEGORIES.NAME,
-                ACCOUNTS.NAME
+                MOVEMENT_CATEGORIES.NAME
             )
             .orderBy(
                 entryDate.desc(),

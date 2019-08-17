@@ -18,10 +18,10 @@
             <tr>
                 <!--<td>{{this.id}}</td>-->
                 <td>{{this.name}}</td>
-                <td>{{this.currentBalance}}</td>
+                <td class="align-right">{{this.currentBalance}}</td>
                 <td>
-                    <a href="/app/accounts/{{this.id}}/movements">Movements</a>
                     <a href="/app/accounts/{{this.id}}">Edit</a>
+                    <a href="/app/accounts/{{this.id}}/movements">Movements</a>
                 </td>
             </tr>
         {{else}}
