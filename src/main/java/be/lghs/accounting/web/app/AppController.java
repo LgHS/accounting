@@ -37,4 +37,13 @@ public class AppController {
             graphService.generateRollingSumGraph(output);
         }
     }
+
+    @GetMapping(value = "credits-per-day", produces = "image/svg+xml")
+    @Secured(Roles.ROLE_MEMBER)
+    public void creditsPerDay(HttpServletResponse response) throws IOException {
+        response.setContentType("image/svg+xml");
+        try (ServletOutputStream output = response.getOutputStream()) {
+            graphService.generateCreditsPerDayGraph(output);
+        }
+    }
 }
