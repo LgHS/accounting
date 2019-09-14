@@ -1,6 +1,7 @@
 package be.lghs.accounting.web.app;
 
 import be.lghs.accounting.configuration.Roles;
+import be.lghs.accounting.repositories.AccountRepository;
 import be.lghs.accounting.repositories.MovementRepository;
 import be.lghs.accounting.services.GraphService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Controller
 @RequestMapping("/app")
@@ -20,12 +23,21 @@ import java.io.IOException;
 public class AppController {
 
     private final MovementRepository movementRepository;
+    private final AccountRepository accountRepository;
     private final GraphService graphService;
 
     @GetMapping
     @Secured(Roles.ROLE_MEMBER)
     public String dashboard(Model model) {
+        var globalBalance = accountRepository.globalBalance();
+
         model.addAttribute("legalSummary", movementRepository.legalSummary());
+        model.addAttribute("globalBalance", globalBalance);
+        model.addAttribute("monthsLeft", globalBalance
+            .divideToIntegralValue(BigDecimal.valueOf(800))
+            .setScale(0, RoundingMode.UNNECESSARY)
+            .intValueExact());
+
         return "app/dashboard";
     }
 

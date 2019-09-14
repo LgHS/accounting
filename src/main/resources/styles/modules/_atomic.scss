@@ -2,10 +2,37 @@
   text-align: right;
 }
 
+.align-center {
+  text-align: center;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.red {
+  color: #c00;
+}
+
 tr.bg-light-red:nth-child(2n) td {
   background-color: #fbb;
 }
 
 .bg-light-red {
   background-color: #fcc;
+}
+
+.flex {
+  display: flex;
+  //align-content: center;
+  align-items: center;
+  justify-content: stretch;
+
+  > * {
+    flex: 1;
+  }
+}
+
+.text-big {
+  font-size: 2em;
 }

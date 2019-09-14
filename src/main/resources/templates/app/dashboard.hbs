@@ -3,22 +3,31 @@
 {{/partial}}
 
 {{#partial "content"}}
-    <section style="text-align: center">
+    <div class="flex horizontal">
         <img src="/app/rolling-sum"
-             width="1080"
-             onload="this.style.width = 'unset'; this.style.maxWidth = '100%'; this.style.minHeight = '50vh'"
+             class="card"
              alt="Graph of the amount of money in the HS accounts">
-    </section>
-    <section style="text-align: center; margin-top: 1em;">
         <img src="/app/credits-per-day"
-             width="1080"
-             onload="this.style.width = 'unset'; this.style.maxWidth = '100%'; this.style.minHeight = '50vh'"
+             class="card"
              alt="Graph of the amount of money entering HS accounts per day">
-    </section>
-    <section style="text-align: center">
-        <h4>Legal summary per year</h4>
-        <pre>{{legalSummary}}</pre>
-    </section>
+    </div>
+
+    <div class="flex horizontal">
+        <section class="card align-center">
+            <span class="text-big">
+                We have money left for
+                <span class="bold{{#lt monthsLeft 5 }} red{{/lt}}">
+                    {{monthsLeft}}
+                </span>
+                months
+            </span>
+        </section>
+        <section class="card align-center">
+            <h4>Legal summary per year</h4>
+            <pre>{{legalSummary}}</pre>
+        </section>
+    </div>
+
 {{/partial}}
 
 {{> layout}}

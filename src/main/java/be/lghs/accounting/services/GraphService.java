@@ -4,8 +4,10 @@ import be.lghs.accounting.repositories.GraphRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardChartTheme;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.StandardXYBarPainter;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.chart.ui.RectangleEdge;
@@ -33,7 +35,21 @@ public class GraphService {
 
     static {
         // Remove stupid gradients
-        ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
+        ChartFactory.setChartTheme(new StandardChartTheme("LGHS", false) {
+            @Override
+            public void apply(JFreeChart chart) {
+                chart.setBackgroundPaint(null);
+                chart.setBorderVisible(false);
+                var plot = chart.getPlot();
+                if (plot instanceof XYPlot) {
+                    var xyPlot = (XYPlot) plot;
+                    xyPlot.setOutlineVisible(false);
+                    xyPlot.getDomainAxis().setAxisLineVisible(false);
+                    xyPlot.getRangeAxis().setAxisLineVisible(false);
+                    xyPlot.getRangeAxis().setTickMarksVisible(false);
+                }
+            }
+        });
 
         // Remove stupid shadows
         XYBarRenderer.setDefaultBarPainter(new StandardXYBarPainter() {
@@ -118,9 +134,7 @@ public class GraphService {
             PlotOrientation.VERTICAL,
             false, false, false);
 
-        chart.setBackgroundPaint(null);
-        chart.setBorderPaint(Color.BLACK);
-        chart.setBorderVisible(false);
+
         chart.getXYPlot().getRenderer().setSeriesPaint(0, Color.BLUE);
         chart.getXYPlot().getRenderer().setSeriesPaint(1, Color.RED);
 
