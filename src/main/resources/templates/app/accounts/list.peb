@@ -1,0 +1,38 @@
+{# @pebvariable name="accounts" type="org.jooq.Result<be.lghs.accounting.model.tables.records.AccountsRecord>" #}
+
+{% extends '../../base' %}
+
+{% block 'title' %}
+    Account list
+{% endblock %}
+
+{% block 'content' %}
+    <a href="{{ href('/app/accounts/new') }}">Create account</a>
+    <table>
+        <thead>
+        <tr>
+            <!--<th>id</th>-->
+            <th>name</th>
+            <th>balance</th>
+            <th>action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for account in accounts %}
+            <tr>
+                <!--<td>{{ account.id }}</td>-->
+                <td>{{ account.name }}</td>
+                <td class="align-right">{{ account.currentBalance }}</td>
+                <td>
+                    <a href="{{ href("/app/accounts/#{account.id}") }}">Edit</a>
+                    <a href="{{ href("/app/accounts/#{account.id}/movements") }}">Movements</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2">no data yet</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <link href="{{ href('/public/main.css') }}" rel="stylesheet">
+        <title>{% block "title" %}{% endblock %} | LgHS Compta</title>
+    </head>
+    <body>
+        <header>
+            <h1><a href="{{ href('/') }}">LgHS Accounting</a></h1>
+            <span> > </span>
+            <h2>{% block "title" %}{% endblock %}</h2>
+            <div class="separator"></div>
+            <nav>
+                <a href="{{ href('/app') }}">Dashboard</a>
+                <a href="{{ href('/app/accounts') }}">Accounts</a>
+                <a href="{{ href('/app/codas') }}">Codas</a>
+                <a href="{{ href('/app/movements') }}">Movements</a>
+            </nav>
+        </header>
+        <main>
+            {% block "content" %}{% endblock %}
+        </main>
+        <footer>
+            Connected as {{ username() }}
+        </footer>
+    </body>
+</html>

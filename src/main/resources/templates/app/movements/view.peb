@@ -1,0 +1,55 @@
+{% extends '../../base' %}
+
+{% import '../../tools/csrf' %}
+
+{% block 'title' %}
+    Movement from {{ movement.entryDate }} of {{ movement.amount }}€
+{% endblock %}
+
+{% block 'content' %}
+    <h3>Movement from {{ movement.entryDate }} of {{ movement.amount }}€</h3>
+    <form method="post" class="form-grid">
+        {{ csrf_input() }}
+
+        <label>From</label>
+        <input type="text" readonly value="{{ movement.counterPartyName }}">
+
+        <label><a href="{{ href("/app/movements/by-iban/#{movement.counterPartyAccountNumber}") }}">From account</a></label>
+        <input type="text" readonly value="{{ movement.counterPartyAccountNumber }}">
+
+        <label for="account"><a href="{{ href("/app/accounts/#{movement.accountId}/movements") }}">To account</a></label>
+        <input type="text"
+               name="account"
+               id="account"
+               value="{{ movement.accountId }}">
+
+        <label for="communication">Communication</label>
+        <input type="text"
+               name="communication"
+               id="communication"
+               value="{{ movement.communication }}">
+
+        <label for="amount">Amount</label>
+        <input type="number"
+               name="amount"
+               id="amount"
+               value="{{ movement.amount }}">
+
+        <label for="category_id">Category</label>
+        <select name="category" id="category_id">
+            <option value=""></option>
+            {% for category in categories %}
+                <option value="{{ category.id }}"
+                        {% if category.id == movement.categoryId %}selected{% endif %}>
+                    {{ category.name }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <label for="coda_id">Coda</label>
+        <input id="coda_id"
+               type="text"
+               readonly
+               value="{{ movement.codaId }} / {{ movement.codaSequenceNumber }}">
+    </form>
+{% endblock %}

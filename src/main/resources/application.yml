@@ -46,9 +46,17 @@ handlebars:
     map: true
   expose-spring-macro-helpers: false
 
+pebble:
+  cache: false
+  strict-variables: true
+  suffix: '.peb'
+
 ---
 spring:
   profiles: prd
 
 handlebars:
+  cache: true
+
+pebble:
   cache: true

@@ -1,0 +1,14 @@
+{% extends 'base' %}
+
+{% block "title" %}
+    LgHS Accounting Application
+{% endblock %}
+
+{% block "content" %}
+    hello world
+    {% if authenticated() %}
+        <a href="{{ href('/app') }}">Go to app</a>
+    {% else %}
+        <a href="{{ href('/login') }}">login</a>
+    {% endif %}
+{% endblock %}

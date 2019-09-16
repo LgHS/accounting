@@ -1,13 +1,18 @@
-{{#partial "title"}}
-    Dashboard
-{{/partial}}
+{# @pebvariable name="monthsLeft" type="Integer" #}
+{# @pebvariable name="legalSummary" type="Object" #}
 
-{{#partial "content"}}
+{% extends '../base' %}
+
+{% block 'title' %}
+    Dashboard
+{% endblock %}
+
+{% block 'content' %}
     <div class="flex horizontal">
-        <img src="/app/rolling-sum"
+        <img src="{{ href('/app/rolling-sum') }}"
              class="card"
              alt="Graph of the amount of money in the HS accounts">
-        <img src="/app/credits-per-day"
+        <img src="{{ href('/app/credits-per-day') }}"
              class="card"
              alt="Graph of the amount of money entering HS accounts per day">
     </div>
@@ -16,18 +21,16 @@
         <section class="card align-center">
             <span class="text-big">
                 We have money left for
-                <span class="bold{{#lt monthsLeft 5 }} red{{/lt}}">
-                    {{monthsLeft}}
+                <span class="bold{% if monthsLeft < 5 %} red{% endif %}">
+                    {{ monthsLeft }}
                 </span>
                 months
             </span>
         </section>
         <section class="card align-center">
             <h4>Legal summary per year</h4>
-            <pre>{{legalSummary}}</pre>
+            <pre>{{ legalSummary }}</pre>
         </section>
     </div>
 
-{{/partial}}
-
-{{> layout}}
+{% endblock %}

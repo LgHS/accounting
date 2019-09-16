@@ -1,0 +1,29 @@
+{% extends '../../base' %}
+
+{% block 'title' %}
+    Coda list
+{% endblock %}
+
+{% block 'content' %}
+    <a href="{{ href('/app/codas/new') }}">Upload coda</a>
+    <table>
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>filename</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for coda in codas %}
+            <tr>
+                <td>{{coda.id}}</td>
+                <td>{{coda.filename}}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2">no data yet</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

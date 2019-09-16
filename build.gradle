@@ -83,12 +83,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jooq'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.security:spring-security-oauth2-client'
     // handlerbars sucks, I'd love rocker back... If only there was an IntelliJ plugin :(
-    // implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'pl.allegro.tech.boot:handlebars-spring-boot-starter:0.3.1'
-    implementation 'com.github.jknack:handlebars:4.1.2' // force newer version
-    implementation 'com.github.jknack:handlebars-springmvc:4.1.2' // force newer version
+    implementation 'io.pebbletemplates:pebble:3.1.0'
+    implementation 'io.pebbletemplates:pebble-spring-boot-starter:3.1.0'
+
     implementation 'org.apache.commons:commons-lang3:3.9' // missing transitive dependency
     implementation 'org.flywaydb:flyway-core'
     implementation 'be.lghs:coda-parser:0.0.1'
