@@ -1,5 +1,7 @@
-{# @pebvariable name="monthsLeft" type="Integer" #}
+{# @pebvariable name="monthsOfRentLeft" type="Integer" #}
 {# @pebvariable name="legalSummary" type="Object" #}
+{# @pebvariable name="amountsPerMonth" type="org.jooq.Result<org.jooq.Record2<String, BigDecimal>>" #}
+{# @pebvariable name="deadLine" type="java.time.LocalDate" #}
 
 {% extends '../base' %}
 
@@ -20,17 +22,40 @@
     <div class="flex horizontal">
         <section class="card align-center">
             <span class="text-big">
-                We have money left for
-                <span class="bold{% if monthsLeft < 5 %} red{% endif %}">
-                    {{ monthsLeft }}
-                </span>
-                months
+                We can pay the rent until
+                <span class="bold{% if monthsOfRentLeft < 5 %} red{% endif %}">
+                    {{ deadLine -}}
+                </span>.
+                That's
+                <span class="bold{% if monthsOfRentLeft < 5 %} red{% endif %}">
+                    {{ monthsOfRentLeft }}
+                </span> months.
             </span>
         </section>
+        <section class="card align-center">
+            <h4>Income per month</h4>
+            <table>
+                <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Amount</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for value in amountsPerMonth %}
+                <tr>
+                    <td>{{ value.value1 }}</td>
+                    <td>{{ value.value2 }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </div>
+    <div class="flex horizontal">
         <section class="card align-center">
             <h4>Legal summary per year</h4>
             <pre>{{ legalSummary }}</pre>
         </section>
     </div>
-
 {% endblock %}

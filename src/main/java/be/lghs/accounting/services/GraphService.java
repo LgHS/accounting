@@ -59,6 +59,8 @@ public class GraphService {
                                        boolean pegShadow) {}
         });
     }
+    private static final int WIDTH = 500;
+    private static final int HEIGHT = (int) (WIDTH / 16.0 * 9);
 
     private final GraphRepository graphRepository;
 
@@ -88,11 +90,9 @@ public class GraphService {
         chart.setBorderPaint(Color.BLACK);
         chart.setBorderVisible(false);
 
-        int width = 1080;
-        int height = 480;
 
-        var g2 = new SVGGraphics2D(width, height);
-        var r = new Rectangle(0, 0, width, height);
+        var g2 = new SVGGraphics2D(WIDTH, HEIGHT);
+        var r = new Rectangle(0, 0, WIDTH, HEIGHT);
         chart.draw(g2, r);
 
         var writer = new OutputStreamWriter(output);
@@ -138,11 +138,8 @@ public class GraphService {
         chart.getXYPlot().getRenderer().setSeriesPaint(0, Color.BLUE);
         chart.getXYPlot().getRenderer().setSeriesPaint(1, Color.RED);
 
-        int width = 1080;
-        int height = 480;
-
-        var g2 = new SVGGraphics2D(width, height);
-        var r = new Rectangle(0, 0, width, height);
+        var g2 = new SVGGraphics2D(WIDTH, HEIGHT);
+        var r = new Rectangle(0, 0, WIDTH, HEIGHT);
         chart.draw(g2, r);
 
         var writer = new OutputStreamWriter(output);

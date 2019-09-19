@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 
 @Controller
 @RequestMapping("/app")
@@ -30,13 +31,20 @@ public class AppController {
     @Secured(Roles.ROLE_MEMBER)
     public String dashboard(Model model) {
         var globalBalance = accountRepository.globalBalance();
+        var monthsOfRentLeft = globalBalance
+            .divideToIntegralValue(BigDecimal.valueOf(800))
+            .setScale(0, RoundingMode.UNNECESSARY)
+            .intValueExact();
 
         model.addAttribute("legalSummary", movementRepository.legalSummary());
         model.addAttribute("globalBalance", globalBalance);
-        model.addAttribute("monthsLeft", globalBalance
-            .divideToIntegralValue(BigDecimal.valueOf(800))
-            .setScale(0, RoundingMode.UNNECESSARY)
-            .intValueExact());
+        model.addAttribute("amountsPerMonth", movementRepository.amountsPerMonth());
+
+        model.addAttribute("deadLine", LocalDate.now()
+            .withDayOfMonth(1)
+            .plusMonths(monthsOfRentLeft + 1));
+
+        model.addAttribute("monthsOfRentLeft", monthsOfRentLeft);
 
         return "app/dashboard";
     }

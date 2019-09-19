@@ -26,10 +26,14 @@ tr.bg-light-red:nth-child(2n) td {
   display: flex;
   //align-content: center;
   align-items: center;
-  justify-content: stretch;
+  justify-content: space-evenly;
 
   > * {
     flex: 1;
+  }
+
+  &.horizontal {
+    margin-bottom: 3em;
   }
 }
 

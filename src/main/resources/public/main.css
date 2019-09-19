@@ -79,9 +79,11 @@ tr.bg-light-red:nth-child(2n) td {
 .flex {
   display: flex;
   align-items: center;
-  justify-content: stretch; }
+  justify-content: space-evenly; }
   .flex > * {
     flex: 1; }
+  .flex.horizontal {
+    margin-bottom: 3em; }
 
 .text-big {
   font-size: 2em; }

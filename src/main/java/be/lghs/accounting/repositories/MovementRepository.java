@@ -7,11 +7,12 @@ import org.jooq.*;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import static be.lghs.accounting.model.Tables.*;
-import static org.jooq.impl.DSL.extract;
-import static org.jooq.impl.DSL.sum;
+import static org.jooq.impl.DSL.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -138,5 +139,23 @@ public class MovementRepository {
 
     public Result<MovementsRecord> findByCategory(UUID categoryId) {
         return find(MOVEMENTS.CATEGORY_ID.eq(categoryId));
+    }
+
+    public Result<Record2<LocalDate, BigDecimal>> amountsPerMonth() {
+        var firstMonth = LocalDate.now()
+            .withDayOfMonth(1)
+            .minusMonths(6);
+        var date_trunc = function("date_trunc", LocalDate.class, val("months"), MOVEMENTS.ENTRY_DATE);
+        return dsl
+            .select(
+                date_trunc.as("date"),
+                sum(MOVEMENTS.AMOUNT)
+            )
+            .from(MOVEMENTS)
+            .where(MOVEMENTS.ENTRY_DATE.greaterOrEqual(Date.valueOf(firstMonth)))
+            .groupBy(field("date"))
+            .orderBy(field("date").desc())
+            .fetch()
+            ;
     }
 }
