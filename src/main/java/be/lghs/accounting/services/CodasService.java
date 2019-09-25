@@ -26,7 +26,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -120,7 +119,7 @@ public class CodasService {
             movement.setCommunication(record1.getCommunication());
             movement.setCounterPartyAccountNumber(senderAccountNumber);
             movement.setCounterPartyName(sender);
-            movement.setEntryDate(Date.valueOf(record1.getEntryDate()));
+            movement.setEntryDate(record1.getEntryDate());
 
             movementRepository.createOne(movement);
 

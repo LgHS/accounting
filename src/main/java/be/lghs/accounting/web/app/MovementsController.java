@@ -62,7 +62,7 @@ public class MovementsController {
     }
 
     @Transactional(readOnly = true)
-    @GetMapping("by-iban/{iban}")
+    @GetMapping("/by-iban/{iban}")
     @Secured(Roles.ROLE_TREASURER)
     public String movementsFromIban(@PathVariable("iban") String iban,
                                     Model model) {
@@ -75,7 +75,7 @@ public class MovementsController {
     }
 
     @Transactional(readOnly = true)
-    @GetMapping("by-category/{category_id}")
+    @GetMapping("/by-category/{category_id}")
     @Secured(Roles.ROLE_TREASURER)
     public String movementsFromIban(@PathVariable("category_id") UUID categoryId,
                                     Model model) {

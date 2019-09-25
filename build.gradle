@@ -54,6 +54,8 @@ jooq {
             //     records = true
             //     immutablePojos = true
             //     fluentSetters = true
+                javaTimeTypes = true
+
             }
             target {
                 packageName = 'be.lghs.accounting.model'

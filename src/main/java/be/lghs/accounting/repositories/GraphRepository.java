@@ -9,7 +9,6 @@ import org.jooq.Result;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.time.LocalDate;
 
 import static be.lghs.accounting.model.Tables.MOVEMENTS;
@@ -22,7 +21,7 @@ public class GraphRepository {
 
     private final DSLContext dsl;
 
-    public Result<Record2<Date, BigDecimal>> rollingSum() {
+    public Result<Record2<LocalDate, BigDecimal>> rollingSum() {
         var innerSelect = dsl
             .select(
                 MOVEMENTS.ENTRY_DATE,
@@ -41,18 +40,18 @@ public class GraphRepository {
 
         return dsl
             .select(
-                innerSelect.field("date", Date.class),
+                innerSelect.field("date", LocalDate.class),
                 min(innerSelect.field("amount", BigDecimal.class))
             )
             .from(innerSelect)
-            .where(innerSelect.field("date", Date.class).greaterOrEqual(Date.valueOf(startDate)))
+            .where(innerSelect.field("date", LocalDate.class).greaterOrEqual(startDate))
             .groupBy(innerSelect.field("date"))
             .orderBy(1)
             .fetch()
             ;
     }
 
-    public Result<Record3<Date, BigDecimal, BigDecimal>> creditsPerDay() {
+    public Result<Record3<LocalDate, BigDecimal, BigDecimal>> creditsPerDay() {
         var startDate = LocalDate.now()
             .withDayOfMonth(1)
             .minusMonths(2);
@@ -68,7 +67,7 @@ public class GraphRepository {
             .from(MOVEMENTS)
             .innerJoin(MOVEMENT_CATEGORIES).onKey(Keys.MOVEMENTS__MOVEMENTS_CATEGORY_ID_FKEY)
             .where(
-                MOVEMENTS.ENTRY_DATE.greaterOrEqual(Date.valueOf(startDate))
+                MOVEMENTS.ENTRY_DATE.greaterOrEqual(startDate)
                     .and(MOVEMENT_CATEGORIES.NAME.notEqual("Crédit interne"))
                     .and(MOVEMENT_CATEGORIES.NAME.notEqual("Débit interne"))
             )

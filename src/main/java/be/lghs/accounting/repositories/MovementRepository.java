@@ -7,7 +7,6 @@ import org.jooq.*;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -152,7 +151,7 @@ public class MovementRepository {
                 sum(MOVEMENTS.AMOUNT)
             )
             .from(MOVEMENTS)
-            .where(MOVEMENTS.ENTRY_DATE.greaterOrEqual(Date.valueOf(firstMonth)))
+            .where(MOVEMENTS.ENTRY_DATE.greaterOrEqual(firstMonth))
             .groupBy(field("date"))
             .orderBy(field("date").desc())
             .fetch()

@@ -8,11 +8,10 @@ import org.jooq.Record6;
 import org.jooq.Result;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
-import static be.lghs.accounting.model.Tables.SUBSCRIPTIONS;
-import static be.lghs.accounting.model.Tables.USERS;
+import static be.lghs.accounting.model.Tables.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,9 +20,9 @@ public class SubscriptionRepository {
     private final DSLContext dsl;
 
     public Result<Record6<UUID,
-                          Date,
-                          Date,
-                          Date,
+                          LocalDate,
+                          LocalDate,
+                          LocalDate,
                           String,
                           SubscriptionType>> findAll() {
         return dsl

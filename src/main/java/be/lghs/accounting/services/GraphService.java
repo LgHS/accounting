@@ -29,8 +29,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -74,8 +74,8 @@ public class GraphService {
         var series = new TimeSeries("name");
         var values = graphRepository.rollingSum();
 
-        for (Record2<Date, BigDecimal> record : values) {
-            var localDate = record.component1().toLocalDate();
+        for (Record2<LocalDate, BigDecimal> record : values) {
+            var localDate = record.component1();
             var day = new Day(localDate.getDayOfMonth(), localDate.getMonthValue(), localDate.getYear());
             series.add(day, record.component2());
         }
@@ -116,8 +116,8 @@ public class GraphService {
         var debits = new TimeSeries("debits");
         var values = graphRepository.creditsPerDay();
 
-        for (Record3<Date, BigDecimal, BigDecimal> record : values) {
-            var localDate = record.component1().toLocalDate();
+        for (Record3<LocalDate, BigDecimal, BigDecimal> record : values) {
+            var localDate = record.component1();
             var day = new Day(localDate.getDayOfMonth(), localDate.getMonthValue(), localDate.getYear());
             credits.add(day, record.component2());
             debits.add(day, record.component3());
