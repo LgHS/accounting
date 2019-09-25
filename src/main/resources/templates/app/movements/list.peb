@@ -33,7 +33,7 @@
                     </a>)
                 </td>
                 <!--<td><a href="{{ href("/app/accounts/#{movement.accountId}/movements") }}">{{ movement.accountId }}</a></td>-->
-                <td class="align-right">{{ movement.amount }}</td>
+                <td class="align-right monospace">{{ movement.amount }}</td>
                 <td>{{ movement.communication }}</td>
                 <td>
                     {% if movement.categoryId is null %}

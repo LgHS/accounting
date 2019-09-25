@@ -22,7 +22,7 @@
             <tr>
                 <!--<td>{{ account.id }}</td>-->
                 <td>{{ account.name }}</td>
-                <td class="align-right">{{ account.currentBalance }}</td>
+                <td class="align-right monospace">{{ account.currentBalance }}</td>
                 <td>
                     <a href="{{ href("/app/accounts/#{account.id}") }}">Edit</a>
                     <a href="{{ href("/app/accounts/#{account.id}/movements") }}">Movements</a>

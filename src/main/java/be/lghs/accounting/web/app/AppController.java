@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Controller
 @RequestMapping("/app")
@@ -36,6 +37,9 @@ public class AppController {
             .setScale(0, RoundingMode.UNNECESSARY)
             .intValueExact();
 
+        var monthFormatter = DateTimeFormatter.ofPattern("MMMM YY");
+
+        model.addAttribute("monthFormatter", monthFormatter);
         model.addAttribute("legalSummary", movementRepository.legalSummary());
         model.addAttribute("globalBalance", globalBalance);
         model.addAttribute("amountsPerMonth", movementRepository.amountsPerMonth());
@@ -49,7 +53,7 @@ public class AppController {
         return "app/dashboard";
     }
 
-    @GetMapping(value = "rolling-sum", produces = "image/svg+xml")
+    @GetMapping(value = "/rolling-sum", produces = "image/svg+xml")
     @Secured(Roles.ROLE_MEMBER)
     public void rollingSum(HttpServletResponse response) throws IOException {
         response.setContentType("image/svg+xml");
@@ -58,7 +62,7 @@ public class AppController {
         }
     }
 
-    @GetMapping(value = "credits-per-day", produces = "image/svg+xml")
+    @GetMapping(value = "/credits-per-day", produces = "image/svg+xml")
     @Secured(Roles.ROLE_MEMBER)
     public void creditsPerDay(HttpServletResponse response) throws IOException {
         response.setContentType("image/svg+xml");

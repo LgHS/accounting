@@ -64,6 +64,18 @@ td {
 .align-center {
   text-align: center; }
 
+.align-left {
+  text-align: left; }
+
+.monospace {
+  font-family: monospace; }
+
+.w-auto {
+  width: auto; }
+
+.m-auto {
+  margin: auto; }
+
 .bold {
   font-weight: bold; }
 

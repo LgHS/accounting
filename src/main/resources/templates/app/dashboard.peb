@@ -1,6 +1,7 @@
 {# @pebvariable name="monthsOfRentLeft" type="Integer" #}
+{# @pebvariable name="monthFormatter" type="java.time.format.DateTimeFormatter" #}
 {# @pebvariable name="legalSummary" type="Object" #}
-{# @pebvariable name="amountsPerMonth" type="org.jooq.Result<org.jooq.Record2<String, BigDecimal>>" #}
+{# @pebvariable name="amountsPerMonth" type="org.jooq.Result<org.jooq.Record2<java.time.LocalDate, BigDecimal>>" #}
 {# @pebvariable name="deadLine" type="java.time.LocalDate" #}
 
 {% extends '../base' %}
@@ -34,7 +35,7 @@
         </section>
         <section class="card align-center">
             <h4>Income per month</h4>
-            <table>
+            <table class="w-auto m-auto">
                 <thead>
                 <tr>
                     <th>Month</th>
@@ -44,8 +45,8 @@
                 <tbody>
                 {% for value in amountsPerMonth %}
                 <tr>
-                    <td>{{ value.value1 }}</td>
-                    <td>{{ value.value2 }}</td>
+                    <td class="align-right">{{ value.value1.format(monthFormatter) }}</td>
+                    <td class="align-right monospace">{{ value.value2 }}</td>
                 </tr>
                 {% endfor %}
                 </tbody>

@@ -54,6 +54,7 @@ public class GraphRepository {
 
     public Result<Record3<Date, BigDecimal, BigDecimal>> creditsPerDay() {
         var startDate = LocalDate.now()
+            .withDayOfMonth(1)
             .minusMonths(2);
 
         return dsl
