@@ -1,8 +1,8 @@
 plugins {
-    id 'org.springframework.boot' version '2.1.6.RELEASE'
+    id 'org.springframework.boot' version '2.1.8.RELEASE'
     id 'java'
     id 'nu.studer.jooq' version '3.0.3'
-    id 'org.flywaydb.flyway' version '5.2.4'
+    id 'org.flywaydb.flyway' version '6.0.3'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -31,8 +31,8 @@ springBoot {
 
 jooq {
     accounting(sourceSets.main) {
-//         logging = 'TRACE'
-        logging = 'WARN'
+        logging = 'TRACE'
+//        logging = 'WARN'
         jdbc {
             driver = "${database_driver}"
             url = "${database_url}"
@@ -75,6 +75,10 @@ flyway {
 
 task jooq(type: GradleBuild) {
     tasks = ['flywayMigrate', 'generateAccountingJooqSchemaSource']
+}
+
+generateAccountingJooqSchemaSource {
+    outputs.upToDateWhen { false }
 }
 
 

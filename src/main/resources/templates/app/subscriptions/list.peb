@@ -1,0 +1,42 @@
+{# @pebvariable name="subscriptions" type="org.jooq.Result<Record6<UUID,
+                          Date,
+                          Date,
+                          Date,
+                          String,
+                          SubscriptionType>>" #}
+
+{% extends '../../base' %}
+
+{% block 'title' %}
+    Subscription list
+{% endblock %}
+
+{% block 'content' %}
+    <a href="{{ href('/app/subscriptions/new') }}">Create subscription</a>
+    <table>
+        <thead>
+        <tr>
+            <!--<th>id</th>-->
+            <th>start</th>
+            <th>end</th>
+            <th>username</th>
+            <th>type</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for subscription in subscriptions %}
+            <tr>
+                <!--<td>{{ subscription.value("id") }}</td>-->
+                <td>{{ subscription.value("start_date") }}</td>
+                <td>{{ subscription.value("end_date") }}</td>
+                <td>{{ subscription.value("username") }}</td>
+                <td>{{ subscription.value("type") }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4" class="align-center">no data yet</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

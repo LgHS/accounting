@@ -1,0 +1,20 @@
+{% extends '../../base' %}
+
+{% import '../../tools/csrf' %}
+
+{# @pebvariable name="account" type="be.lghs.accounting.model.tables.records.AccountsRecord" #}
+
+{% block 'title' %}
+    Account form
+{% endblock %}
+
+{% block 'content' %}
+    <form method="post">
+        {{ csrf_input() }}
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" value="{{ account is defined ? account.name : '' }}">
+        <label for="description">Description</label>
+        <textarea id="description" name="description">{{ account is defined ? account.description : '' }}</textarea>
+        <input type="submit">
+    </form>
+{% endblock %}

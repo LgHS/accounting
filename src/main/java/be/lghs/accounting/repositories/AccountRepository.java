@@ -13,6 +13,22 @@ import java.util.UUID;
 
 import static be.lghs.accounting.model.Tables.ACCOUNTS;
 
+
+//
+// Should probably run this every once in a while to notify treasurers when current_balance is wrong
+//
+// update accounting.accounts updated_table
+// set current_balance = (
+//     select coalesce(sum(amount), 0)
+//     from accounting.movements
+//     where account_id = updated_table.id
+// )
+// from accounting.accounts old_values
+// where updated_table.id = old_values.id
+// returning old_values.current_balance, updated_table.current_balance;
+// ;
+//
+
 @Repository
 @RequiredArgsConstructor
 public class AccountRepository {

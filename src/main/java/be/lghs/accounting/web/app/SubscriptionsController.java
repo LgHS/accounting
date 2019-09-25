@@ -1,0 +1,62 @@
+package be.lghs.accounting.web.app;
+
+import be.lghs.accounting.configuration.Roles;
+import be.lghs.accounting.repositories.SubscriptionRepository;
+import be.lghs.accounting.services.GraphService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/app/subscriptions")
+@RequiredArgsConstructor
+public class SubscriptionsController {
+
+    private final SubscriptionRepository subscriptionRepository;
+    private final GraphService graphService;
+
+    @GetMapping
+    @Transactional(readOnly = true)
+    @Secured(Roles.ROLE_ADMIN)
+    public String subscriptions(Model model) {
+        var subscriptions = subscriptionRepository.findAll();
+
+        model.addAttribute("subscriptions", subscriptions);
+
+        return "app/subscriptions/list";
+    }
+
+    @GetMapping("/new")
+    @Secured(Roles.ROLE_TREASURER)
+    public String subscriptionsForm() {
+        return "app/subscriptions/form";
+    }
+
+    // @PostMapping({"/new", "/{id}"})
+    // @Transactional
+    // @Secured(Roles.ROLE_TREASURER)
+    // public String createSubscription(@PathVariable(value = "id", required = false) UUID subscriptionId,
+    //                                  @RequestParam("name") String name,
+    //                                  @RequestParam("description") String description) {
+    //     if (subscriptionId == null) {
+    //         subscriptionRepository.createOne(name, description);
+    //     } else {
+    //         subscriptionRepository.update(subscriptionId, name, description);
+    //     }
+    //     return "redirect:/app/subscriptions";
+    // }
+    //
+    // @GetMapping("/{id}")
+    // @Transactional
+    // @Secured(Roles.ROLE_TREASURER)
+    // public String subscriptionsForm(@PathVariable("id") UUID id, Model model) {
+    //     SubscriptionsRecord subscriptions = subscriptionRepository.findOne(id)
+    //             .orElseThrow(() -> new EmptyResultDataAccessException(1));
+    //     model.addAttribute("subscriptions", subscriptions);
+    //     return "app/subscriptions/form";
+    // }
+}

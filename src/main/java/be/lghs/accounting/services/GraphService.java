@@ -6,6 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.StandardChartTheme;
+import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.DateTickUnit;
+import org.jfree.chart.axis.DateTickUnitType;
+import org.jfree.chart.axis.TickUnit;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.StandardXYBarPainter;
@@ -26,7 +30,9 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.TimeZone;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -89,15 +95,20 @@ public class GraphService {
         chart.setBackgroundPaint(null);
         chart.setBorderPaint(Color.BLACK);
         chart.setBorderVisible(false);
+        var dateFormat = new SimpleDateFormat("MMM YY");
+        var unit = new DateTickUnit(
+            DateTickUnitType.MONTH, 6,
+            dateFormat);
+        try {
+            var minorTickCount = TickUnit.class.getDeclaredField("minorTickCount");
+            minorTickCount.setAccessible(true);
+            minorTickCount.set(unit, 12);
+        } catch (IllegalAccessException | IllegalArgumentException | NoSuchFieldException | SecurityException e) {
+            throw new RuntimeException(e);
+        }
+        ((DateAxis) chart.getXYPlot().getDomainAxis()).setTickUnit(unit);
 
-
-        var g2 = new SVGGraphics2D(WIDTH, HEIGHT);
-        var r = new Rectangle(0, 0, WIDTH, HEIGHT);
-        chart.draw(g2, r);
-
-        var writer = new OutputStreamWriter(output);
-        writer.write(g2.getSVGElement());
-        writer.flush();
+        writeChartToOutputStream(output, chart);
     }
 
     public void generateCreditsPerDayGraph(OutputStream output) throws IOException {
@@ -135,9 +146,18 @@ public class GraphService {
             false, false, false);
 
 
-        chart.getXYPlot().getRenderer().setSeriesPaint(0, Color.BLUE);
-        chart.getXYPlot().getRenderer().setSeriesPaint(1, Color.RED);
+        chart.getXYPlot().getRenderer().setSeriesPaint(0, new Color(0x5555ff));
+        chart.getXYPlot().getRenderer().setSeriesPaint(1, new Color(0xff5555));
 
+        var dateFormat = new SimpleDateFormat("MMM YY");
+        ((DateAxis) chart.getXYPlot().getDomainAxis()).setTickUnit(new DateTickUnit(
+            DateTickUnitType.MONTH, 1,
+            dateFormat));
+
+        writeChartToOutputStream(output, chart);
+    }
+
+    private void writeChartToOutputStream(OutputStream output, JFreeChart chart) throws IOException {
         var g2 = new SVGGraphics2D(WIDTH, HEIGHT);
         var r = new Rectangle(0, 0, WIDTH, HEIGHT);
         chart.draw(g2, r);
@@ -145,5 +165,8 @@ public class GraphService {
         var writer = new OutputStreamWriter(output);
         writer.write(g2.getSVGElement());
         writer.flush();
+    }
+
+    public void generateSubscriptionGraph(UUID userId, OutputStream output) {
     }
 }
