@@ -8,6 +8,11 @@ header {
   padding: 0 2ch;
   height: 2em;
   line-height: 2;
+
+  position: sticky;
+  top: 0;
+  box-shadow: 0 0 3px black;
+  z-index: 3; // the box-shadow goes above page elements
 }
 header > * {
   padding: 0 1ch;

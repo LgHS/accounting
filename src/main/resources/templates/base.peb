@@ -6,15 +6,15 @@
     </head>
     <body>
         <header>
-            <h1><a href="{{ href('/') }}">LgHS Accounting</a></h1>
+            <h1><a href="{{ authenticated() ? href('/app') : href('/') }}">LgHS Accounting</a></h1>
             <span> > </span>
-            <h2>{% block "title" %}{% endblock %}</h2>
+            <h2><a href="">{% block "title" %}{% endblock %}</a></h2>
             <div class="separator"></div>
             <nav>
-                <a href="{{ href('/app') }}">Dashboard</a>
+                <a href="{{ href('/app/movements') }}">Movements</a>
+                <a href="{{ href('/app/subscriptions') }}">Subscriptions</a>
                 <a href="{{ href('/app/accounts') }}">Accounts</a>
                 <a href="{{ href('/app/codas') }}">Codas</a>
-                <a href="{{ href('/app/movements') }}">Movements</a>
             </nav>
         </header>
         <main>

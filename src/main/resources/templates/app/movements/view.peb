@@ -21,18 +21,21 @@
         <input type="text"
                name="account"
                id="account"
+               readonly
                value="{{ movement.accountId }}">
 
         <label for="communication">Communication</label>
         <input type="text"
                name="communication"
                id="communication"
+               readonly
                value="{{ movement.communication }}">
 
         <label for="amount">Amount</label>
         <input type="number"
                name="amount"
                id="amount"
+               readonly
                value="{{ movement.amount }}">
 
         <label for="category_id">Category</label>
