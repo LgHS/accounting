@@ -65,11 +65,13 @@ public class GraphRepository {
                     .filterWhere(MOVEMENTS.AMOUNT.lessThan(BigDecimal.ZERO))
             )
             .from(MOVEMENTS)
-            .innerJoin(MOVEMENT_CATEGORIES).onKey(Keys.MOVEMENTS__MOVEMENTS_CATEGORY_ID_FKEY)
+            .leftJoin(MOVEMENT_CATEGORIES).onKey(Keys.MOVEMENTS__MOVEMENTS_CATEGORY_ID_FKEY)
             .where(
                 MOVEMENTS.ENTRY_DATE.greaterOrEqual(startDate)
-                    .and(MOVEMENT_CATEGORIES.NAME.notEqual("Crédit interne"))
-                    .and(MOVEMENT_CATEGORIES.NAME.notEqual("Débit interne"))
+                    .and(
+                        MOVEMENT_CATEGORIES.NAME.isNull()
+                            .or(MOVEMENT_CATEGORIES.NAME.notIn("Crédit interne", "Débit interne"))
+                    )
             )
             .groupBy(MOVEMENTS.ENTRY_DATE)
             .orderBy(MOVEMENTS.ENTRY_DATE)
