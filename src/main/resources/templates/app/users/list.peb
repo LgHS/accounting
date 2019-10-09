@@ -1,0 +1,40 @@
+{# @pebvariable name="users" type="org.jooq.Result<be.lghs.accounting.model.tables.records.UsersRecord>" #}
+
+{% extends '../../base' %}
+
+{% block 'title' %}
+    User list
+{% endblock %}
+
+{% block 'content' %}
+<table>
+    <thead>
+    <tr>
+        <!--<th>id</th>-->
+        <th>username</th>
+        <th>type</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for user in users %}
+    <tr>
+        <!--<td>{{ user.id }}</td>-->
+        <td>
+            <a href="{{ href("/app/users/#{user.uuid}") }}">{{ user.username }}</a>
+        </td>
+        <td>
+        {% set first = true %}
+        {% for role in user.roles %}
+            {%- if first %}{% set first = false %}{% else %}, {% endif -%}
+            {{- role -}}
+        {% endfor %}
+        </td>
+    </tr>
+    {% else %}
+    <tr>
+        <td colspan="4" class="align-center">no data yet</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

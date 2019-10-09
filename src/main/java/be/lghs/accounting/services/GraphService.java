@@ -32,7 +32,6 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.TimeZone;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -67,6 +66,19 @@ public class GraphService {
     }
     private static final int WIDTH = 500;
     private static final int HEIGHT = (int) (WIDTH / 16.0 * 9);
+
+    public static void writeChartToOutputStream(OutputStream output, JFreeChart chart) throws IOException {
+        writeChartToOutputStream(output, chart, WIDTH, HEIGHT);
+    }
+    public static void writeChartToOutputStream(OutputStream output, JFreeChart chart, int width, int height) throws IOException {
+        var g2 = new SVGGraphics2D(width, height);
+        var r = new Rectangle(0, 0, width, height);
+        chart.draw(g2, r);
+
+        var writer = new OutputStreamWriter(output);
+        writer.write(g2.getSVGElement());
+        writer.flush();
+    }
 
     private final GraphRepository graphRepository;
 
@@ -155,18 +167,5 @@ public class GraphService {
             dateFormat));
 
         writeChartToOutputStream(output, chart);
-    }
-
-    private void writeChartToOutputStream(OutputStream output, JFreeChart chart) throws IOException {
-        var g2 = new SVGGraphics2D(WIDTH, HEIGHT);
-        var r = new Rectangle(0, 0, WIDTH, HEIGHT);
-        chart.draw(g2, r);
-
-        var writer = new OutputStreamWriter(output);
-        writer.write(g2.getSVGElement());
-        writer.flush();
-    }
-
-    public void generateSubscriptionGraph(UUID userId, OutputStream output) {
     }
 }

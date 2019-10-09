@@ -4,6 +4,7 @@ import be.lghs.accounting.model.Tables;
 import be.lghs.accounting.model.tables.records.UsersRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
+import org.jooq.Result;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -29,15 +30,20 @@ public class UserRepository {
             .fetchOne();
     }
 
-    public Optional<UsersRecord> findByUsername(String username) {
+    // public Optional<UsersRecord> findByUsername(String username) {
+    //     return dsl.selectFrom(Tables.USERS)
+    //         .where(USERS.USERNAME.eq(username))
+    //         .fetchOptional();
+    // }
+
+    public Optional<UsersRecord> findById(UUID id) {
         return dsl.selectFrom(Tables.USERS)
-            .where(USERS.USERNAME.eq(username))
+            .where(USERS.UUID.eq(id))
             .fetchOptional();
     }
 
-    public Optional<UsersRecord> findById(int id) {
+    public Result<UsersRecord> findAll() {
         return dsl.selectFrom(Tables.USERS)
-            .where(USERS.ID.eq(id))
-            .fetchOptional();
+            .fetch();
     }
 }

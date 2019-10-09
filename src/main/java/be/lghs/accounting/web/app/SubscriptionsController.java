@@ -30,12 +30,6 @@ public class SubscriptionsController {
         return "app/subscriptions/list";
     }
 
-    @GetMapping("/new")
-    @Secured(Roles.ROLE_TREASURER)
-    public String subscriptionsForm() {
-        return "app/subscriptions/form";
-    }
-
     // @PostMapping({"/new", "/{id}"})
     // @Transactional
     // @Secured(Roles.ROLE_TREASURER)

@@ -4,6 +4,7 @@
 
 {# @pebvariable name="movements" type="org.jooq.Result<be.lghs.accounting.model.tables.records.MovementsRecord>" #}
 {# @pebvariable name="categories" type="org.jooq.Result<be.lghs.accounting.model.tables.records.MovementCategoriesRecord>" #}
+{# @pebvariable name="categoryNamesById" type="java.util.Map<java.util.UUID, java.lang.String>" #}
 
 {% block 'title' %}
     Movement list
@@ -57,17 +58,23 @@
                         </form>
                     {% else %}
                         ✓
-                        {% for category in categories %}
-                            {# FIXME this is highly inefficient, I blame handlebar's terrible syntax. #}
-                            {% if movement.categoryId == category.id %}
-                                <a href="{{ href("/app/movements/by-category/#{category.id}") }}">{{ category.name }}</a>
-                            {% endif %}
-                        {% endfor %}
+                        <a href="{{ href("/app/movements/by-category/#{movement.categoryId}") }}">
+                            {{ categoryNamesById[movement.categoryId] }}
+                        </a>
                     {% endif %}
                 </td>
                 <td>
                     <a href="{{ href("/app/movements/#{movement.id}") }}">view</a>
                     <a href="{{ href("/app/movements/#{movement.id}/split") }}">split</a>
+
+                    {% for category in categories %}
+                        {# FIXME this is highly inefficient, I blame handlebar's terrible syntax. #}
+                        {% if movement.categoryId == category.id and category.name == 'Cotisations' %}
+                            <a href="{{ href("/app/movements/#{movement.id}/subscription") }}">
+                                subscription
+                            </a>
+                        {% endif %}
+                    {% endfor %}
                 </td>
             </tr>
         {% else %}

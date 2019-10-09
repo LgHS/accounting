@@ -1,3 +1,5 @@
+{# @pebvariable name="categories" type="org.jooq.Result<be.lghs.accounting.model.tables.records.MovementCategoriesRecord>" #}
+
 {% extends '../../base' %}
 
 {% import '../../tools/csrf' %}

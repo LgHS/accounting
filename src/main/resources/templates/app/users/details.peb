@@ -1,0 +1,13 @@
+{# @pebvariable name="user" type="be.lghs.accounting.model.tables.records.UsersRecord" #}
+
+{% extends '../../base' %}
+
+{% block 'title' %}
+    {{ user.username }}
+{% endblock %}
+
+{% block 'content' %}
+<div>
+    <img src="{{ href("/app/users/#{user.uuid}/subscriptions/graph") }}">
+</div>
+{% endblock %}

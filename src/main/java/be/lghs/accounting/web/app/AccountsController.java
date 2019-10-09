@@ -69,8 +69,10 @@ public class AccountsController {
                                      Model model) {
         var movements = movementRepository.findByAccount(accountId);
         var categories = movementRepository.categories();
+        var categoryNamesById = movementRepository.categoryNamesById();
         model.addAttribute("movements", movements);
         model.addAttribute("categories", categories);
+        model.addAttribute("categoryNamesById", categoryNamesById);
         return "app/movements/list";
     }
 }

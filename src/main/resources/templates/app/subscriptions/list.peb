@@ -29,7 +29,11 @@
                 <!--<td>{{ subscription.value("id") }}</td>-->
                 <td>{{ subscription.value("start_date") }}</td>
                 <td>{{ subscription.value("end_date") }}</td>
-                <td>{{ subscription.value("username") }}</td>
+                <td>
+                    <a href="{{ href("/app/users/#{subscription.value("uuid")}") }}">
+                        {{ subscription.value("username") }}
+                    </a>
+                </td>
                 <td>{{ subscription.value("type") }}</td>
             </tr>
         {% else %}

@@ -44,7 +44,7 @@
                 </thead>
                 <tbody>
                 {% for value in amountsPerMonth %}
-                <tr>
+                <tr {% if value.value2.signum() < 0 %}class="bg-light-red"{% endif %}>
                     <td class="align-right">{{ value.value1.format(monthFormatter) }}</td>
                     <td class="align-right monospace">{{ value.value2 }}</td>
                 </tr>

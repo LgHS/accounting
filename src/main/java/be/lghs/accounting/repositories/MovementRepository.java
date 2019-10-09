@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.UUID;
 
 import static be.lghs.accounting.model.Tables.*;
@@ -23,6 +24,12 @@ public class MovementRepository {
         return dsl.selectFrom(MOVEMENT_CATEGORIES)
             .orderBy(MOVEMENT_CATEGORIES.NAME)
             .fetch();
+    }
+
+    public Map<UUID, String> categoryNamesById() {
+        return dsl.selectFrom(MOVEMENT_CATEGORIES)
+            .orderBy(MOVEMENT_CATEGORIES.NAME)
+            .fetchMap(MOVEMENT_CATEGORIES.ID, MOVEMENT_CATEGORIES.NAME);
     }
 
     private Result<MovementsRecord> find(Condition... conditions) {
