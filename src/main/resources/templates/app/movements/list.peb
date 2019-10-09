@@ -24,7 +24,7 @@
         </thead>
         <tbody>
         {% for movement in movements %}
-            <tr id="{{ movement.id }}" {% if movement.amount.signum == 0 %}class="bg-light-red"{% endif %}>
+            <tr id="{{ movement.id }}" {% if movement.amount.signum() < 0 %}class="bg-light-red"{% endif %}>
                 <td>{{ movement.entryDate }}</td>
                 <td>
                     {{ movement.counterPartyName }}
