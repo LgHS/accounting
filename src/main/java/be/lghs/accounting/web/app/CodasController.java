@@ -7,6 +7,7 @@ import be.lghs.accounting.repositories.AccountRepository;
 import be.lghs.accounting.repositories.CodaRepository;
 import be.lghs.accounting.services.CodasService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.Result;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Controller
 @RequestMapping("/app/codas")
 @RequiredArgsConstructor
@@ -64,6 +66,7 @@ public class CodasController {
                 codasService.handleCodaUpload(accountId, file.getOriginalFilename(), inputStream);
             } catch (IOException e) {
                 // FIXME Report what went wrong without failing the whole batch
+                log.error("error importing {}", file.getOriginalFilename(), e);
             }
         }
 
