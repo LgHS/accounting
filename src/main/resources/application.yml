@@ -4,6 +4,7 @@ server.error:
 
 logging.config: classpath:logback-spring.xml
 
+lghs.accounting.coda-rs: "../coda-rs"
 
 spring:
   profiles:

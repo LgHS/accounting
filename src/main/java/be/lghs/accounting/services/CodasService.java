@@ -6,126 +6,140 @@ import be.lghs.accounting.model.tables.records.MovementsRecord;
 import be.lghs.accounting.repositories.AccountRepository;
 import be.lghs.accounting.repositories.CodaRepository;
 import be.lghs.accounting.repositories.MovementRepository;
-import be.lghs.codaparser.raw.Record;
-import be.lghs.codaparser.raw.RecordParser;
-import be.lghs.codaparser.raw.records.MovementRecord1;
-import be.lghs.codaparser.raw.records.MovementRecord2;
-import be.lghs.codaparser.raw.records.MovementRecord3;
-import be.lghs.codaparser.raw.records.OldBalanceRecord;
-import be.lghs.codaparser.raw.records.model.MovementSign;
-import be.lghs.codaparser.raw.records.model.RecordType;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.javamoney.moneta.Money;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StreamUtils;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class CodasService {
 
-    private final RecordParser codaParser;
-    private final CodaRepository codaRepository;
-    private final AccountRepository accountRepository;
-    private final MovementRepository movementRepository;
+   private final CodaRepository codaRepository;
+   private final AccountRepository accountRepository;
+   private final MovementRepository movementRepository;
 
-    @Transactional
-    public void handleCodaUpload(UUID accountId, String filename, InputStream content) throws IOException {
-        AccountsRecord account = accountRepository.findOne(accountId)
-            .orElseThrow(() -> new EmptyResultDataAccessException(1));
+   @Value("${lghs.accounting.coda-rs}")
+   private String codaRsPath;
 
-        byte[] bytes = StreamUtils.copyToByteArray(content);
+   private JsonNode parseCoda(byte[] content) throws IOException {
+       Process process = new ProcessBuilder(codaRsPath, "-e", "windows-1250", "json", "/dev/stdin")
+               .start();
 
-        CodasRecord coda = new CodasRecord();
-        coda.setFilename(filename);
-        coda.setContent(bytes);
-        coda.setAccountId(accountId);
+       try (OutputStream outputStream = process.getOutputStream()) {
+           outputStream.write(content);
+       }
 
-        UUID codaId = codaRepository.createOne(coda);
+       JsonNode tree = new ObjectMapper().readTree(process.getInputStream());
 
-        BigDecimal total = BigDecimal.ZERO;
+       try {
+           process.waitFor(100, TimeUnit.MILLISECONDS);
+       } catch (InterruptedException e) {
+           if (process.isAlive()) {
+               throw new RuntimeException(e);
+           } else {
+               // doesn't matter if we got interrupted, let's finish handling uploads first
+           }
+       }
+       if (process.exitValue() != 0) {
+           throw new RuntimeException(StreamUtils.copyToString(process.getErrorStream(), StandardCharsets.UTF_8));
+       }
 
-        Iterator<Record> iterator = codaParser.parse(new ByteArrayInputStream(bytes)).iterator();
-        while (iterator.hasNext()) {
-            Record record = iterator.next();
+       return tree;
+   }
 
-            if (record.getType() == RecordType.OLD_BALANCE) {
-                OldBalanceRecord oldBalanceRecord = (OldBalanceRecord) record;
+   @Transactional
+   public void handleCodaUpload(UUID accountId, String filename, InputStream content) throws IOException {
+       AccountsRecord account = accountRepository.findOne(accountId)
+               .orElseThrow(() -> new EmptyResultDataAccessException(1));
 
-                BigDecimal currentBalance = account.getCurrentBalance();
-                long currentBalanceInteger = currentBalance.toBigInteger().longValueExact();
-                long currentBalanceDecimals = currentBalance
-                    .subtract(new BigDecimal(currentBalanceInteger))
-                    .multiply(new BigDecimal(100))
-                    .longValueExact();
+       byte[] bytes = StreamUtils.copyToByteArray(content);
 
-                long oldBalance = Long.parseLong(oldBalanceRecord.getBalance());
-                                                                                              // only keep two positions
-                long oldBalanceDecimals = Long.parseLong(oldBalanceRecord.getBalanceDecimals().substring(0, 2));
+       CodasRecord coda = new CodasRecord();
+       coda.setFilename(filename);
+       coda.setContent(bytes);
+       coda.setAccountId(accountId);
 
-                if (currentBalanceInteger != oldBalance || currentBalanceDecimals != oldBalanceDecimals) {
-                    throw new IllegalStateException(String.format("missing transactions, current balance is %s, coda %s says it should be %s.%s",
-                        currentBalance,
-                        filename,
-                        oldBalance,
-                        oldBalanceDecimals));
-                }
-                continue;
-            }
+       UUID codaId = codaRepository.createOne(coda);
 
-            if (record.getType() != RecordType.MOVEMENT) {
-                continue;
-            }
+       BigDecimal total = BigDecimal.ZERO;
 
-            MovementRecord1 record1 = (MovementRecord1) record;
-            if (record1.getDetailsNumber() != 0) {
-                log.warn("unsupported detail line");
-                continue;
-            }
+       JsonNode root = parseCoda(bytes);
 
+       Iterator<JsonNode> elements = root.elements();
+       while (elements.hasNext()) {
+           total = handleCoda(codaId, filename, total, account, elements.next());
+       }
+   }
 
-            MovementRecord2 record2 = record1.getRecord2();
-            MovementRecord3 record3 = null;
-            if (record2 != null) {
-                record3 = record2.getRecord3();
-            }
-            String sender = null;
-            String senderAccountNumber = null;
-            if (record3 != null) {
-                sender = record3.getCounterPartyName();
-                senderAccountNumber = record3.getCounterPartyAccountNumber();
-            }
+   private BigDecimal handleCoda(UUID codaId, String filename, BigDecimal total, AccountsRecord account, JsonNode root) {
+       JsonNode oldBalanceObject = root.get("old_balance");
+       long oldBalanceFull = oldBalanceObject.get("old_balance").asLong();
+       long oldBalance = oldBalanceFull / 1000;
+       long oldBalanceDecimals = (oldBalanceFull - (oldBalance * 1000)) / 10;
+       if (oldBalanceObject.get("old_balance_sign").asText().equals("Debit")) {
+           oldBalance *= -1;
+       }
 
-            Money amount = record1.getAmount();
-            if (record1.getMovementSign() == MovementSign.DEBIT) {
-                amount = amount.negate();
-            }
+       BigDecimal currentBalance = account.getCurrentBalance();
+       long currentBalanceInteger = currentBalance.toBigInteger().longValueExact();
+       long currentBalanceDecimals = currentBalance
+               .subtract(new BigDecimal(currentBalanceInteger))
+               .multiply(new BigDecimal(100))
+               .longValueExact();
 
-            MovementsRecord movement = new MovementsRecord();
-            movement.setAccountId(accountId);
-            movement.setAmount(amount.getNumberStripped());
-            movement.setCodaId(codaId);
-            movement.setCodaSequenceNumber(record1.getSequenceNumber());
-            movement.setCommunication(record1.getCommunication());
-            movement.setCounterPartyAccountNumber(senderAccountNumber);
-            movement.setCounterPartyName(sender);
-            movement.setEntryDate(record1.getEntryDate());
+       if (currentBalanceInteger != oldBalance || currentBalanceDecimals != oldBalanceDecimals) {
+           throw new IllegalStateException(String.format("missing transactions, current balance is %s, coda %s says it should be %s.%s",
+                   currentBalance,
+                   filename,
+                   oldBalance,
+                   oldBalanceDecimals));
+       }
 
-            movementRepository.createOne(movement);
+       Iterator<JsonNode> movements = root.get("movements").elements();
+       while (movements.hasNext()) {
+           JsonNode movement = movements.next();
 
-            total = total.add(amount.getNumberStripped());
-        }
+           String sender = movement.get("counterparty_name").asText();
+           String senderAccountNumber = movement.get("counterparty_account").asText();
+           BigDecimal amount = BigDecimal.valueOf(movement.get("amount").asLong(), 3);
+           if (movement.get("amount_sign").asText().equals("Debit")) {
+               amount = amount.negate();
+           }
 
-        accountRepository.updateBalance(accountId, total);
-    }
+           MovementsRecord movementRecord = new MovementsRecord();
+           movementRecord.setAccountId(account.getId());
+           movementRecord.setAmount(amount);
+           movementRecord.setCodaId(codaId);
+           movementRecord.setCodaSequenceNumber(movement.get("sequence").intValue());
+           movementRecord.setCommunication(movement.get("communication").asText().strip());
+           movementRecord.setCounterPartyAccountNumber(senderAccountNumber);
+           movementRecord.setCounterPartyName(sender);
+           movementRecord.setEntryDate(LocalDate.parse(movement.get("entry_date").asText()));
+
+           movementRepository.createOne(movementRecord);
+
+           total = total.add(amount);
+       }
+
+       accountRepository.updateBalance(account.getId(), total);
+
+       return total;
+   }
 }

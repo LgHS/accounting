@@ -1,5 +1,11 @@
 # Accounting application for the LgHS
 
+## Dependencies
+
+You'll need a postgresql database and a compiled version of [coda-rs](https://github.com/bendem/coda-rs/tree/develop).
+
+Make sure you provide the path to the coda-rs executable through the config param `lghs.accounting.coda-rs`.
+
 ## Setup
 
 Create yourself a nice cosy space from your `psql` prompt:

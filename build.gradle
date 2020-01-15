@@ -97,7 +97,6 @@ dependencies {
 
     implementation 'org.apache.commons:commons-lang3:3.9' // missing transitive dependency
     implementation 'org.flywaydb:flyway-core'
-    implementation 'be.lghs:coda-parser:0.0.1'
 
     implementation 'org.jfree:jfreechart:1.5.0'
     implementation 'org.jfree:jfreesvg:3.4'
