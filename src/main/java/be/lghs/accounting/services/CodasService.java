@@ -31,6 +31,10 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class CodasService {
 
+   private static BigDecimal parseCodaAmount(long valueFull) {
+       return BigDecimal.valueOf(valueFull, 3);
+   }
+
    private final CodaRepository codaRepository;
    private final AccountRepository accountRepository;
    private final MovementRepository movementRepository;
@@ -71,45 +75,40 @@ public class CodasService {
 
        byte[] bytes = StreamUtils.copyToByteArray(content);
 
-       CodasRecord coda = new CodasRecord();
-       coda.setFilename(filename);
-       coda.setContent(bytes);
-       coda.setAccountId(accountId);
-
-       UUID codaId = codaRepository.createOne(coda);
-
        BigDecimal total = BigDecimal.ZERO;
 
        JsonNode root = parseCoda(bytes);
 
        Iterator<JsonNode> elements = root.elements();
        while (elements.hasNext()) {
-           total = handleCoda(codaId, filename, total, account, elements.next());
+           JsonNode element = elements.next();
+
+           CodasRecord coda = new CodasRecord();
+           coda.setFilename(filename);
+           coda.setContent(bytes);
+           coda.setAccountId(accountId);
+
+           UUID codaId = codaRepository.createOne(coda);
+
+           total = handleCoda(codaId, filename, total, account, element);
        }
    }
 
    private BigDecimal handleCoda(UUID codaId, String filename, BigDecimal total, AccountsRecord account, JsonNode root) {
        JsonNode oldBalanceObject = root.get("old_balance");
-       long oldBalanceFull = oldBalanceObject.get("old_balance").asLong();
-       long oldBalance = oldBalanceFull / 1000;
-       long oldBalanceDecimals = (oldBalanceFull - (oldBalance * 1000)) / 10;
+       BigDecimal oldBalance = parseCodaAmount(oldBalanceObject.get("old_balance").asLong());
        if (oldBalanceObject.get("old_balance_sign").asText().equals("Debit")) {
-           oldBalance *= -1;
+           oldBalance = oldBalance.negate();
        }
 
        BigDecimal currentBalance = account.getCurrentBalance();
-       long currentBalanceInteger = currentBalance.toBigInteger().longValueExact();
-       long currentBalanceDecimals = currentBalance
-               .subtract(new BigDecimal(currentBalanceInteger))
-               .multiply(new BigDecimal(100))
-               .longValueExact();
 
-       if (currentBalanceInteger != oldBalance || currentBalanceDecimals != oldBalanceDecimals) {
-           throw new IllegalStateException(String.format("missing transactions, current balance is %s, coda %s says it should be %s.%s",
+       // don't test BigDecimal equality with equals...
+       if (currentBalance.compareTo(oldBalance) != 0) {
+           throw new IllegalStateException(String.format("missing transactions, current balance is %s, coda %s says it should be %s",
                    currentBalance,
                    filename,
-                   oldBalance,
-                   oldBalanceDecimals));
+                   oldBalance));
        }
 
        Iterator<JsonNode> movements = root.get("movements").elements();
@@ -132,7 +131,7 @@ public class CodasService {
            movementRecord.setAccountId(account.getId());
            movementRecord.setAmount(amount);
            movementRecord.setCodaId(codaId);
-           movementRecord.setCodaSequenceNumber(movement.get("sequence").intValue());
+           movementRecord.setCodaSequenceNumber(Integer.valueOf(movement.get("sequence").asText()));
            movementRecord.setCommunication(movement.get("communication").asText().strip());
            movementRecord.setCounterPartyAccountNumber(senderAccountNumber);
            movementRecord.setCounterPartyName(sender);
@@ -141,6 +140,17 @@ public class CodasService {
            movementRepository.createOne(movementRecord);
 
            total = total.add(amount);
+       }
+
+
+       BigDecimal newBalance = parseCodaAmount(root.get("new_balance").get("new_balance").asLong());
+       if (root.get("new_balance").get("new_balance_sign").asText().equals("Debit")) {
+           newBalance = newBalance.negate();
+       }
+
+       if (total.compareTo(newBalance) != 0) {
+           throw new RuntimeException(String.format("new balance after import of %s should be %s, it is %s",
+                   filename, newBalance, total));
        }
 
        accountRepository.updateBalance(account.getId(), total);
