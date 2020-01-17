@@ -87,6 +87,7 @@ public class CodasService {
            coda.setFilename(filename);
            coda.setContent(bytes);
            coda.setAccountId(accountId);
+           coda.setSequenceNumber(Integer.valueOf(element.get("old_balance").get("coda_sequence").asText()));
 
            UUID codaId = codaRepository.createOne(coda);
 
