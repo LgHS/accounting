@@ -116,6 +116,11 @@ public class CodasService {
        while (movements.hasNext()) {
            JsonNode movement = movements.next();
 
+           if (Integer.parseInt(movement.get("detail_sequence").asText()) != 0) {
+               // details about the previous movement, ignoring for now
+               continue;
+           }
+
            String sender = movement.get("counterparty_name").asText();
            String senderAccountNumber = movement.get("counterparty_account").asText();
            BigDecimal amount = BigDecimal.valueOf(movement.get("amount").asLong(), 3);
