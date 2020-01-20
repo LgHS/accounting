@@ -104,7 +104,7 @@ public class GraphService {
             "EUR",
             dataset, false, false, false);
 
-        chart.setBackgroundPaint(null);
+        chart.setBackgroundPaint(Color.WHITE);
         chart.setBorderPaint(Color.BLACK);
         chart.setBorderVisible(false);
         var dateFormat = new SimpleDateFormat("MMM YY");

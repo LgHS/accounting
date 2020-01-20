@@ -31,9 +31,8 @@ header a {
   text-decoration: none;
   padding: 0 1ch;
   display: inline-block; }
-
-header a:visited {
-  color: white; }
+  header a, header a:visited {
+    color: white; }
 
 header a:hover {
   background-color: #666; }

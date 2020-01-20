@@ -14,7 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @RequiredArgsConstructor
 public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final UserService userService;
+    private final SecurityUserService securityUserService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -25,7 +25,7 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .anyRequest().authenticated()
 
             .and()
-                .oauth2Login().userInfoEndpoint().userService(userService)
+                .oauth2Login().userInfoEndpoint().userService(securityUserService)
         ;
     }
 }

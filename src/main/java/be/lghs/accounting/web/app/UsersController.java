@@ -3,6 +3,7 @@ package be.lghs.accounting.web.app;
 import be.lghs.accounting.configuration.Roles;
 import be.lghs.accounting.repositories.UserRepository;
 import be.lghs.accounting.services.SubscriptionService;
+import be.lghs.accounting.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,7 @@ import java.util.UUID;
 public class UsersController {
 
     private final UserRepository userRepository;
+    private final UserService userService;
     private final SubscriptionService subscriptionService;
 
     @GetMapping
@@ -34,6 +36,19 @@ public class UsersController {
         model.addAttribute("users", users);
 
         return "app/users/list";
+    }
+
+    @GetMapping("/me")
+    @Secured(Roles.ROLE_MEMBER)
+    @Transactional(readOnly = true)
+    public String userDetails(Model model) {
+        var oAuth2User = userService.getCurrentUser().orElseThrow();
+
+        var user = userRepository.findById(oAuth2User.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        model.addAttribute("user", user);
+
+        return "app/users/details";
     }
 
     @GetMapping("/{user_id}")
