@@ -2,12 +2,111 @@
 
 {% extends '../../base' %}
 
+{% import '../../tools/csrf' %}
+
 {% block 'title' %}
     {{ user.username }}
 {% endblock %}
 
 {% block 'content' %}
-<div>
+<div class="align-center">
     <img src="{{ href("/app/users/#{user.uuid}/subscriptions/graph") }}">
+</div>
+
+<hr>
+
+<div class="flex horizontal">
+    <section class="card">
+        <h3>Pay your monthly subscription</h3>
+        <form action="#">
+            {{ csrf_input() }}
+
+            <div>
+                <label for="">Month</label>
+                <input type="month" value="2020-02">
+            </div>
+
+            <div>
+                <label for="">Amount</label>
+                <input type="number" value="20" min="10">
+            </div>
+
+            <div>
+                <label for="">Message</label>
+                <textarea name=""></textarea>
+            </div>
+
+            <div>
+                <input type="submit" value="Pay">
+            </div>
+        </form>
+
+        <div>
+            <h3>Your last payments</h3>
+
+            <table>
+                <tr>
+                    <td><pre>2020-01-02</pre></td>
+                    <td><pre>20€</pre></td>
+                    <td>Abonnement mensuel Benjamin Demarteau 1 mois</td>
+                </tr>
+                <tr>
+                    <td><pre>2019-12-02</pre></td>
+                    <td><pre>20€</pre></td>
+                    <td>Abonnement mensuel Benjamin Demarteau 1 mois</td>
+                </tr>
+            </table>
+        </div>
+    </section>
+    <section class="card">
+        <h3>Your Tab</h3>
+        <div>
+            You currently have <strong>12€</strong> on your tab.
+        </div>
+
+        <form action="#">
+            {{ csrf_input() }}
+
+            <div>
+                <label for="">Month</label>
+                <input type="month" value="2020-02">
+            </div>
+
+            <div>
+                <label for="">Amount</label>
+                <input type="number" value="20" min="10">
+            </div>
+
+            <div>
+                <label for="">Message</label>
+                <textarea name=""></textarea>
+            </div>
+
+            <div>
+                <input type="submit" value="Pay">
+            </div>
+        </form>
+
+        <div>
+            <h3>Your last tab transactions</h3>
+            <table>
+                <tr>
+                    <td><pre>2020-01-03</pre></td>
+                    <td><pre>-2€</pre></td>
+                    <td>Maté</td>
+                </tr>
+                <tr>
+                    <td><pre>2020-01-02</pre></td>
+                    <td><pre>-2€</pre></td>
+                    <td>Maté</td>
+                </tr>
+                <tr>
+                    <td><pre>2020-01-02</pre></td>
+                    <td><pre>-0.5€</pre></td>
+                    <td>Chips</td>
+                </tr>
+            </table>
+        </div>
+    </section>
 </div>
 {% endblock %}

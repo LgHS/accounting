@@ -2,6 +2,9 @@ html, body {
   margin: 0;
   padding: 0; }
 
+hr {
+  color: white; }
+
 header {
   background-color: #333;
   color: white;
@@ -106,6 +109,9 @@ tr.bg-light-red:nth-child(2n) td {
     flex: 1; }
   .flex.horizontal {
     margin-bottom: 3em; }
+    .flex.horizontal > * {
+      margin-right: 0.5ch;
+      margin-left: 0.5ch; }
 
 .text-big {
   font-size: 2em; }

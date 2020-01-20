@@ -74,12 +74,12 @@ public class SubscriptionRepository {
             .fetchOne();
     }
 
-    public Result<SubscriptionsRecord> findSubscriptionsForMonthlyGraph(UUID userId) {
+    public Result<SubscriptionsRecord> findSubscriptionsForMonthlyGraph(UUID userId, int months) {
         return dsl.selectFrom(SUBSCRIPTIONS)
             .where(
                 SUBSCRIPTIONS.MEMBER_ID.eq(userId)
                     .and(SUBSCRIPTIONS.TYPE.eq(SubscriptionType.MONTHLY))
-                    .and(SUBSCRIPTIONS.START_DATE.greaterOrEqual(LocalDate.now().minusYears(1)))
+                    .and(SUBSCRIPTIONS.START_DATE.greaterOrEqual(LocalDate.now().withDayOfMonth(1).minusMonths(months)))
             )
             .orderBy(SUBSCRIPTIONS.START_DATE)
             .fetch();

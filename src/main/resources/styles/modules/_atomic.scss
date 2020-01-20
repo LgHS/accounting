@@ -50,6 +50,11 @@ tr.bg-light-red:nth-child(2n) td {
 
   &.horizontal {
     margin-bottom: 3em;
+
+    > * {
+      margin-right: 0.5ch;
+      margin-left: 0.5ch;
+    }
   }
 }
 

@@ -18,7 +18,10 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -26,10 +29,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class SubscriptionService {
 
+    public static final int NUMBER_OF_MONTHS_TO_LOAD = 12;
+
     private final SubscriptionRepository subscriptionRepository;
 
     public void generateMonthlyGraphForUser(UUID userId, OutputStream output, int width) throws IOException {
-        var subscriptions = subscriptionRepository.findSubscriptionsForMonthlyGraph(userId);
+        var subscriptions = subscriptionRepository.findSubscriptionsForMonthlyGraph(userId, NUMBER_OF_MONTHS_TO_LOAD);
         var payments = new TimeSeries("payments");
 
         for (SubscriptionsRecord record : subscriptions) {
@@ -48,8 +53,11 @@ public class SubscriptionService {
         var dataset = new TimeSeriesCollection(TimeZone.getTimeZone("Europe/Brussels"));
         dataset.addSeries(payments);
 
+        LocalDate now = LocalDate.now().withDayOfMonth(1).minusMonths(NUMBER_OF_MONTHS_TO_LOAD);
+        Month firstMonthToShow = new Month(now.getMonthValue(), now.getYear());
+
         var hidden = new TimeSeries("only used to set the minY to 0 on the graph");
-        hidden.add(payments.getDataItem(0).getPeriod(), 0);
+        hidden.add(firstMonthToShow, 0);
         dataset.addSeries(hidden);
 
         // var chart = ChartFactory.createTimeSeriesChart(
