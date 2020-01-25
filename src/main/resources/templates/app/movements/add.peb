@@ -1,0 +1,43 @@
+{# @pebvariable name="accounts" type="org.jooq.Result<be.lghs.accounting.model.tables.records.AccountsRecord>" #}
+
+{% extends '../../base' %}
+
+{% import '../../tools/csrf' %}
+
+{% block 'title' %}
+    Manuel movement adding
+{% endblock %}
+
+{% block 'content' %}
+    <h3>Add a movement</h3>
+    <form method="post" class="form-grid">
+        {{ csrf_input() }}
+
+        <label for="account_id">Account</label>
+        <select required name="account_id" id="account_id">
+            <option value=""></option>
+            {% for account in accounts %}
+                <option value="{{ account.id }}" >
+                {{ account.name }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <label for="amount">Amount</label>
+        <input required type="number"
+               name="amount"
+               id="amount"
+               min="0"
+               >
+
+        <label for="date">Date</label>
+            <input required type="date" name="date" id="date">
+
+            <label for="communication">Communication</label>
+            <input required type="text"
+                   name="communication"
+                   id="communication">
+            <input type="submit">
+
+    </form>
+{% endblock %}
