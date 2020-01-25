@@ -12,16 +12,15 @@ import org.jfree.chart.plot.ValueMarker;
 import org.jfree.data.time.Month;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
+import org.jooq.Result;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -34,7 +33,30 @@ public class SubscriptionService {
     private final SubscriptionRepository subscriptionRepository;
 
     public void generateMonthlyGraphForUser(UUID userId, OutputStream output, int width) throws IOException {
-        var subscriptions = subscriptionRepository.findSubscriptionsForMonthlyGraph(userId, NUMBER_OF_MONTHS_TO_LOAD);
+        Result<SubscriptionsRecord> subscriptions = subscriptionRepository.findSubscriptionsForMonthlyGraph(userId, NUMBER_OF_MONTHS_TO_LOAD);
+
+        generateGraphForUser(subscriptions,
+                "Months with a valid subscription paid",
+                new Color(0x5555ff),
+                output,
+                width);
+    }
+
+    public void generateYearlyGraphForUser(UUID userId, OutputStream output, int width) throws IOException {
+        Result<SubscriptionsRecord> subscriptions = subscriptionRepository.findSubscriptionsForYearlyGraph(userId);
+
+        generateGraphForUser(subscriptions,
+                "Years with a valid subscription paid",
+                new Color(0x9D7146),
+                output,
+                width);
+    }
+
+    public void generateGraphForUser(Result<SubscriptionsRecord> subscriptions,
+                                     String title,
+                                     Color color,
+                                     OutputStream output,
+                                     int width) throws IOException {
         var payments = new TimeSeries("payments");
 
         for (SubscriptionsRecord record : subscriptions) {
@@ -60,13 +82,8 @@ public class SubscriptionService {
         hidden.add(firstMonthToShow, 0);
         dataset.addSeries(hidden);
 
-        // var chart = ChartFactory.createTimeSeriesChart(
-        //     "Money in HS accounts over time",
-        //     null,
-        //     "EUR",
-        //     dataset, false, false, false);
         var chart = ChartFactory.createXYBarChart(
-            "Months with a valid subscription paid",
+            title,
             null,
             true,
             null,
@@ -74,10 +91,13 @@ public class SubscriptionService {
             PlotOrientation.VERTICAL,
             false, false, false);
 
-        chart.getXYPlot().addDomainMarker(new ValueMarker(Instant.now().toEpochMilli(), new Color(0x00FF00), new BasicStroke(2)));
+        chart.getXYPlot().addDomainMarker(new ValueMarker(
+                Instant.now().toEpochMilli(),
+                new Color(0x80FF7F),
+                new BasicStroke(4)));
 
 
-        chart.getXYPlot().getRenderer().setSeriesPaint(0, new Color(0x5555ff));
+        chart.getXYPlot().getRenderer().setSeriesPaint(0, color);
 
         var dateFormat = new SimpleDateFormat("MMM YY");
         ((DateAxis) chart.getXYPlot().getDomainAxis()).setTickUnit(new DateTickUnit(

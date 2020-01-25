@@ -5,15 +5,16 @@ import be.lghs.accounting.model.enums.SubscriptionType;
 import be.lghs.accounting.model.tables.records.SubscriptionsRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.jooq.Record7;
+import org.jooq.Record4;
+import org.jooq.Record8;
 import org.jooq.Result;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import static be.lghs.accounting.model.Tables.SUBSCRIPTIONS;
-import static be.lghs.accounting.model.Tables.USERS;
+import static be.lghs.accounting.model.Tables.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,10 +22,11 @@ public class SubscriptionRepository {
 
     private final DSLContext dsl;
 
-    public Result<Record7<UUID,
+    public Result<Record8<UUID,
                           LocalDate,
                           LocalDate,
                           LocalDate,
+                          String,
                           String,
                           UUID,
                           SubscriptionType>> findAll() {
@@ -35,6 +37,7 @@ public class SubscriptionRepository {
                 SUBSCRIPTIONS.END_DATE,
                 SUBSCRIPTIONS.END_DATE,
                 USERS.USERNAME,
+                USERS.NAME,
                 USERS.UUID,
                 SUBSCRIPTIONS.TYPE
             )
@@ -82,6 +85,36 @@ public class SubscriptionRepository {
                     .and(SUBSCRIPTIONS.START_DATE.greaterOrEqual(LocalDate.now().withDayOfMonth(1).minusMonths(months)))
             )
             .orderBy(SUBSCRIPTIONS.START_DATE)
+            .fetch();
+    }
+
+    public Result<SubscriptionsRecord> findSubscriptionsForYearlyGraph(UUID userId) {
+        return dsl.selectFrom(SUBSCRIPTIONS)
+            .where(
+                SUBSCRIPTIONS.MEMBER_ID.eq(userId)
+                    .and(SUBSCRIPTIONS.TYPE.eq(SubscriptionType.YEARLY))
+            )
+            .orderBy(SUBSCRIPTIONS.START_DATE)
+            .limit(2)
+            .fetch();
+    }
+
+    public Result<Record4<LocalDate, BigDecimal, String, SubscriptionType>> findLastSubscriptionsForUser(UUID userId) {
+        return dsl
+            .select(
+                MOVEMENTS.ENTRY_DATE,
+                MOVEMENTS.AMOUNT,
+                MOVEMENTS.COMMUNICATION,
+                SUBSCRIPTIONS.TYPE
+            )
+            .from(SUBSCRIPTIONS)
+            .innerJoin(MOVEMENTS).onKey(Keys.SUBSCRIPTIONS__SUBSCRIPTIONS_MOVEMENT_ID_FKEY)
+            .innerJoin(USERS).onKey(Keys.SUBSCRIPTIONS__SUBSCRIPTIONS_MEMBER_ID_FKEY)
+            .where(
+                SUBSCRIPTIONS.MEMBER_ID.eq(userId)
+            )
+            .orderBy(MOVEMENTS.ENTRY_DATE)
+            .limit(10)
             .fetch();
     }
 }

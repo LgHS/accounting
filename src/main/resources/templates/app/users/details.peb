@@ -1,4 +1,8 @@
 {# @pebvariable name="user" type="be.lghs.accounting.model.tables.records.UsersRecord" #}
+{# @pebvariable name="payments" type="org.jooq.Record4<java.time.LocalDate,
+                                                       java.math.BigDecimal,
+                                                       java.lang.String,
+                                                       be.lghs.accounting.model.enums.SubscriptionType>" #}
 
 {% extends '../../base' %}
 
@@ -10,16 +14,31 @@
 
 {% block 'content' %}
 <div class="align-center">
-    <img src="{{ href("/app/users/#{user.uuid}/subscriptions/graph") }}">
+    <img src="{{ href("/app/users/#{user.uuid}/subscriptions/graph/monthly") }}">
+    <img src="{{ href("/app/users/#{user.uuid}/subscriptions/graph/yearly") }}">
 </div>
 
 <hr>
 
 <div class="flex horizontal">
     <section class="card">
+        <h3>Your last payments</h3>
+
+        <table>
+            {% for payment in payments %}
+            <tr>
+                <td><pre>{{ payment.value("entry_date") }}</pre></td>
+                <td><pre>{{ payment.value("amount") }}</pre></td>
+                <td>{{ payment.value("communication") }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </section>
+
+    <section class="card">
         <h3>Pay your monthly subscription</h3>
         <form action="#">
-            {{ csrf_input() }}
+        {{ csrf_input() }}
 
             <div>
                 <label for="">Month</label>
@@ -37,27 +56,34 @@
             </div>
 
             <div>
-                <input type="submit" value="Pay">
+                <input type="submit" value="Pay (WIP)" disabled>
             </div>
         </form>
-
-        <div>
-            <h3>Your last payments</h3>
-
-            <table>
-                <tr>
-                    <td><pre>2020-01-02</pre></td>
-                    <td><pre>20€</pre></td>
-                    <td>Abonnement mensuel Benjamin Demarteau 1 mois</td>
-                </tr>
-                <tr>
-                    <td><pre>2019-12-02</pre></td>
-                    <td><pre>20€</pre></td>
-                    <td>Abonnement mensuel Benjamin Demarteau 1 mois</td>
-                </tr>
-            </table>
-        </div>
     </section>
+</div>
+
+<div class="flex horizontal">
+    <section class="card">
+        <h3>Your last tab transactions</h3>
+        <table>
+            <tr>
+                <td><pre>2020-01-03</pre></td>
+                <td><pre>-2€</pre></td>
+                <td>Lorem</td>
+            </tr>
+            <tr>
+                <td><pre>2020-01-02</pre></td>
+                <td><pre>-2€</pre></td>
+                <td>Ipsum</td>
+            </tr>
+            <tr>
+                <td><pre>2020-01-02</pre></td>
+                <td><pre>-0.5€</pre></td>
+                <td>Dolor</td>
+            </tr>
+        </table>
+    </section>
+
     <section class="card">
         <h3>Your Tab</h3>
         <div>
@@ -83,30 +109,9 @@
             </div>
 
             <div>
-                <input type="submit" value="Pay">
+                <input type="submit" value="Pay (WIP)" disabled>
             </div>
         </form>
-
-        <div>
-            <h3>Your last tab transactions</h3>
-            <table>
-                <tr>
-                    <td><pre>2020-01-03</pre></td>
-                    <td><pre>-2€</pre></td>
-                    <td>Maté</td>
-                </tr>
-                <tr>
-                    <td><pre>2020-01-02</pre></td>
-                    <td><pre>-2€</pre></td>
-                    <td>Maté</td>
-                </tr>
-                <tr>
-                    <td><pre>2020-01-02</pre></td>
-                    <td><pre>-0.5€</pre></td>
-                    <td>Chips</td>
-                </tr>
-            </table>
-        </div>
     </section>
 </div>
 {% endblock %}

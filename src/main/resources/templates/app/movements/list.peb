@@ -38,24 +38,28 @@
                 <td>{{ movement.communication }}</td>
                 <td>
                     {% if movement.categoryId is null %}
-                        <form action="{{ href("/app/movements/#{movement.id}/category") }}" method="post">
-                            {{ csrf_input() }}
-                            <select name="category_id">
-                                <option value="">Select a category</option>
-                                {% for category in categories %}
-                                    {% if movement.amount.signum > 0 %}
-                                        {% if category.type == 'CREDIT' %}
-                                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% if has_treasurer_role() %}
+                            <form action="{{ href("/app/movements/#{movement.id}/category") }}" method="post">
+                                {{ csrf_input() }}
+                                <select name="category_id">
+                                    <option value="">Select a category</option>
+                                    {% for category in categories %}
+                                        {% if movement.amount.signum > 0 %}
+                                            {% if category.type == 'CREDIT' %}
+                                                <option value="{{ category.id }}">{{ category.name }}</option>
+                                            {% endif %}
+                                        {% else %}
+                                            {% if category.type == 'DEBIT' %}
+                                                <option value="{{ category.id }}">{{ category.name }}</option>
+                                            {% endif %}
                                         {% endif %}
-                                    {% else %}
-                                        {% if category.type == 'DEBIT' %}
-                                            <option value="{{ category.id }}">{{ category.name }}</option>
-                                        {% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                            </select>
-                            <input type="submit">
-                        </form>
+                                    {% endfor %}
+                                </select>
+                                <input type="submit">
+                            </form>
+                        {% else %}
+                            Not categorized yet
+                        {% endif %}
                     {% else %}
                         ✓
                         <a href="{{ href("/app/movements/by-category/#{movement.categoryId}") }}">
@@ -65,16 +69,19 @@
                 </td>
                 <td>
                     <a href="{{ href("/app/movements/#{movement.id}") }}">view</a>
-                    <a href="{{ href("/app/movements/#{movement.id}/split") }}">split</a>
 
-                    {% for category in categories %}
-                        {# FIXME this is highly inefficient, I blame handlebar's terrible syntax. #}
-                        {% if movement.categoryId == category.id and category.name == 'Cotisations' %}
-                            <a href="{{ href("/app/movements/#{movement.id}/subscription") }}">
-                                subscription
-                            </a>
-                        {% endif %}
-                    {% endfor %}
+                    {% if has_treasurer_role() %}
+                        <a href="{{ href("/app/movements/#{movement.id}/split") }}">split</a>
+
+                        {% for category in categories %}
+                            {# FIXME this is highly inefficient, I blame handlebar's terrible syntax. #}
+                            {% if movement.categoryId == category.id and category.name == 'Cotisations' %}
+                                <a href="{{ href("/app/movements/#{movement.id}/subscription") }}">
+                                    subscription
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
                 </td>
             </tr>
         {% else %}

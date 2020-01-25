@@ -1,8 +1,10 @@
-{# @pebvariable name="subscriptions" type="org.jooq.Result<Record6<UUID,
+{# @pebvariable name="subscriptions" type="org.jooq.Result<Record8<UUID,
                           java.time.LocalDate,
                           java.time.LocalDate,
                           java.time.LocalDate,
                           String,
+                          String,
+                          UUID,
                           SubscriptionType>>" #}
 
 {% extends '../../base' %}
@@ -19,7 +21,7 @@
             <!--<th>id</th>-->
             <th>start</th>
             <th>end</th>
-            <th>username</th>
+            <th>user</th>
             <th>type</th>
         </tr>
         </thead>
@@ -31,7 +33,8 @@
                 <td>{{ subscription.value("end_date") }}</td>
                 <td>
                     <a href="{{ href("/app/users/#{subscription.value("uuid")}") }}">
-                        {{ subscription.value("username") }}
+                        {{ subscription.value("name") }}
+                        ({{ subscription.value("username") }})
                     </a>
                 </td>
                 <td>{{ subscription.value("type") }}</td>
