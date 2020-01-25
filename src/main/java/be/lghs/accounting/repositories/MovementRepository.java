@@ -73,6 +73,14 @@ public class MovementRepository {
             .execute();
     }
 
+    public MovementsRecord addMovement(UUID accountId, BigDecimal amount, String communication, LocalDate date) {
+        return dsl.insertInto(MOVEMENTS)
+                .columns(MOVEMENTS.AMOUNT, MOVEMENTS.ENTRY_DATE, MOVEMENTS.ACCOUNT_ID, MOVEMENTS.COMMUNICATION)
+                .values(amount, date, accountId, communication)
+                .returning(MOVEMENTS.ID)
+                .fetchOne();
+    }
+
     public void setCategory(UUID movementId, UUID categoryId) {
         dsl.update(MOVEMENTS)
             .set(MOVEMENTS.CATEGORY_ID, categoryId)

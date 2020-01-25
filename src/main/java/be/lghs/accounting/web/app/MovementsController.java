@@ -3,11 +3,13 @@ package be.lghs.accounting.web.app;
 import be.lghs.accounting.configuration.Roles;
 import be.lghs.accounting.model.tables.records.MovementCategoriesRecord;
 import be.lghs.accounting.model.tables.records.MovementsRecord;
+import be.lghs.accounting.repositories.AccountRepository;
 import be.lghs.accounting.repositories.MovementRepository;
 import be.lghs.accounting.repositories.SubscriptionRepository;
 import be.lghs.accounting.services.MovementService;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Result;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
@@ -26,6 +29,7 @@ public class MovementsController {
     private final MovementRepository movementRepository;
     private final MovementService movementService;
     private final SubscriptionRepository subscriptionRepository;
+    private final AccountRepository accountRepository;
 
     @GetMapping
     @Transactional(readOnly = true)
@@ -144,5 +148,26 @@ public class MovementsController {
         model.addAttribute("monthFormatter", DateTimeFormatter.ofPattern("YYYY-MM"));
 
         return "/app/subscriptions/form";
+    }
+
+    @Transactional(readOnly = true)
+    @GetMapping("/add")
+    @Secured(Roles.ROLE_ADMIN)
+    public String movementForm(Model model) {
+        var accounts = accountRepository.findAll();
+        model.addAttribute("accounts", accounts);
+        return "/app/movements/add";
+    }
+    @Transactional
+    @PostMapping("/add")
+    @Secured(Roles.ROLE_ADMIN)
+    public String addMovement(@RequestParam("account_id") UUID accountId,
+                              @RequestParam("amount") BigDecimal amount,
+                              @RequestParam("communication") String communication,
+                              @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        MovementsRecord movement = movementRepository.addMovement(
+                accountId, amount, communication, date);
+
+        return "redirect:/app/movements#" + movement.getId();
     }
 }
