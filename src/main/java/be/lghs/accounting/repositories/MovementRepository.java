@@ -61,7 +61,9 @@ public class MovementRepository {
     }
 
     public Result<MovementsRecord> findAll() {
-        return find();
+        return find(
+            MOVEMENTS.ENTRY_DATE.greaterOrEqual(LocalDate.now().withDayOfYear(1).minusYears(1))
+        );
     }
 
     public void createOne(MovementsRecord movement) {
