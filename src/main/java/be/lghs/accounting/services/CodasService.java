@@ -75,7 +75,7 @@ public class CodasService {
 
        byte[] bytes = StreamUtils.copyToByteArray(content);
 
-       BigDecimal total = BigDecimal.ZERO;
+       BigDecimal total = account.getCurrentBalance();
 
        JsonNode root = parseCoda(bytes);
 

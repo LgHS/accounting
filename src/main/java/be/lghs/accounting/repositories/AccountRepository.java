@@ -70,10 +70,10 @@ public class AccountRepository {
             .execute();
     }
 
-    public void updateBalance(UUID accountId, BigDecimal added) {
+    public void updateBalance(UUID accountId, BigDecimal newBalance) {
         dsl
             .update(ACCOUNTS)
-            .set(ACCOUNTS.CURRENT_BALANCE, ACCOUNTS.CURRENT_BALANCE.plus(added))
+            .set(ACCOUNTS.CURRENT_BALANCE, newBalance)
             .where(ACCOUNTS.ID.eq(accountId))
             .execute();
     }
