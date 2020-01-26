@@ -66,6 +66,8 @@ tr:nth-child(2n) td {
 td {
   border-top: 1px solid #ddd;
   padding: 0.2em 1ch; }
+  td .adaptable {
+    word-break: break-word; }
 
 .form-grid {
   display: grid;
