@@ -24,20 +24,15 @@
         </select>
 
         <label for="amount">Amount</label>
-        <input required type="number"
-               name="amount"
-               id="amount"
-               min="0"
-               >
+        <input required type="number" name="amount" id="amount" min="0">
 
         <label for="date">Date</label>
-            <input required type="date" name="date" id="date">
+        <input required type="date" name="date" id="date">
 
-            <label for="communication">Communication</label>
-            <input required type="text"
-                   name="communication"
-                   id="communication">
-            <input type="submit">
+        <label for="communication">Communication</label>
+        <input required type="text" name="communication" id="communication">
+
+        <input type="submit">
 
     </form>
 {% endblock %}

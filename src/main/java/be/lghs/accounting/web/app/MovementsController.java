@@ -167,7 +167,6 @@ public class MovementsController {
                               @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         MovementsRecord movement = movementRepository.addMovement(
                 accountId, amount, communication, date);
-
         return "redirect:/app/movements#" + movement.getId();
     }
 }
