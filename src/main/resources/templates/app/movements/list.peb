@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block 'content' %}
-<a href="{{ href('/app/movements/add') }}">Add Manual Movement</a>
+    <a href="{{ href('/app/movements/add') }}">Add Manual Movement</a>
     <table>
         <thead>
         <tr>

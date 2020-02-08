@@ -12,6 +12,7 @@
             <div class="separator"></div>
             <nav>
                 {% if has_admin_role() == true or has_treasurer_role() == true %}
+                    <a href="{{ href('/app/movements/add') }}">Add movement</a>
                     <a href="{{ href('/app/movements') }}">Movements</a>
                     <a href="{{ href('/app/subscriptions') }}">Subscriptions</a>
                     <a href="{{ href('/app/accounts') }}">Accounts</a>

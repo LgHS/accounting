@@ -24,7 +24,7 @@
         </select>
 
         <label for="amount">Amount</label>
-        <input required type="number" name="amount" id="amount" min="0">
+        <input required type="number" name="amount" id="amount">
 
         <label for="date">Date</label>
         <input required type="date" name="date" id="date">
