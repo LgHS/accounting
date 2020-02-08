@@ -158,6 +158,7 @@ public class MovementsController {
         model.addAttribute("accounts", accounts);
         return "/app/movements/add";
     }
+
     @Transactional
     @PostMapping("/add")
     @Secured(Roles.ROLE_ADMIN)
