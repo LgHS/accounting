@@ -1,8 +1,8 @@
 plugins {
-    id 'org.springframework.boot' version '2.1.12.RELEASE'
+    id 'org.springframework.boot' version '2.2.4.RELEASE'
     id 'java'
     id 'nu.studer.jooq' version '4.1'
-    id 'org.flywaydb.flyway' version '6.2.0'
+    id 'org.flywaydb.flyway' version '6.2.2'
 }
 
 apply plugin: 'io.spring.dependency-management'

@@ -21,7 +21,7 @@
 
   <bean class="org.jooq.impl.DefaultConfiguration" name="config">
     <property name="SQLDialect">
-      <value type="org.jooq.SQLDialect">POSTGRES_10</value>
+      <value type="org.jooq.SQLDialect">POSTGRES</value>
     </property>
     <property name="connectionProvider" ref="connectionProvider" />
     <property name="executeListenerProvider">

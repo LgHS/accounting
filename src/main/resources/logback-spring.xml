@@ -2,8 +2,9 @@
 <configuration>
   <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
-  <logger name="org.springframework" level="DEBUG"/>
+  <logger name="org.springframework" level="WARN"/>
   <logger name="org.flywaydb" level="WARN"/>
   <logger name="org.postgresql" level="INFO"/>
-  <logger name="org.jooq" level="DEBUG"/>
+  <logger name="org.jooq" level="INFO"/>
+  <logger name="be.lghs" level="DEBUG"/>
 </configuration>

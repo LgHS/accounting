@@ -35,7 +35,7 @@ spring:
           members:
             client-id: "change-me"
             client-secret: "change-me"
-            redirect-uri-template: "{baseUrl}/login/oauth2/code/{registrationId}"
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             authorization-grant-type: "authorization_code"
 
 handlebars:
