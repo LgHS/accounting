@@ -113,7 +113,7 @@ public class SubscriptionRepository {
             .where(
                 SUBSCRIPTIONS.MEMBER_ID.eq(userId)
             )
-            .orderBy(MOVEMENTS.ENTRY_DATE)
+            .orderBy(MOVEMENTS.ENTRY_DATE.desc())
             .limit(10)
             .fetch();
     }
