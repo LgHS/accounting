@@ -21,12 +21,13 @@
         <input type="number"
                name="amount"
                id="amount"
-               value="{{movement.amount}}">
+               value="{{movement.amount}}"
+               step="0.01">
         <label for="category">Category</label>
         <select name="category" id="category">
             <option value=""></option>
             {% for category in categories %}
-                <option value="{{category.id}}">{{category.name}}</option>
+                <option value="{{category.id}}" {% if category.id == movement.categoryId %}selected{% endif %}>{{category.name}}</option>
             {% endfor %}
         </select>
 
@@ -41,7 +42,8 @@
         <input type="number"
                name="amount_split"
                id="amount_split"
-               value="0">
+               value="0"
+               step="0.01">
         <label for="category_split">Category</label>
         <select name="category_split" id="category_split">
             <option value=""></option>
