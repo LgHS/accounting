@@ -16,6 +16,7 @@ import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -29,6 +30,8 @@ public class PebbleConfiguration {
             @Override
             public Map<String, Function> getFunctions() {
                 return Map.of(
+                    "current_date", function((args, self) -> LocalDate.now()),
+
                     "username", function((args, self) -> userService.getCurrentUser()
                         .map(AuthenticatedPrincipal::getName)
                         .orElse("anonymous")),

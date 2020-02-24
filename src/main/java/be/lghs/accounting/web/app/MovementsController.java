@@ -166,8 +166,7 @@ public class MovementsController {
                               @RequestParam("amount") BigDecimal amount,
                               @RequestParam("communication") String communication,
                               @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        MovementsRecord movement = movementRepository.addMovement(
-                accountId, amount, communication, date);
-        return "redirect:/app/movements#" + movement.getId();
+        UUID movementId = movementService.addMovement(accountId, amount, communication, date);
+        return "redirect:/app/movements#" + movementId;
     }
 }
