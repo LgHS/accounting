@@ -1,12 +1,14 @@
 package be.lghs.accounting.services;
 
 import be.lghs.accounting.model.tables.records.MovementsRecord;
+import be.lghs.accounting.repositories.AccountRepository;
 import be.lghs.accounting.repositories.MovementRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import static be.lghs.accounting.model.Tables.MOVEMENTS;
@@ -17,6 +19,7 @@ import static be.lghs.accounting.model.Tables.MOVEMENTS;
 public class MovementService {
 
     private final MovementRepository movementRepository;
+    private final AccountRepository accountRepository;
 
     public MovementsRecord splitMovement(UUID movementId,
                                          String communication,
@@ -50,5 +53,13 @@ public class MovementService {
         movementRepository.insertFromTemplate(movement, communicationSplit, amountSplit, categorySplitId);
 
         return movement;
+    }
+
+    public UUID addMovement(UUID accountId, BigDecimal amount, String communication, LocalDate date) {
+        MovementsRecord movement = movementRepository.addMovement(accountId, amount, communication, date);
+
+        accountRepository.addToBalance(accountId, amount);
+
+        return movement.getId();
     }
 }

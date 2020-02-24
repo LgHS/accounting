@@ -24,10 +24,10 @@
         </select>
 
         <label for="amount">Amount</label>
-        <input required type="number" name="amount" id="amount">
+        <input required type="number" name="amount" id="amount" step="0.01">
 
         <label for="date">Date</label>
-        <input required type="date" name="date" id="date">
+        <input required type="date" name="date" id="date" value="{{ current_date() }}">
 
         <label for="communication">Communication</label>
         <input required type="text" name="communication" id="communication">

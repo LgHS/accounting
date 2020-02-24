@@ -78,6 +78,14 @@ public class AccountRepository {
             .execute();
     }
 
+    public void addToBalance(UUID accountId, BigDecimal change) {
+        dsl
+            .update(ACCOUNTS)
+            .set(ACCOUNTS.CURRENT_BALANCE, ACCOUNTS.CURRENT_BALANCE.add(change))
+            .where(ACCOUNTS.ID.eq(accountId))
+            .execute();
+    }
+
     public BigDecimal globalBalance() {
         return dsl
             .select(DSL.sum(
