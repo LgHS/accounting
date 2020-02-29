@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block 'content' %}
-    <a href="{{ href('/app/accounts/new') }}">Create account</a>
+    <a href="{{ href('/accounts/new') }}">Create account</a>
     <table>
         <thead>
         <tr>
@@ -24,8 +24,8 @@
                 <td>{{ account.name }}</td>
                 <td class="align-right monospace">{{ account.currentBalance }}</td>
                 <td>
-                    <a href="{{ href("/app/accounts/#{account.id}") }}">Edit</a>
-                    <a href="{{ href("/app/accounts/#{account.id}/movements") }}">Movements</a>
+                    <a href="{{ href("/accounts/#{account.id}") }}">Edit</a>
+                    <a href="{{ href("/accounts/#{account.id}/movements") }}">Movements</a>
                 </td>
             </tr>
         {% else %}

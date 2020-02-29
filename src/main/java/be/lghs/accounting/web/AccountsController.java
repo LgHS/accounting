@@ -1,4 +1,4 @@
-package be.lghs.accounting.web.app;
+package be.lghs.accounting.web;
 
 import be.lghs.accounting.configuration.Roles;
 import be.lghs.accounting.model.tables.records.AccountsRecord;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @Controller
-@RequestMapping("/app/accounts")
+@RequestMapping("/accounts")
 @RequiredArgsConstructor
 public class AccountsController {
 
@@ -49,7 +49,7 @@ public class AccountsController {
         } else {
             accountRepository.update(accountId, name, description);
         }
-        return "redirect:/app/accounts";
+        return "redirect:/accounts";
     }
 
     @GetMapping("/{id}")

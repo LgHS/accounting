@@ -1,5 +1,6 @@
 package be.lghs.accounting.repositories;
 
+import be.lghs.accounting.model.Keys;
 import be.lghs.accounting.model.tables.records.MovementCategoriesRecord;
 import be.lghs.accounting.model.tables.records.MovementsRecord;
 import lombok.RequiredArgsConstructor;
@@ -33,23 +34,6 @@ public class MovementRepository {
     }
 
     private Result<MovementsRecord> find(Condition... conditions) {
-    //     return dsl
-    //        .select(
-    //            MOVEMENTS.ID,
-    //            MOVEMENTS.ENTRY_DATE,
-    //            MOVEMENTS.COUNTER_PARTY_NAME,
-    //            MOVEMENTS.COUNTER_PARTY_ACCOUNT_NUMBER,
-    //            MOVEMENTS.AMOUNT,
-    //            MOVEMENTS.COMMUNICATION,
-    //            MOVEMENTS.CATEGORY_ID,
-    //            MOVEMENT_CATEGORIES.NAME
-    //        )
-    //        .from(
-    //            MOVEMENTS
-    //                .leftJoin(MOVEMENT_CATEGORIES).onKey()
-    //        )
-    //        .orderBy(MOVEMENTS.ENTRY_DATE.desc())
-    //        .fetch();
         return dsl.selectFrom(MOVEMENTS)
             .where(conditions)
             .orderBy(

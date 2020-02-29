@@ -14,8 +14,8 @@
 
 {% block 'content' %}
 <div class="align-center">
-    <img src="{{ href("/app/users/#{user.uuid}/subscriptions/graph/monthly") }}">
-    <img src="{{ href("/app/users/#{user.uuid}/subscriptions/graph/yearly") }}">
+    <img src="{{ href("/users/#{user.uuid}/subscriptions/graph/monthly") }}">
+    <img src="{{ href("/users/#{user.uuid}/subscriptions/graph/yearly") }}">
 </div>
 
 <hr>

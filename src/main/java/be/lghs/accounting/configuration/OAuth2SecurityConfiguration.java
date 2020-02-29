@@ -20,8 +20,8 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
             .mvcMatchers("/").permitAll()
-            .antMatchers("/main.css").permitAll()
             .antMatchers("/public/**").permitAll()
+            .antMatchers("/graphs/**").permitAll()
             .anyRequest().authenticated()
 
             .and()

@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block 'content' %}
-    <a href="{{ href('/app/subscriptions/new') }}">Create subscription</a>
+    <a href="{{ href('/subscriptions/new') }}">Create subscription</a>
     <table>
         <thead>
         <tr>
@@ -32,7 +32,7 @@
                 <td>{{ subscription.value("start_date") }}</td>
                 <td>{{ subscription.value("end_date") }}</td>
                 <td>
-                    <a href="{{ href("/app/users/#{subscription.value("uuid")}") }}">
+                    <a href="{{ href("/users/#{subscription.value("uuid")}") }}">
                         {{ subscription.value("name") }}
                         ({{ subscription.value("username") }})
                     </a>

@@ -6,19 +6,23 @@
     </head>
     <body>
         <header>
-            <h1><a href="{{ authenticated() ? href('/app') : href('/') }}">LgHS Accounting</a></h1>
+            <h1><a href="{{ href('/') }}">LgHS Accounting</a></h1>
             <!--<span> > </span>
             <h2><a href="">{% block "title" %}{% endblock %}</a></h2>-->
             <div class="separator"></div>
             <nav>
                 {% if has_admin_role() == true or has_treasurer_role() == true %}
-                    <a href="{{ href('/app/movements/add') }}">Add movement</a>
-                    <a href="{{ href('/app/movements') }}">Movements</a>
-                    <a href="{{ href('/app/subscriptions') }}">Subscriptions</a>
-                    <a href="{{ href('/app/accounts') }}">Accounts</a>
-                    <a href="{{ href('/app/codas') }}">Codas</a>
+                    <a href="{{ href('/movements/add') }}">Add movement</a>
+                    <a href="{{ href('/movements') }}">Movements</a>
+                    <a href="{{ href('/subscriptions') }}">Subscriptions</a>
+                    <a href="{{ href('/accounts') }}">Accounts</a>
+                    <a href="{{ href('/codas') }}">Codas</a>
                 {% endif %}
-                <a href="{{ href('/app/users/me') }}">My Data</a>
+                {% if authenticated() %}
+                    <a href="{{ href('/users/me') }}">My Data</a>
+                {% else %}
+                    <a href="{{ href('/oauth2/authorization/members') }}">Login</a>
+                {% endif %}
             </nav>
         </header>
         <main>

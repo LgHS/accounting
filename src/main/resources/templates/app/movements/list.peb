@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block 'content' %}
-    <a href="{{ href('/app/movements/add') }}">Add Manual Movement</a>
+    <a href="{{ href('/movements/add') }}">Add Manual Movement</a>
     <table>
         <thead>
         <tr>
@@ -30,17 +30,17 @@
                 <td>{{ movement.entryDate }}</td>
                 <td>
                     {{ movement.counterPartyName }}
-                    (<a href="{{ href("/app/movements/by-iban/#{movement.counterPartyAccountNumber}") }}">
+                    (<a href="{{ href("/movements/by-iban/#{movement.counterPartyAccountNumber}") }}">
                      {{- movement.counterPartyAccountNumber | default("") | ellipsis -}}
                     </a>)
                 </td>
-                <!--<td><a href="{{ href("/app/accounts/#{movement.accountId}/movements") }}">{{ movement.accountId }}</a></td>-->
+                <!--<td><a href="{{ href("/accounts/#{movement.accountId}/movements") }}">{{ movement.accountId }}</a></td>-->
                 <td class="align-right monospace">{{ movement.amount }}</td>
                 <td class="adaptable">{{ movement.communication }}</td>
                 <td>
                     {% if movement.categoryId is null %}
                         {% if has_treasurer_role() %}
-                            <form action="{{ href("/app/movements/#{movement.id}/category") }}" method="post">
+                            <form action="{{ href("/movements/#{movement.id}/category") }}" method="post">
                                 {{ csrf_input() }}
                                 <select name="category_id">
                                     <option value="">Select a category</option>
@@ -63,21 +63,21 @@
                         {% endif %}
                     {% else %}
                         ✓
-                        <a href="{{ href("/app/movements/by-category/#{movement.categoryId}") }}">
+                        <a href="{{ href("/movements/by-category/#{movement.categoryId}") }}">
                             {{ categoryNamesById[movement.categoryId] }}
                         </a>
                     {% endif %}
                 </td>
                 <td>
-                    <a href="{{ href("/app/movements/#{movement.id}") }}">view</a>
+                    <a href="{{ href("/movements/#{movement.id}") }}">view</a>
 
                     {% if has_treasurer_role() %}
-                        <a href="{{ href("/app/movements/#{movement.id}/split") }}">split</a>
+                        <a href="{{ href("/movements/#{movement.id}/split") }}">split</a>
 
                         {% for category in categories %}
                             {# FIXME this is highly inefficient, I blame handlebar's terrible syntax. #}
                             {% if movement.categoryId == category.id and category.name == 'Cotisations' %}
-                                <a href="{{ href("/app/movements/#{movement.id}/subscription") }}">
+                                <a href="{{ href("/movements/#{movement.id}/subscription") }}">
                                     subscription
                                 </a>
                             {% endif %}

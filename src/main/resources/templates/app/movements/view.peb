@@ -16,10 +16,10 @@
         <label>From</label>
         <input type="text" readonly value="{{ movement.counterPartyName }}">
 
-        <label><a href="{{ href("/app/movements/by-iban/#{movement.counterPartyAccountNumber}") }}">From account</a></label>
+        <label><a href="{{ href("/movements/by-iban/#{movement.counterPartyAccountNumber}") }}">From account</a></label>
         <input type="text" readonly value="{{ movement.counterPartyAccountNumber }}">
 
-        <label for="account"><a href="{{ href("/app/accounts/#{movement.accountId}/movements") }}">To account</a></label>
+        <label for="account"><a href="{{ href("/accounts/#{movement.accountId}/movements") }}">To account</a></label>
         <input type="text"
                name="account"
                id="account"

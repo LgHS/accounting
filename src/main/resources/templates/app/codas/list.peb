@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block 'content' %}
-    <a href="{{ href('/app/codas/new') }}">Upload coda</a>
+    <a href="{{ href('/codas/new') }}">Upload coda</a>
     <table>
         <thead>
         <tr>

@@ -12,10 +12,10 @@
 
 {% block 'content' %}
     <div class="flex horizontal">
-        <img src="{{ href('/app/rolling-sum') }}"
+        <img src="{{ href('/graphs/rolling-sum') }}"
              class="card"
              alt="Graph of the amount of money in the HS accounts">
-        <img src="{{ href('/app/credits-per-day') }}"
+        <img src="{{ href('/graphs/credits-per-day') }}"
              class="card"
              alt="Graph of the amount of money entering HS accounts per day">
     </div>
@@ -53,10 +53,13 @@
             </table>
         </section>
     </div>
-    <div class="flex horizontal">
-        <section class="card align-center">
-            <h4>Legal summary per year</h4>
-            <pre>{{ legalSummary }}</pre>
-        </section>
-    </div>
+
+    {% if has_treasurer_role() %}
+        <div class="flex horizontal">
+            <section class="card align-center">
+                <h4>Legal summary per year</h4>
+                <pre>{{ legalSummary }}</pre>
+            </section>
+        </div>
+    {% endif %}
 {% endblock %}

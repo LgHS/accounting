@@ -1,4 +1,4 @@
-package be.lghs.accounting.web.app;
+package be.lghs.accounting.web;
 
 import be.lghs.accounting.configuration.Roles;
 import be.lghs.accounting.repositories.AccountRepository;
@@ -20,7 +20,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Controller
-@RequestMapping("/app")
+@RequestMapping("/")
 @RequiredArgsConstructor
 public class AppController {
 
@@ -29,7 +29,6 @@ public class AppController {
     private final GraphService graphService;
 
     @GetMapping
-    @Secured(Roles.ROLE_MEMBER)
     public String dashboard(Model model) {
         var globalBalance = accountRepository.globalBalance();
         var monthsOfRentLeft = globalBalance
@@ -53,8 +52,7 @@ public class AppController {
         return "app/dashboard";
     }
 
-    @GetMapping(value = "/rolling-sum", produces = "image/svg+xml")
-    @Secured(Roles.ROLE_MEMBER)
+    @GetMapping(value = "/graphs/rolling-sum", produces = "image/svg+xml")
     public void rollingSum(HttpServletResponse response) throws IOException {
         response.setContentType("image/svg+xml");
         try (ServletOutputStream output = response.getOutputStream()) {
@@ -62,8 +60,7 @@ public class AppController {
         }
     }
 
-    @GetMapping(value = "/credits-per-day", produces = "image/svg+xml")
-    @Secured(Roles.ROLE_MEMBER)
+    @GetMapping(value = "/graphs/credits-per-day", produces = "image/svg+xml")
     public void creditsPerDay(HttpServletResponse response) throws IOException {
         response.setContentType("image/svg+xml");
         try (ServletOutputStream output = response.getOutputStream()) {

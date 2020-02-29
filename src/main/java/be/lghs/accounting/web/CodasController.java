@@ -1,4 +1,4 @@
-package be.lghs.accounting.web.app;
+package be.lghs.accounting.web;
 
 import be.lghs.accounting.configuration.Roles;
 import be.lghs.accounting.model.tables.records.AccountsRecord;
@@ -27,7 +27,7 @@ import java.util.UUID;
 
 @Slf4j
 @Controller
-@RequestMapping("/app/codas")
+@RequestMapping("/codas")
 @RequiredArgsConstructor
 public class CodasController {
 
@@ -70,6 +70,6 @@ public class CodasController {
             }
         }
 
-        return "redirect:/app/codas";
+        return "redirect:/codas";
     }
 }

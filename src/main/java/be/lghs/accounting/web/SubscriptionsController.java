@@ -1,4 +1,4 @@
-package be.lghs.accounting.web.app;
+package be.lghs.accounting.web;
 
 import be.lghs.accounting.configuration.Roles;
 import be.lghs.accounting.repositories.SubscriptionRepository;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/app/subscriptions")
+@RequestMapping("/subscriptions")
 @RequiredArgsConstructor
 public class SubscriptionsController {
 
@@ -41,7 +41,7 @@ public class SubscriptionsController {
     //     } else {
     //         subscriptionRepository.update(subscriptionId, name, description);
     //     }
-    //     return "redirect:/app/subscriptions";
+    //     return "redirect:/subscriptions";
     // }
     //
     // @GetMapping("/{id}")

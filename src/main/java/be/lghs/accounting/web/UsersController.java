@@ -1,4 +1,4 @@
-package be.lghs.accounting.web.app;
+package be.lghs.accounting.web;
 
 import be.lghs.accounting.configuration.Roles;
 import be.lghs.accounting.repositories.SubscriptionRepository;
@@ -22,7 +22,7 @@ import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/app/users")
+@RequestMapping("/users")
 public class UsersController {
 
     private final UserRepository userRepository;

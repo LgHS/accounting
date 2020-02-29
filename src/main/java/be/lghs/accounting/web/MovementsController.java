@@ -1,12 +1,15 @@
-package be.lghs.accounting.web.app;
+package be.lghs.accounting.web;
 
 import be.lghs.accounting.configuration.Roles;
+import be.lghs.accounting.model.enums.SubscriptionType;
 import be.lghs.accounting.model.tables.records.MovementCategoriesRecord;
 import be.lghs.accounting.model.tables.records.MovementsRecord;
 import be.lghs.accounting.repositories.AccountRepository;
 import be.lghs.accounting.repositories.MovementRepository;
 import be.lghs.accounting.repositories.SubscriptionRepository;
+import be.lghs.accounting.repositories.UserRepository;
 import be.lghs.accounting.services.MovementService;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Result;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,10 +22,11 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
-@RequestMapping("/app/movements")
+@RequestMapping("/movements")
 @RequiredArgsConstructor
 public class MovementsController {
 
@@ -30,6 +34,7 @@ public class MovementsController {
     private final MovementService movementService;
     private final SubscriptionRepository subscriptionRepository;
     private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
 
     @GetMapping
     @Transactional(readOnly = true)
@@ -64,10 +69,10 @@ public class MovementsController {
     public String setCategory(@PathVariable("movement_id") UUID movementId,
                               @RequestParam("category_id") UUID categoryId) {
         if (categoryId == null) {
-            return "redirect:/app/movements";
+            return "redirect:/movements";
         }
         movementRepository.setCategory(movementId, categoryId);
-        return "redirect:/app/movements#"+movementId;
+        return "redirect:/movements#"+movementId;
     }
 
     @Transactional(readOnly = true)
@@ -133,7 +138,7 @@ public class MovementsController {
             communication, amount, categoryId,
             communicationSplit, amountSplit, categorySplitId);
         MovementsRecord movement = movementRepository.getOne(movementId);
-        return "redirect:/app/movements#" + partOne.getId();
+        return "redirect:/movements#" + partOne.getId();
     }
 
     @Transactional(readOnly = true)
@@ -147,7 +152,7 @@ public class MovementsController {
         model.addAttribute("subscription", subscription);
         model.addAttribute("monthFormatter", DateTimeFormatter.ofPattern("YYYY-MM"));
 
-        return "/app/subscriptions/form";
+        return "app/subscriptions/form";
     }
 
     @Transactional(readOnly = true)
@@ -156,7 +161,7 @@ public class MovementsController {
     public String movementForm(Model model) {
         var accounts = accountRepository.findAll();
         model.addAttribute("accounts", accounts);
-        return "/app/movements/add";
+        return "app/movements/add";
     }
 
     @Transactional
@@ -167,6 +172,6 @@ public class MovementsController {
                               @RequestParam("communication") String communication,
                               @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         UUID movementId = movementService.addMovement(accountId, amount, communication, date);
-        return "redirect:/app/movements#" + movementId;
+        return "redirect:/movements#" + movementId;
     }
 }

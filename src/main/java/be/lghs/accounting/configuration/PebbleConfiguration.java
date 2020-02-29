@@ -59,23 +59,42 @@ public class PebbleConfiguration {
             @Override
             public Map<String, Filter> getFilters() {
                 return Map.of(
-                    "ellipsis", new Filter() {
-                        @Override
-                        public Object apply(Object input, Map<String, Object> args, PebbleTemplate self, EvaluationContext context, int lineNumber) throws PebbleException {
-                            String value = input.toString();
-                            if (value.length() <= 7) {
-                                return value;
-                            }
-
-                            return value.substring(0, 3) + "…" + value.substring(value.length() - 3);
+                    "ellipsis", filter(input -> {
+                        String value = input.toString();
+                        if (value.length() <= 7) {
+                            return value;
                         }
 
-                        @Override
-                        public List<String> getArgumentNames() {
-                            return List.of();
-                        }
-                    }
+                        return value.substring(0, 3) + "…" + value.substring(value.length() - 3);
+                    }),
+
+                    "first_day_of_month", filter(input -> {
+                        var date = (LocalDate) input;
+                        return date.withDayOfMonth(1);
+                    }),
+
+                    "last_day_of_month", filter(input -> {
+                        var date = (LocalDate) input;
+                        return date
+                            .withDayOfMonth(1)
+                            .plusMonths(1)
+                            .minusDays(1);
+                    })
                 );
+            }
+        };
+    }
+
+    public static <T> Filter filter(java.util.function.Function<Object, T> function) {
+        return new Filter() {
+            @Override
+            public Object apply(Object input, Map<String, Object> args, PebbleTemplate self, EvaluationContext context, int lineNumber) throws PebbleException {
+                return function.apply(input);
+            }
+
+            @Override
+            public List<String> getArgumentNames() {
+                return List.of();
             }
         };
     }
