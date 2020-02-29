@@ -6,7 +6,7 @@ import be.lghs.accounting.model.tables.records.SubscriptionsRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.jooq.Record4;
-import org.jooq.Record8;
+import org.jooq.Record7;
 import org.jooq.Result;
 import org.springframework.stereotype.Repository;
 
@@ -22,8 +22,7 @@ public class SubscriptionRepository {
 
     private final DSLContext dsl;
 
-    public Result<Record8<UUID,
-                          LocalDate,
+    public Result<Record7<UUID,
                           LocalDate,
                           LocalDate,
                           String,
@@ -34,7 +33,6 @@ public class SubscriptionRepository {
             .select(
                 SUBSCRIPTIONS.ID,
                 SUBSCRIPTIONS.START_DATE,
-                SUBSCRIPTIONS.END_DATE,
                 SUBSCRIPTIONS.END_DATE,
                 USERS.USERNAME,
                 USERS.NAME,

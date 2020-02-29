@@ -1,5 +1,4 @@
-{# @pebvariable name="subscriptions" type="org.jooq.Result<Record8<UUID,
-                          java.time.LocalDate,
+{# @pebvariable name="subscriptions" type="org.jooq.Result<org.jooq.Record7<UUID,
                           java.time.LocalDate,
                           java.time.LocalDate,
                           String,
