@@ -1,0 +1,16 @@
+.flex {
+  flex-direction: column;
+}
+
+.flex.horizontal > * {
+  width: 100%;
+  margin-bottom: 2ch;
+  margin-top: 2ch;
+}
+
+header {
+  width: 100vw;
+  height: unset;
+  position: unset;
+  padding: 0;
+}

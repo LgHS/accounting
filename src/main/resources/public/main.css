@@ -6,6 +6,9 @@ html, body {
 hr {
   color: white; }
 
+* {
+  box-sizing: border-box; }
+
 header {
   background-color: #333;
   color: white;
@@ -118,3 +121,16 @@ tr.bg-light-red:nth-child(2n) td {
 
 .text-big {
   font-size: 2em; }
+
+@media (max-width: 800px) {
+  .flex {
+    flex-direction: column; }
+  .flex.horizontal > * {
+    width: 100%;
+    margin-bottom: 2ch;
+    margin-top: 2ch; }
+  header {
+    width: 100vw;
+    height: unset;
+    position: unset;
+    padding: 0; } }

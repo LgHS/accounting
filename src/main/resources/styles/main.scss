@@ -6,3 +6,6 @@
 @import 'modules/form';
 @import 'modules/atomic';
 
+@media (max-width: 800px) {
+  @import 'modules/mobile';
+}
