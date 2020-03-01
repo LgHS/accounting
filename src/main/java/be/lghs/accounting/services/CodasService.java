@@ -1,5 +1,6 @@
 package be.lghs.accounting.services;
 
+import be.lghs.accounting.configuration.AccountingConfiguration;
 import be.lghs.accounting.model.tables.records.AccountsRecord;
 import be.lghs.accounting.model.tables.records.CodasRecord;
 import be.lghs.accounting.model.tables.records.MovementsRecord;
@@ -10,7 +11,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,12 +38,10 @@ public class CodasService {
    private final CodaRepository codaRepository;
    private final AccountRepository accountRepository;
    private final MovementRepository movementRepository;
-
-   @Value("${lghs.accounting.coda-rs}")
-   private String codaRsPath;
+   private final AccountingConfiguration config;
 
    private JsonNode parseCoda(byte[] content) throws IOException {
-       Process process = new ProcessBuilder(codaRsPath, "-e", "windows-1250", "json", "/dev/stdin")
+       Process process = new ProcessBuilder(config.getCodaRs(), "-e", "windows-1250", "json", "/dev/stdin")
                .start();
 
        try (OutputStream outputStream = process.getOutputStream()) {

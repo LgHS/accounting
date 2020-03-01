@@ -1,5 +1,6 @@
 package be.lghs.accounting.web;
 
+import be.lghs.accounting.configuration.AccountingConfiguration;
 import be.lghs.accounting.repositories.AccountRepository;
 import be.lghs.accounting.repositories.MovementRepository;
 import be.lghs.accounting.services.GraphService;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -28,12 +28,13 @@ public class AppController {
     private final MovementRepository movementRepository;
     private final AccountRepository accountRepository;
     private final GraphService graphService;
+    private final AccountingConfiguration config;
 
     @GetMapping
     public String dashboard(Model model) {
         var globalBalance = accountRepository.globalBalance();
         var monthsOfRentLeft = globalBalance
-            .divideToIntegralValue(BigDecimal.valueOf(800))
+            .divideToIntegralValue(config.getAverageMonthlyRent())
             .setScale(0, RoundingMode.UNNECESSARY)
             .intValueExact();
 
