@@ -1,4 +1,5 @@
 {# @pebvariable name="accounts" type="org.jooq.Result<be.lghs.accounting.model.tables.records.AccountsRecord>" #}
+{# @pebvariable name="total" type="double" #}
 
 {% extends '../../base' %}
 
@@ -28,6 +29,13 @@
                     <a href="{{ href("/accounts/#{account.id}/movements") }}">Movements</a>
                 </td>
             </tr>
+            {% if loop.last %}
+                <tr class="border-top-bold">
+                    <td class="bold">Total</td>
+                    <td class="align-right monospace">{{ total }}</td>
+                    <td></td>
+                </tr>
+            {% endif %}
         {% else %}
             <tr>
                 <td colspan="2">no data yet</td>

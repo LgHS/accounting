@@ -1,6 +1,7 @@
 package be.lghs.accounting.web;
 
 import be.lghs.accounting.configuration.Roles;
+import be.lghs.accounting.model.Tables;
 import be.lghs.accounting.model.tables.records.AccountsRecord;
 import be.lghs.accounting.repositories.AccountRepository;
 import be.lghs.accounting.repositories.MovementRepository;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Controller
@@ -28,7 +30,12 @@ public class AccountsController {
     @Secured(Roles.ROLE_ADMIN)
     public String accounts(Model model) {
         Result<AccountsRecord> accounts = accountRepository.findAll();
+
         model.addAttribute("accounts", accounts);
+        model.addAttribute("total", accounts
+            .getValues(Tables.ACCOUNTS.CURRENT_BALANCE, BigDecimal.class).stream()
+            .mapToDouble(BigDecimal::doubleValue).sum());
+
         return "app/accounts/list";
     }
 

@@ -64,6 +64,9 @@ thead > tr {
   box-shadow: 0 2px 0 -1px gray;
   z-index: 2; }
 
+.border-top-bold {
+  border-top: 3px solid #444; }
+
 tr:nth-child(2n) td {
   background-color: #eee; }
 
