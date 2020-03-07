@@ -32,5 +32,5 @@ jobs:
       - name: Upload jar
         uses: actions/upload-artifact@v1
         with:
-          name: accounting.jar
+          name: accounting-${{steps.build.outputs.accounting_version}}.jar
           path: build/libs/accounting-${{steps.build.outputs.accounting_version}}.jar
