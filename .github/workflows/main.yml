@@ -14,13 +14,12 @@ jobs:
         with:
           java-version: 11
 
-      - uses: m4nu56/postgresql-action@v1
-        with:
-          postgresql version: '12'
-          postgresql db: postgres
-          postgresql user: postgres
-          postgresql init scripts: ./etc/
-
-      - uses: eskatos/gradle-command-action@v1
-        with:
-          arguments: -Dgradle.user.home=etc build
+      - run: |
+          docker run \
+            -p 127.0.0.1:5432:5432 \
+            -v etc/database.sql:/docker-entrypoint-initdb.d/database.sql \
+            postgres:12 &
+          sleep 5
+          ./gradlew --no-daemon -Dgradle.user.home=etc flywayMigrate
+          ./gradlew --no-daemon -Dgradle.user.home=etc generateAccountingJooqSchemaSource
+          ./gradlew --no-daemon build
