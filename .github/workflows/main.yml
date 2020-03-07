@@ -24,8 +24,7 @@ jobs:
             postgres:12 &
           sleep 5
           ./gradlew -Dgradle.user.home=.github/workflows/data flywayMigrate
-          ./gradlew -Dgradle.user.home=.github/workflows/data generateAccountingJooqSchemaSource
-          ./gradlew build
+          ./gradlew -Dgradle.user.home=.github/workflows/data build
           ./gradlew -q ghActionVersion
         id: build
 
