@@ -1,4 +1,4 @@
-create user lghs_accounting_root with password 'lghs_accounting_root_password'; -- change it really
+create user lghs_accounting_root;
 create database lghs_accounting owner lghs_accounting_root;
 
 \c lghs_accounting

@@ -14,9 +14,11 @@ jobs:
         with:
           java-version: 11
 
-      - run: |
+      - name: start postgres and build
+        run: |
           docker pull postgres:12
           docker run \
+            -e POSTGRES_HOST_AUTH_METHOD=trust \
             -p 127.0.0.1:5432:5432 \
             -v $(realpath etc/database.sql):/docker-entrypoint-initdb.d/database.sql \
             postgres:12 &
