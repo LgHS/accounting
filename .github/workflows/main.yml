@@ -23,6 +23,6 @@ jobs:
             -v $(realpath etc/database.sql):/docker-entrypoint-initdb.d/database.sql \
             postgres:12 &
           sleep 5
-          ./gradlew --no-daemon -Dgradle.user.home=etc flywayMigrate
-          ./gradlew --no-daemon -Dgradle.user.home=etc generateAccountingJooqSchemaSource
-          ./gradlew --no-daemon build
+          ./gradlew -Dgradle.user.home=etc flywayMigrate
+          ./gradlew -Dgradle.user.home=etc generateAccountingJooqSchemaSource
+          ./gradlew build
