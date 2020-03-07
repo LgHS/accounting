@@ -36,7 +36,7 @@ jobs:
           path: build/libs/accounting-${{steps.build.outputs.accounting_version}}.jar
 
       - name: deploy
-        if: github.ref == 'refs/heads/master' and github.event == 'push'
+        if: github.ref == 'refs/heads/master' && github.event == 'push'
         run: |
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${{ secrets.deploy_key }}"
