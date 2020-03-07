@@ -34,3 +34,12 @@ jobs:
         with:
           name: accounting-${{steps.build.outputs.accounting_version}}.jar
           path: build/libs/accounting-${{steps.build.outputs.accounting_version}}.jar
+
+      - name: deploy
+        if: github.ref == 'refs/heads/master' and github.event == 'push'
+        run: |
+          eval "$(ssh-agent -s)"
+          ssh-add - <<< "${{ secrets.deploy_key }}"
+          echo "${{ secrets.deploy_host }} ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCIzicRrz0v4YSCsr7y6IBNUEjZNxO+V8f0LhdC96JKGopIIK3Ivz3mHqUSORY6Cq+/CDyqanqWkiYTDi0quKm8=" > ~/.ssh/known_hosts
+          < "build/libs/accounting-${{steps.build.outputs.accounting_version}}.jar" \
+            | ssh accounting-deploy@${{ secrets.deploy_host }}
