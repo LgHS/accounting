@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.UUID;
 
 @Controller
@@ -34,7 +35,8 @@ public class AccountsController {
         model.addAttribute("accounts", accounts);
         model.addAttribute("total", accounts
             .getValues(Tables.ACCOUNTS.CURRENT_BALANCE, BigDecimal.class).stream()
-            .mapToDouble(BigDecimal::doubleValue).sum());
+            .reduce(BigDecimal.ZERO, BigDecimal::add)
+            .setScale(2, RoundingMode.UNNECESSARY));
 
         return "app/accounts/list";
     }
