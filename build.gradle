@@ -79,6 +79,12 @@ task jooq(type: GradleBuild) {
     tasks = ['flywayMigrate', 'generateAccountingJooqSchemaSource']
 }
 
+task ghActionVersion {
+    doLast {
+        println "::set-output name=accounting_version::$version"
+    }
+}
+
 generateAccountingJooqSchemaSource {
     outputs.upToDateWhen { false }
 }
