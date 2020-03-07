@@ -15,9 +15,10 @@ jobs:
           java-version: 11
 
       - run: |
+          docker pull postgres:12
           docker run \
             -p 127.0.0.1:5432:5432 \
-            -v etc/database.sql:/docker-entrypoint-initdb.d/database.sql \
+            -v $(realpath etc/database.sql):/docker-entrypoint-initdb.d/database.sql \
             postgres:12 &
           sleep 5
           ./gradlew --no-daemon -Dgradle.user.home=etc flywayMigrate
