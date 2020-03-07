@@ -26,3 +26,9 @@ jobs:
           ./gradlew -Dgradle.user.home=etc flywayMigrate
           ./gradlew -Dgradle.user.home=etc generateAccountingJooqSchemaSource
           ./gradlew build
+
+      - name: Upload jar
+        uses: actions/upload-artifact@v1
+        with:
+          name: accounting.jar
+          path: build/libs/*.jar
