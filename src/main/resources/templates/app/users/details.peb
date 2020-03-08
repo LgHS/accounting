@@ -62,6 +62,7 @@
     </section>
 </div>
 
+{#
 <div class="flex horizontal">
     <section class="card">
         <h3>Your last tab transactions</h3>
@@ -114,4 +115,6 @@
         </form>
     </section>
 </div>
+#}
+
 {% endblock %}
