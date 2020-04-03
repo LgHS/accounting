@@ -12,3 +12,4 @@ grant usage on schema public to lghs_accounting_app;
 
 create extension "uuid-ossp";
 create extension pgcrypto;
+create extension btree_gist;
