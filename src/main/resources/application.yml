@@ -5,7 +5,7 @@ server.error:
 logging.config: classpath:logback-spring.xml
 
 lghs.accounting:
-  average-monthly-rent: 800
+  average-monthly-rent: 855
   coda-rs: "../coda-rs"
 
 spring:
