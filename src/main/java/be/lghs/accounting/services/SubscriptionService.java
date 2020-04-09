@@ -32,31 +32,37 @@ public class SubscriptionService {
 
     private final SubscriptionRepository subscriptionRepository;
 
-    public void generateMonthlyGraphForUser(UUID userId, OutputStream output, int width) throws IOException {
+    public void generateMonthlyGraphForUser(UUID userId, OutputStream output, int width, int height, boolean drawTitle) throws IOException {
         Result<SubscriptionsRecord> subscriptions = subscriptionRepository.findSubscriptionsForMonthlyGraph(userId, NUMBER_OF_MONTHS_TO_LOAD);
 
         generateGraphForUser(subscriptions,
                 "Months with a valid subscription paid",
                 new Color(0x5555ff),
                 output,
-                width);
+                width,
+                height,
+                drawTitle);
     }
 
-    public void generateYearlyGraphForUser(UUID userId, OutputStream output, int width) throws IOException {
+    public void generateYearlyGraphForUser(UUID userId, OutputStream output, int width, int height, boolean drawTitle) throws IOException {
         Result<SubscriptionsRecord> subscriptions = subscriptionRepository.findSubscriptionsForYearlyGraph(userId);
 
         generateGraphForUser(subscriptions,
                 "Years with a valid subscription paid",
                 new Color(0x9D7146),
                 output,
-                width);
+                width,
+                height,
+                drawTitle);
     }
 
     public void generateGraphForUser(Result<SubscriptionsRecord> subscriptions,
                                      String title,
                                      Color color,
                                      OutputStream output,
-                                     int width) throws IOException {
+                                     int width,
+                                     int height,
+                                     boolean drawTitle) throws IOException {
         var payments = new TimeSeries("payments");
 
         for (SubscriptionsRecord record : subscriptions) {
@@ -75,11 +81,14 @@ public class SubscriptionService {
         var dataset = new TimeSeriesCollection(TimeZone.getTimeZone("Europe/Brussels"));
         dataset.addSeries(payments);
 
-        LocalDate now = LocalDate.now().withDayOfMonth(1).minusMonths(NUMBER_OF_MONTHS_TO_LOAD);
-        Month firstMonthToShow = new Month(now.getMonthValue(), now.getYear());
+        LocalDate minMonth = LocalDate.now().withDayOfMonth(1).minusMonths(NUMBER_OF_MONTHS_TO_LOAD);
+        LocalDate thisMonth = LocalDate.now().withDayOfMonth(1);
+        Month firstMonthToShow = new Month(minMonth.getMonthValue(), minMonth.getYear());
+        Month lastMonthToShow = new Month(thisMonth.getMonthValue(), thisMonth.getYear());
 
-        var hidden = new TimeSeries("only used to set the minY to 0 on the graph");
+        var hidden = new TimeSeries("only used to make sure the graph is at least "+ NUMBER_OF_MONTHS_TO_LOAD + " months long and showing the current month");
         hidden.add(firstMonthToShow, 0);
+        hidden.add(lastMonthToShow, 0);
         dataset.addSeries(hidden);
 
         var chart = ChartFactory.createXYBarChart(
@@ -90,6 +99,10 @@ public class SubscriptionService {
             dataset,
             PlotOrientation.VERTICAL,
             false, false, false);
+
+        if (!drawTitle) {
+            chart.setTitle((String) null);
+        }
 
         chart.getXYPlot().addDomainMarker(new ValueMarker(
                 Instant.now().toEpochMilli(),
@@ -105,6 +118,6 @@ public class SubscriptionService {
             dateFormat));
         chart.getXYPlot().getRangeAxis().setVisible(false);
 
-        GraphService.writeChartToOutputStream(output, chart, width, 100);
+        GraphService.writeChartToOutputStream(output, chart, width, height);
     }
 }

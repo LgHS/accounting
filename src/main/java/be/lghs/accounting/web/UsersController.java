@@ -65,27 +65,53 @@ public class UsersController {
         return "app/users/details";
     }
 
-    @GetMapping(value = "/{user_id}/subscriptions/graph/monthly", produces = "image/svg+xml")
+    @GetMapping(value = "/me/subscriptions/graph/monthly", produces = "image/svg+xml")
     @Secured(Roles.ROLE_MEMBER)
+    @Transactional(readOnly = true)
+    public void monthlyGraph(@RequestParam(name = "width", required = false, defaultValue = "1200") int width,
+                             @RequestParam(name = "height", required = false, defaultValue = "100") int height,
+                             @RequestParam(name = "title", required = false, defaultValue = "true") boolean drawTitle,
+                             HttpServletResponse response) throws IOException {
+        monthlyGraph(userService.getCurrentUser().orElseThrow().getId(),
+                     width, height, drawTitle, response);
+    }
+
+    @GetMapping(value = "/me/subscriptions/graph/yearly", produces = "image/svg+xml")
+    @Secured(Roles.ROLE_MEMBER)
+    @Transactional(readOnly = true)
+    public void yearlyGraph(@RequestParam(name = "width", required = false, defaultValue = "1200") int width,
+                            @RequestParam(name = "height", required = false, defaultValue = "100") int height,
+                            @RequestParam(name = "title", required = false, defaultValue = "true") boolean drawTitle,
+                            HttpServletResponse response) throws IOException {
+        yearlyGraph(userService.getCurrentUser().orElseThrow().getId(),
+                    width, height, drawTitle, response);
+    }
+
+    @GetMapping(value = "/{user_id}/subscriptions/graph/monthly", produces = "image/svg+xml")
+    @Secured(Roles.ROLE_ADMIN)
     @Transactional(readOnly = true)
     public void monthlyGraph(@PathVariable("user_id") UUID userId,
                              @RequestParam(name = "width", required = false, defaultValue = "1200") int width,
+                             @RequestParam(name = "height", required = false, defaultValue = "100") int height,
+                             @RequestParam(name = "title", required = false, defaultValue = "true") boolean drawTitle,
                              HttpServletResponse response) throws IOException {
         response.setContentType("image/svg+xml");
         try (ServletOutputStream output = response.getOutputStream()) {
-            subscriptionService.generateMonthlyGraphForUser(userId, output, width);
+            subscriptionService.generateMonthlyGraphForUser(userId, output, width, height, drawTitle);
         }
     }
 
     @GetMapping(value = "/{user_id}/subscriptions/graph/yearly", produces = "image/svg+xml")
-    @Secured(Roles.ROLE_MEMBER)
+    @Secured(Roles.ROLE_ADMIN)
     @Transactional(readOnly = true)
     public void yearlyGraph(@PathVariable("user_id") UUID userId,
                             @RequestParam(name = "width", required = false, defaultValue = "1200") int width,
+                            @RequestParam(name = "height", required = false, defaultValue = "100") int height,
+                            @RequestParam(name = "title", required = false, defaultValue = "true") boolean drawTitle,
                             HttpServletResponse response) throws IOException {
         response.setContentType("image/svg+xml");
         try (ServletOutputStream output = response.getOutputStream()) {
-            subscriptionService.generateYearlyGraphForUser(userId, output, width);
+            subscriptionService.generateYearlyGraphForUser(userId, output, width, height, drawTitle);
         }
     }
 }
