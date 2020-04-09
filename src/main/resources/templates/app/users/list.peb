@@ -22,7 +22,8 @@
     <tr>
         <!--<td>{{ user.id }}</td>-->
         <td>
-            <a href="{{ href("/users/#{user.uuid}") }}">{{ user.username }}</a>
+            {{ user.name }}
+            (<a href="{{ href("/users/#{user.uuid}") }}">{{ user.username }}</a>)
         </td>
         <td>
             {% set first = true %}

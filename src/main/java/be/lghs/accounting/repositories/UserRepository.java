@@ -44,6 +44,7 @@ public class UserRepository {
 
     public Result<UsersRecord> findAll() {
         return dsl.selectFrom(Tables.USERS)
+            .orderBy(USERS.NAME)
             .fetch();
     }
 }
