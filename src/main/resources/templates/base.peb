@@ -19,6 +19,7 @@
                     <a href="{{ href('/movements') }}">Movements</a>
                     <a href="{{ href('/subscriptions') }}">Subscriptions</a>
                     <a href="{{ href('/accounts') }}">Accounts</a>
+                    <a href="{{ href('/users') }}">Users</a>
                     <a href="{{ href('/codas') }}">Codas</a>
                 {% endif %}
                 {% if authenticated() %}
