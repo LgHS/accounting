@@ -4,10 +4,8 @@ import be.lghs.accounting.model.Keys;
 import be.lghs.accounting.model.enums.SubscriptionType;
 import be.lghs.accounting.model.tables.records.SubscriptionsRecord;
 import lombok.RequiredArgsConstructor;
-import org.jooq.DSLContext;
-import org.jooq.Record4;
-import org.jooq.Record7;
-import org.jooq.Result;
+import org.jooq.*;
+import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -20,6 +18,8 @@ import static be.lghs.accounting.model.Tables.*;
 @RequiredArgsConstructor
 public class SubscriptionRepository {
 
+    private static final Condition ONE_EQUALS_ONE = DSL.val(1).eq(1);
+
     private final DSLContext dsl;
 
     public Result<Record7<UUID,
@@ -28,7 +28,7 @@ public class SubscriptionRepository {
                           String,
                           String,
                           UUID,
-                          SubscriptionType>> findAll() {
+                          SubscriptionType>> findAll(SubscriptionType type) {
         return dsl
             .select(
                 SUBSCRIPTIONS.ID,
@@ -41,6 +41,7 @@ public class SubscriptionRepository {
             )
             .from(SUBSCRIPTIONS)
             .innerJoin(USERS).onKey(Keys.SUBSCRIPTIONS__SUBSCRIPTIONS_MEMBER_ID_FKEY)
+            .where(type != null ? SUBSCRIPTIONS.TYPE.eq(type) : ONE_EQUALS_ONE)
             .orderBy(SUBSCRIPTIONS.START_DATE.desc())
             .fetch();
     }

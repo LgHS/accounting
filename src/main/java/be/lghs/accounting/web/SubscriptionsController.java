@@ -1,6 +1,7 @@
 package be.lghs.accounting.web;
 
 import be.lghs.accounting.configuration.Roles;
+import be.lghs.accounting.model.enums.SubscriptionType;
 import be.lghs.accounting.repositories.SubscriptionRepository;
 import be.lghs.accounting.services.GraphService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/subscriptions")
@@ -22,8 +24,9 @@ public class SubscriptionsController {
     @GetMapping
     @Transactional(readOnly = true)
     @Secured(Roles.ROLE_ADMIN)
-    public String subscriptions(Model model) {
-        var subscriptions = subscriptionRepository.findAll();
+    public String subscriptions(@RequestParam(value = "type", required = false) SubscriptionType type,
+                                Model model) {
+        var subscriptions = subscriptionRepository.findAll(type);
 
         model.addAttribute("subscriptions", subscriptions);
 
