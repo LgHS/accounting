@@ -10,9 +10,11 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.UUID;
 
 import static be.lghs.accounting.model.Tables.*;
+import static org.jooq.impl.DSL.max;
 
 @Repository
 @RequiredArgsConstructor
@@ -115,5 +117,18 @@ public class SubscriptionRepository {
             .orderBy(MOVEMENTS.ENTRY_DATE.desc())
             .limit(10)
             .fetch();
+    }
+
+    public LocalDate getLastSubscription(UUID userId, SubscriptionType type) {
+        AggregateFunction<LocalDate> max = max(SUBSCRIPTIONS.END_DATE);
+
+        return dsl
+            .select(max)
+            .from(SUBSCRIPTIONS)
+            .where(
+                SUBSCRIPTIONS.TYPE.eq(type)
+                    .and(SUBSCRIPTIONS.MEMBER_ID.eq(userId))
+            )
+            .fetchOne(max);
     }
 }

@@ -32,10 +32,15 @@ public class SubscriptionService {
 
     private final SubscriptionRepository subscriptionRepository;
 
-    public void generateMonthlyGraphForUser(UUID userId, OutputStream output, int width, int height, boolean drawTitle) throws IOException {
+    public void generateMonthlyGraphForUser(UUID userId,
+                                            OutputStream output,
+                                            int width,
+                                            int height,
+                                            boolean drawTitle) throws IOException {
         Result<SubscriptionsRecord> subscriptions = subscriptionRepository.findSubscriptionsForMonthlyGraph(userId, NUMBER_OF_MONTHS_TO_LOAD);
 
-        generateGraphForUser(subscriptions,
+        generateGraphForUser(
+                subscriptions,
                 "Months with a valid subscription paid",
                 new Color(0x5555ff),
                 output,
@@ -44,10 +49,15 @@ public class SubscriptionService {
                 drawTitle);
     }
 
-    public void generateYearlyGraphForUser(UUID userId, OutputStream output, int width, int height, boolean drawTitle) throws IOException {
+    public void generateYearlyGraphForUser(UUID userId,
+                                           OutputStream output,
+                                           int width,
+                                           int height,
+                                           boolean drawTitle) throws IOException {
         Result<SubscriptionsRecord> subscriptions = subscriptionRepository.findSubscriptionsForYearlyGraph(userId);
 
-        generateGraphForUser(subscriptions,
+        generateGraphForUser(
+                subscriptions,
                 "Years with a valid subscription paid",
                 new Color(0x9D7146),
                 output,

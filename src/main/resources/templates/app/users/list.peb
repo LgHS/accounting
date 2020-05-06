@@ -33,10 +33,14 @@
             {% endfor %}
         </td>
         <td>
-            <img src="{{ href("/users/#{user.uuid}/subscriptions/graph/monthly") }}?width=750&height=50&title=false" alt="monthly subscription of {{ user.username }}">
+            <img src="{{ href("/users/#{user.uuid}/subscriptions/graph/monthly") }}?width=600&height=50&title=false"
+                 width="600" height="50"
+                 alt="monthly subscription of {{ user.username }}">
         </td>
         <td>
-            <img src="{{ href("/users/#{user.uuid}/subscriptions/graph/yearly") }}?width=750&height=50&title=false" alt="yearly subscription of {{ user.username }}">
+            <img src="{{ href("/users/#{user.uuid}/subscriptions/graph/yearly") }}?width=600&height=50&title=false"
+                 width="600" height="50"
+                 alt="yearly subscription of {{ user.username }}">
         </td>
     </tr>
     {% else %}
