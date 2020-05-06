@@ -28,6 +28,7 @@ public class SubscriptionsController {
                                 Model model) {
         var subscriptions = subscriptionRepository.findAll(type);
 
+        model.addAttribute("selectedType", type);
         model.addAttribute("subscriptions", subscriptions);
 
         return "app/subscriptions/list";

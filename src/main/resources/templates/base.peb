@@ -8,6 +8,8 @@
         <title>{% block "title" %}{% endblock %} | LgHS Compta</title>
     </head>
     <body>
+        {# please don't ask me, this is dumb... https://stackoverflow.com/a/57888310/2919551 #}
+        <script>0</script>
         <header>
             <h1><a href="{{ href('/') }}">LgHS Accounting</a></h1>
             <!--<span> > </span>

@@ -5,6 +5,7 @@
                           String,
                           UUID,
                           SubscriptionType>>" #}
+{# @pebvariable name="selectedType" type="be.lghs.accounting.model.enums.SubscriptionType" #}
 
 {% extends '../../base' %}
 
@@ -21,7 +22,12 @@
             <th>start</th>
             <th>end</th>
             <th>user</th>
-            <th>type</th>
+            <th>
+                type
+                (<a class="filter{% if selectedType is null %} active{% endif %}" href="{{ href('/subscriptions') }}">A</a>
+                | <a class="filter{% if selectedType == 'MONTHLY' %} active{% endif %}" href="{{ href('/subscriptions?type=MONTHLY') }}">M</a>
+                | <a class="filter{% if selectedType == 'YEARLY' %} active{% endif %}" href="{{ href('/subscriptions?type=YEARLY') }}">Y</a>)
+            </th>
         </tr>
         </thead>
         <tbody>

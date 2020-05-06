@@ -12,9 +12,9 @@
     <tr>
         <!--<th>id</th>-->
         <th>username</th>
+        <th>roles</th>
         <th>monthly</th>
         <th>yearly</th>
-        <th>type</th>
     </tr>
     </thead>
     <tbody>

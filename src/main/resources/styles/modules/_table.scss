@@ -4,6 +4,20 @@ table {
   border-collapse: collapse;
 }
 
+table th .filter {
+  display: inline-block;
+  padding: 0.1em 0.5ch;
+
+  color: white;
+  background-color: #666666;
+  border-radius: 2px;
+  text-decoration: none;
+
+  &.active {
+    background-color: black;
+  }
+}
+
 thead > tr {
   position: sticky;
   top: 2em;
