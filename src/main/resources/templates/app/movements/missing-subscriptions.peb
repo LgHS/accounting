@@ -1,0 +1,94 @@
+{% extends '../../base' %}
+
+{% import '../../tools/csrf' %}
+
+{# @pebvariable name="movements" type="org.jooq.Result<org.jooq.Record>" #}
+{# @pebvariable name="users" type="org.jooq.Result<be.lghs.accounting.model.tables.records.UsersRecord>" #}
+
+{% block 'title' %}
+List of movements without subscription
+{% endblock %}
+
+{% block 'content' %}
+
+<datalist id="usernames">
+{% for user in users %}
+    <option value="{{ user.uuid }}">
+    {{ user.name }}
+        ({{ user.username }})
+    </option>
+{% endfor %}
+</datalist>
+
+<form method="post">
+{{ csrf_input() }}
+{% for movement in movements %}
+    <fieldset style="margin-bottom: 1em;">
+        <legend>
+            <label>
+                <input type="checkbox" name="movements[{{ loop.index }}].selected">
+                {{ movement.value("entry_date") }} -
+                {{ movement.value("amount") }}€
+                {{ movement.value("counter_party_name") }}
+                ({{ movement.value("communication") }})
+            </label>
+        </legend>
+
+        <input type="hidden"
+               name="movements[{{ loop.index }}].movementId"
+               value="{{ movement.value("id") }}">
+
+        <div>
+            <label for="member_id-{{ movement.value("id") }}">Member</label>
+            <input type="text"
+                   name="movements[{{ loop.index }}].memberId"
+                   list="usernames"
+                   id="member_id-{{ movement.value("id") }}">
+        </div>
+
+        <div>
+            <label for="type-{{ movement.value("id") }}">Type</label>
+            <label>
+                <input type="radio"
+                       id="type-{{ movement.value("id") }}"
+                       name="movements[{{ loop.index }}].type"
+                       {% if movement.value("amount").longValue() != 5 %}checked{% endif %}
+                       value="MONTHLY">
+                Monthly
+            </label>
+            <label>
+                <input type="radio"
+                       id="type-{{ movement.value("id") }}"
+                       name="movements[{{ loop.index }}].type"
+                       {% if movement.value("amount").longValue() == 5 %}checked{% endif %}
+                       value="YEARLY">
+                Yearly
+            </label>
+        </div>
+
+        <div>
+            <label for="start_date-{{ movement.value("id") }}">Start Date</label>
+            <input type="date"
+                   id="start_date-{{ movement.value("id") }}"
+                   value="{{ movement.value("entry_date") | first_day_of_month }}"
+                   name="movements[{{ loop.index }}].start_date">
+
+            <label for="end_date-{{ movement.value("id") }}">End Date</label>
+            <input type="date"
+                   id="end_date-{{ movement.value("id") }}"
+                   value="{{ movement.value("entry_date") | last_day_of_month }}"
+                   name="movements[{{ loop.index }}].end_date">
+        </div>
+
+        <div>
+            <label for="comment-{{ movement.value("id") }}">Comment</label>
+            <textarea name="movements[{{ loop.index }}].comment"
+                      id="comment-{{ movement.value("id") }}"></textarea>
+        </div>
+    </fieldset>
+{% endfor %}
+
+    <input type="submit">
+</form>
+
+{% endblock %}

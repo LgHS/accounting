@@ -158,4 +158,25 @@ public class MovementRepository {
             .fetch()
             ;
     }
+
+    public Result<Record> findWithoutSubscription() {
+        return dsl
+            .select(
+                MOVEMENTS.asterisk()
+            )
+            .from(MOVEMENTS)
+            .innerJoin(MOVEMENT_CATEGORIES).onKey(Keys.MOVEMENTS__MOVEMENTS_CATEGORY_ID_FKEY)
+            .leftJoin(SUBSCRIPTIONS).onKey(Keys.SUBSCRIPTIONS__SUBSCRIPTIONS_MOVEMENT_ID_FKEY)
+            .where(
+                MOVEMENTS.ENTRY_DATE.greaterOrEqual(LocalDate.now().withDayOfYear(1).minusYears(1))
+                    .and(MOVEMENT_CATEGORIES.NAME.eq("Cotisations"))
+                    .and(SUBSCRIPTIONS.MOVEMENT_ID.isNull())
+            )
+            .orderBy(
+                MOVEMENTS.ENTRY_DATE.desc(),
+                MOVEMENTS.CODA_SEQUENCE_NUMBER.desc(),
+                MOVEMENTS.AMOUNT.desc(),
+                MOVEMENTS.COMMUNICATION)
+            .fetch();
+    }
 }

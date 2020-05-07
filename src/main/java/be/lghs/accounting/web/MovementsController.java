@@ -141,6 +141,51 @@ public class MovementsController {
         return "redirect:/movements#" + partOne.getId();
     }
 
+    @GetMapping("/missing-subscriptions")
+    @Transactional(readOnly = true)
+    @Secured(Roles.ROLE_ADMIN)
+    public String missingSubscriptions(Model model) {
+        var movements = movementRepository.findWithoutSubscription();
+        var users = userRepository.findAll();
+
+        model.addAttribute("movements", movements);
+        model.addAttribute("users", users);
+
+        return "app/movements/missing-subscriptions";
+    }
+
+    @Data
+    public static class SubscriptionFormList {
+        private List<SubscriptionForm> movements;
+    }
+
+    @Data
+    public static class SubscriptionForm {
+        private boolean selected;
+        private UUID movementId;
+        private UUID memberId;
+        private SubscriptionType type;
+        private LocalDate startDate;
+        private LocalDate endDate;
+        private String comment;
+    }
+
+    @PostMapping("/missing-subscriptions")
+    @Transactional
+    @Secured(Roles.ROLE_TREASURER)
+    public String missingSubscriptionsPost(@ModelAttribute SubscriptionFormList forms,
+                                           //@RequestParam Map<String, String> forms,
+                                           Model model) {
+        var movements = movementRepository.findWithoutSubscription();
+        var users = userRepository.findAll();
+
+        model.addAttribute("movements", movements);
+        model.addAttribute("users", users);
+        //
+        // return "redirect:/movements/missing-subscriptions";
+        return null;
+    }
+
     @Transactional(readOnly = true)
     @GetMapping("/{movement_id}/subscription")
     @Secured(Roles.ROLE_TREASURER)
