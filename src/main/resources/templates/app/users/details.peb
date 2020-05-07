@@ -1,4 +1,5 @@
 {# @pebvariable name="user" type="be.lghs.accounting.model.tables.records.UsersRecord" #}
+{# @pebvariable name="loadAllPayments" type="boolean" #}
 {# @pebvariable name="payments" type="org.jooq.Record4<java.time.LocalDate,
                                                        java.math.BigDecimal,
                                                        java.lang.String,
@@ -32,6 +33,14 @@
                 <td>{{ payment.value("communication") }}</td>
             </tr>
             {% endfor %}
+
+            {% if not loadAllPayments %}
+            <tr>
+                <td colspan="3">
+                    <a href="{{ href("?allPayments=true") }}">load all payments</a>
+                </td>
+            </tr>
+            {% endif %}
         </table>
     </section>
 

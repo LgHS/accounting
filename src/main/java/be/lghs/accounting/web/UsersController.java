@@ -70,22 +70,25 @@ public class UsersController {
     @GetMapping("/me")
     @Secured(Roles.ROLE_MEMBER)
     @Transactional(readOnly = true)
-    public String userDetails(Model model) {
+    public String userDetails(@RequestParam(value = "allPayments", defaultValue = "false") boolean loadAllPayments,
+                              Model model) {
         var oAuth2User = userService.getCurrentUser().orElseThrow();
 
-        return userDetails(oAuth2User.getId(), model);
+        return userDetails(loadAllPayments, oAuth2User.getId(), model);
     }
 
     @GetMapping("/{user_id}")
     @Secured(Roles.ROLE_ADMIN)
     @Transactional(readOnly = true)
-    public String userDetails(@PathVariable("user_id") UUID userId,
+    public String userDetails(@RequestParam(value = "allPayments", defaultValue = "false") boolean loadAllPayments,
+                              @PathVariable("user_id") UUID userId,
                               Model model) {
         var user = userRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException("User not found"));
 
-        var payments = subscriptionRepository.findLastSubscriptionsForUser(userId);
+        var payments = subscriptionRepository.findLastSubscriptionsForUser(userId, loadAllPayments);
 
+        model.addAttribute("loadAllPayments", loadAllPayments);
         model.addAttribute("payments", payments);
         model.addAttribute("user", user);
 

@@ -31,7 +31,7 @@ public class SubscriptionRepository {
                           String,
                           UUID,
                           SubscriptionType>> findAll(SubscriptionType type) {
-        return dsl
+        var query = dsl
             .select(
                 SUBSCRIPTIONS.ID,
                 SUBSCRIPTIONS.START_DATE,
@@ -42,12 +42,19 @@ public class SubscriptionRepository {
                 SUBSCRIPTIONS.TYPE
             )
             .from(SUBSCRIPTIONS)
-            .innerJoin(USERS).onKey(Keys.SUBSCRIPTIONS__SUBSCRIPTIONS_MEMBER_ID_FKEY)
-            .where(type != null ? SUBSCRIPTIONS.TYPE.eq(type) : ONE_EQUALS_ONE)
+            .innerJoin(USERS).onKey(Keys.SUBSCRIPTIONS__SUBSCRIPTIONS_MEMBER_ID_FKEY);
+
+
+        SelectOrderByStep<Record7<UUID, LocalDate, LocalDate, String, String, UUID, SubscriptionType>> where = query;
+        if (type != null) {
+            where = query.where(SUBSCRIPTIONS.TYPE.eq(type));
+        }
+
+        return where
             .orderBy(SUBSCRIPTIONS.START_DATE.desc())
             .fetch();
     }
-    //
+
     // public Record9<UUID,
     //                LocalDate,
     //                LocalDate,
@@ -100,8 +107,9 @@ public class SubscriptionRepository {
             .fetch();
     }
 
-    public Result<Record4<LocalDate, BigDecimal, String, SubscriptionType>> findLastSubscriptionsForUser(UUID userId) {
-        return dsl
+    public Result<Record4<LocalDate, BigDecimal, String, SubscriptionType>> findLastSubscriptionsForUser(UUID userId,
+                                                                                                         boolean loadAllPayments) {
+        var query = dsl
             .select(
                 MOVEMENTS.ENTRY_DATE,
                 MOVEMENTS.AMOUNT,
@@ -114,9 +122,14 @@ public class SubscriptionRepository {
             .where(
                 SUBSCRIPTIONS.MEMBER_ID.eq(userId)
             )
-            .orderBy(MOVEMENTS.ENTRY_DATE.desc())
-            .limit(10)
-            .fetch();
+            .orderBy(MOVEMENTS.ENTRY_DATE.desc());
+
+        ResultQuery<Record4<LocalDate, BigDecimal, String, SubscriptionType>> result = query;
+        if (!loadAllPayments) {
+            result = query.limit(10);
+        }
+
+        return result.fetch();
     }
 
     public LocalDate getLastSubscription(UUID userId, SubscriptionType type) {
