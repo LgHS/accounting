@@ -28,8 +28,8 @@
         <table>
             {% for payment in payments %}
             <tr>
-                <td><pre>{{ payment.value("entry_date") }}</pre></td>
-                <td><pre>{{ payment.value("amount") }}</pre></td>
+                <td class="monospace">{{ payment.value("entry_date") }}</td>
+                <td class="monospace align-right">{{ payment.value("amount") }}</td>
                 <td>{{ payment.value("communication") }}</td>
             </tr>
             {% endfor %}
