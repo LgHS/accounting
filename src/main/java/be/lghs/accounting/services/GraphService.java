@@ -139,9 +139,11 @@ public class GraphService {
         dataset.addSeries(credits);
         dataset.addSeries(debits);
 
-        var hidden = new TimeSeries("only used to set the minY to 0 on the graph");
-        hidden.add(credits.getDataItem(0).getPeriod(), 0);
-        dataset.addSeries(hidden);
+        if (credits.getItemCount() > 0) {
+            var hidden = new TimeSeries("only used to set the minY to 0 on the graph");
+            hidden.add(credits.getDataItem(0).getPeriod(), 0);
+            dataset.addSeries(hidden);
+        }
 
         // var chart = ChartFactory.createTimeSeriesChart(
         //     "Money in HS accounts over time",
