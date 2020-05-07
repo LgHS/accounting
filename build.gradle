@@ -1,8 +1,8 @@
 plugins {
-    id 'org.springframework.boot' version '2.2.4.RELEASE'
+    id 'org.springframework.boot' version '2.2.7.RELEASE'
     id 'java'
-    id 'nu.studer.jooq' version '4.1'
-    id 'org.flywaydb.flyway' version '6.2.2'
+    id 'nu.studer.jooq' version '4.2'
+    id 'org.flywaydb.flyway' version '6.4.1'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -98,10 +98,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.security:spring-security-oauth2-client'
     // handlerbars sucks, I'd love rocker back... If only there was an IntelliJ plugin :(
-    implementation 'io.pebbletemplates:pebble:3.1.2'
-    implementation 'io.pebbletemplates:pebble-spring-boot-starter:3.1.2'
+    implementation 'io.pebbletemplates:pebble:3.1.3'
+    implementation 'io.pebbletemplates:pebble-spring-boot-starter:3.1.3'
 
-    implementation 'org.apache.commons:commons-lang3:3.9' // missing transitive dependency
+    implementation 'org.apache.commons:commons-lang3:3.10' // missing transitive dependency
     implementation 'org.flywaydb:flyway-core'
 
     implementation 'org.jfree:jfreechart:1.5.0'
