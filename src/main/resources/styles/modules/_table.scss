@@ -30,15 +30,11 @@ thead > tr {
   border-top: 3px solid #444;
 }
 
-tr:nth-child(2n) td {
+tr:nth-child(2n) {
   background-color: #eee;
 }
 
 td {
   border-top: 1px solid #ddd;
   padding: 0.2em 1ch;
-
-  .adaptable {
-    word-break: break-word;
-  }
 }

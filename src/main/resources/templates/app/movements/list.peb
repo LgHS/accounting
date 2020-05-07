@@ -36,7 +36,7 @@
                 </td>
                 <!--<td><a href="{{ href("/accounts/#{movement.accountId}/movements") }}">{{ movement.accountId }}</a></td>-->
                 <td class="align-right monospace">{{ movement.amount }}</td>
-                <td class="adaptable">{{ movement.communication }}</td>
+                <td class="break-words">{{ movement.communication }}</td>
                 <td>
                     {% if movement.categoryId is null %}
                         {% if has_treasurer_role() %}

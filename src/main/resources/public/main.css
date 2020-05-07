@@ -77,14 +77,12 @@ thead > tr {
 .border-top-bold {
   border-top: 3px solid #444; }
 
-tr:nth-child(2n) td {
+tr:nth-child(2n) {
   background-color: #eee; }
 
 td {
   border-top: 1px solid #ddd;
   padding: 0.2em 1ch; }
-  td .adaptable {
-    word-break: break-word; }
 
 .form-grid {
   display: grid;
@@ -114,11 +112,13 @@ td {
 .red {
   color: #c00; }
 
-tr.bg-light-red:nth-child(2n) td {
-  background-color: #fbb; }
-
 .bg-light-red {
-  background-color: #fcc; }
+  background-color: #fdd; }
+  .bg-light-red:nth-child(2n) {
+    background-color: #fbb; }
+
+.break-words {
+  word-break: break-word; }
 
 .flex {
   display: flex;

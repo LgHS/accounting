@@ -30,12 +30,16 @@
   color: #c00;
 }
 
-tr.bg-light-red:nth-child(2n) td {
-  background-color: #fbb;
+.bg-light-red {
+  background-color: #fdd;
+
+  &:nth-child(2n) {
+    background-color: #fbb;
+  }
 }
 
-.bg-light-red {
-  background-color: #fcc;
+.break-words {
+  word-break: break-word;
 }
 
 .flex {
