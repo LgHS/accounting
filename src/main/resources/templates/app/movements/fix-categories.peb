@@ -1,0 +1,70 @@
+{% extends '../../base' %}
+
+{% import '../../tools/csrf' %}
+
+{# @pebvariable name="movements" type="org.jooq.Result<be.lghs.accounting.model.tables.records.MovementsRecord>" #}
+{# @pebvariable name="categories" type="org.jooq.Result<be.lghs.accounting.model.tables.records.MovementCategoriesRecord>" #}
+{# @pebvariable name="month" type="java.time.YearMonth" #}
+
+{% block 'title' %}
+    Movement list
+{% endblock %}
+
+{% block 'content' %}
+
+<h2>Fixing categories of month {{ month }}</h2>
+<form action="" method="post">
+    {{ csrf_input() }}
+
+    <table>
+        <thead>
+        <tr>
+            <th>entry date</th>
+            <th>from</th>
+            <!--<th>account</th>-->
+            <th>amount</th>
+            <th>communication</th>
+            <th>category</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for movement in movements %}
+            <tr id="{{ movement.id }}" {% if movement.amount.signum() < 0 %}class="bg-light-red"{% endif %}>
+                <td>{{ movement.entryDate }}</td>
+                <td>
+                    {{ movement.counterPartyName }}
+                    ({{- movement.counterPartyAccountNumber | default("") | ellipsis -}})
+                </td>
+                <!--<td><a href="{{ href("/accounts/#{movement.accountId}/movements") }}">{{ movement.accountId }}</a></td>-->
+                <td class="align-right monospace">{{ movement.amount }}</td>
+                <td class="break-words">{{ movement.communication }}</td>
+                <td>
+                    <input type="hidden" name="movements[{{ loop.index }}].movementId" value="{{ movement.id }}">
+                    <select name="movements[{{ loop.index }}].categoryId" {% if loop.first %}autofocus{% endif %}>
+                        <option value="">Select a category</option>
+                        {% for category in categories %}
+                            {% if movement.amount.signum > 0 %}
+                                {% if category.type == 'CREDIT' %}
+                                    <option value="{{ category.id }}">{{ category.name }}</option>
+                                {% endif %}
+                            {% else %}
+                                {% if category.type == 'DEBIT' %}
+                                    <option value="{{ category.id }}">{{ category.name }}</option>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="2">no data yet</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <input type="submit">
+</form>
+
+{% endblock %}

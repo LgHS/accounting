@@ -1,15 +1,12 @@
 package be.lghs.accounting.web;
 
 import be.lghs.accounting.configuration.Roles;
-import be.lghs.accounting.model.enums.SubscriptionType;
 import be.lghs.accounting.model.tables.records.MovementCategoriesRecord;
 import be.lghs.accounting.model.tables.records.MovementsRecord;
 import be.lghs.accounting.repositories.AccountRepository;
 import be.lghs.accounting.repositories.MovementRepository;
 import be.lghs.accounting.repositories.SubscriptionRepository;
-import be.lghs.accounting.repositories.UserRepository;
 import be.lghs.accounting.services.MovementService;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Result;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,8 +18,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.util.UUID;
 
 @Controller
@@ -34,7 +33,6 @@ public class MovementsController {
     private final MovementService movementService;
     private final SubscriptionRepository subscriptionRepository;
     private final AccountRepository accountRepository;
-    private final UserRepository userRepository;
 
     @GetMapping
     @Transactional(readOnly = true)
@@ -47,6 +45,7 @@ public class MovementsController {
         model.addAttribute("movements", movements);
         model.addAttribute("categories", categories);
         model.addAttribute("categoryNamesById", categoryNamesById);
+
         return "app/movements/list";
     }
 
@@ -60,6 +59,7 @@ public class MovementsController {
 
         model.addAttribute("movement", movement);
         model.addAttribute("categories", categories);
+
         return "app/movements/view";
     }
 
@@ -87,6 +87,41 @@ public class MovementsController {
         model.addAttribute("movements", movements);
         model.addAttribute("categories", categories);
         model.addAttribute("categoryNamesById", categoryNamesById);
+
+        return "app/movements/list";
+    }
+
+    @Transactional(readOnly = true)
+    @GetMapping("/by-month")
+    @Secured(Roles.ROLE_ADMIN)
+    public String movementsByMonth(Model model) {
+        var movements = movementRepository.monthsSummaries();
+
+        var monthFormatter = new DateTimeFormatterBuilder()
+            .appendValue(ChronoField.YEAR, 4)
+            .appendLiteral('-')
+            .appendValue(ChronoField.MONTH_OF_YEAR, 2)
+            .toFormatter();
+
+        model.addAttribute("monthFormatter", monthFormatter);
+        model.addAttribute("monthlySummaries", movements);
+
+        return "app/movements/monthly";
+    }
+
+    @Transactional(readOnly = true)
+    @GetMapping("/by-month/{month}")
+    @Secured(Roles.ROLE_ADMIN)
+    public String movementsByMonth(@PathVariable("month") YearMonth month,
+                                   Model model) {
+        var movements = movementRepository.findForMonth(month);
+        var categories = movementRepository.categories();
+        var categoryNamesById = movementRepository.categoryNamesById();
+
+        model.addAttribute("movements", movements);
+        model.addAttribute("categories", categories);
+        model.addAttribute("categoryNamesById", categoryNamesById);
+
         return "app/movements/list";
     }
 
@@ -102,6 +137,7 @@ public class MovementsController {
         model.addAttribute("movements", movements);
         model.addAttribute("categories", categories);
         model.addAttribute("categoryNamesById", categoryNamesById);
+
         return "app/movements/list";
     }
 
@@ -120,6 +156,7 @@ public class MovementsController {
 
         model.addAttribute("movement", movement);
         model.addAttribute("categories", categories);
+
         return "app/movements/split";
     }
 
@@ -137,7 +174,7 @@ public class MovementsController {
             movementId,
             communication, amount, categoryId,
             communicationSplit, amountSplit, categorySplitId);
-        MovementsRecord movement = movementRepository.getOne(movementId);
+
         return "redirect:/movements#" + partOne.getId();
     }
 
@@ -148,9 +185,8 @@ public class MovementsController {
                                    Model model) {
         var subscription = subscriptionRepository.getForMovement(movementId);
 
-
         model.addAttribute("subscription", subscription);
-        model.addAttribute("monthFormatter", DateTimeFormatter.ofPattern("YYYY-MM"));
+        model.addAttribute("monthFormatter", DateTimeFormatter.ofPattern("yyyy-MM"));
 
         return "app/subscriptions/form";
     }

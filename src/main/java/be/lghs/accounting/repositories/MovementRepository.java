@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.Map;
 import java.util.UUID;
 
@@ -103,6 +104,12 @@ public class MovementRepository {
         return find(MOVEMENTS.ACCOUNT_ID.eq(accountId));
     }
 
+    public Result<MovementsRecord> findForMonth(YearMonth yearMonth) {
+        var date_trunc = function("date_trunc", LocalDate.class, inline("months"), MOVEMENTS.ENTRY_DATE);
+
+        return find(date_trunc.eq(yearMonth.atDay(1)));
+    }
+
     public MovementsRecord getOne(UUID movementId) {
         return dsl.selectFrom(MOVEMENTS)
             .where(MOVEMENTS.ID.eq(movementId))
@@ -145,7 +152,7 @@ public class MovementRepository {
         var firstMonth = LocalDate.now()
             .withDayOfMonth(1)
             .minusMonths(6);
-        var date_trunc = function("date_trunc", LocalDate.class, val("months"), MOVEMENTS.ENTRY_DATE);
+        var date_trunc = function("date_trunc", LocalDate.class, inline("months"), MOVEMENTS.ENTRY_DATE);
         return dsl
             .select(
                 date_trunc.as("date"),
@@ -157,5 +164,28 @@ public class MovementRepository {
             .orderBy(field("date").desc())
             .fetch()
             ;
+    }
+
+    public Result<Record5<LocalDate, Integer, Integer, Integer, BigDecimal>> monthsSummaries() {
+        var month = function("date_trunc", LocalDate.class, inline("months"), MOVEMENTS.ENTRY_DATE);
+
+        return dsl
+            .select(
+                month,
+                count(asterisk()),
+                count(asterisk()).filterWhere(MOVEMENTS.CATEGORY_ID.isNull()),
+                count(asterisk()).filterWhere(SUBSCRIPTIONS.ID.isNull().and(MOVEMENT_CATEGORIES.NAME.ne("Cotisations"))),
+                sum(MOVEMENTS.AMOUNT)
+            )
+            .from(MOVEMENTS)
+            .leftJoin(MOVEMENT_CATEGORIES).onKey(Keys.MOVEMENTS__MOVEMENTS_CATEGORY_ID_FKEY)
+            .leftJoin(SUBSCRIPTIONS).onKey(Keys.SUBSCRIPTIONS__SUBSCRIPTIONS_MOVEMENT_ID_FKEY)
+            .groupBy(month)
+            .orderBy(month.desc())
+            .fetch();
+    }
+
+    public Result<MovementsRecord> missingCategories(YearMonth month) {
+        return find(MOVEMENTS.CATEGORY_ID.isNull().and(MOVEMENTS.ENTRY_DATE.between(month.atDay(1), month.atEndOfMonth())));
     }
 }

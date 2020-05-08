@@ -1,0 +1,55 @@
+{% extends '../../base' %}
+
+{% import '../../tools/csrf' %}
+
+{# @pebvariable name="monthlySummaries" type="org.jooq.Result<org.jooq.Record5<java.time.LocalDate, Integer, Integer, Integer, java.math.BigDecimal>>" #}
+{# @pebvariable name="monthFormatter" type="java.time.format.DateTimeFormatter" #}
+
+{% block 'title' %}
+    Movement list
+{% endblock %}
+
+{% block 'content' %}
+    <a href="{{ href('/movements/add') }}">Add Manual Movement</a>
+    <table class="fluid m-auto">
+        <thead>
+        <tr>
+            <th>month</th>
+            <th>movements</th>
+            <th>missing category</th>
+            <th>unlinked subscriptions</th>
+            <th>amount</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for monthlySummary in monthlySummaries %}
+            <tr>
+                <td>
+                    {% set month = monthlySummary.value1().format(monthFormatter) %}
+                    <a href="{{ href("/movements/by-month/#{month}") }}">
+                        {{ month }}
+                    </a>
+                </td>
+                <td class="align-right monospace">{{ monthlySummary.value2() }}</td>
+                <td class="align-right monospace{% if monthlySummary.value3() > 0 %} red{% endif %}">
+                    {{ monthlySummary.value3() }}
+                    {% if monthlySummary.value3() > 0 %}
+                        | <a href="{{ href("/movements/by-month/#{month}/fix-categories") }}">fix</a>
+                    {% endif %}
+                </td>
+                <td class="align-right monospace{% if monthlySummary.value4() > 0 %} red{% endif %}">
+                    {{ monthlySummary.value4() }}
+                    {% if monthlySummary.value4() > 0 %}
+                        | <a href="{{ href("/movements/by-month/#{month}/fix-subscriptions") }}">fix</a>
+                    {% endif %}
+                </td>
+                <td class="align-right monospace{% if monthlySummary.value5().signum() < 0 %} red{% endif %}">{{ monthlySummary.value5() }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2">no data yet</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

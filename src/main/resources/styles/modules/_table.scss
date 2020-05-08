@@ -1,7 +1,22 @@
 table {
-  width: 100%;
   /*table-layout: fixed;*/
   border-collapse: collapse;
+}
+
+table:not(.fluid) {
+  width: 100%;
+}
+
+table.fluid {
+  th {
+    padding: 0 1ch;
+  }
+
+  th, td {
+    &:not(:last-child) {
+      border-right: 1px dashed #999;
+    }
+  }
 }
 
 table th .filter {
