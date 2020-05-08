@@ -174,7 +174,7 @@ public class MovementRepository {
                 month,
                 count(asterisk()),
                 count(asterisk()).filterWhere(MOVEMENTS.CATEGORY_ID.isNull()),
-                count(asterisk()).filterWhere(SUBSCRIPTIONS.ID.isNull().and(MOVEMENT_CATEGORIES.NAME.ne("Cotisations"))),
+                count(asterisk()).filterWhere(SUBSCRIPTIONS.ID.isNull().and(MOVEMENT_CATEGORIES.NAME.eq("Cotisations"))),
                 sum(MOVEMENTS.AMOUNT)
             )
             .from(MOVEMENTS)
