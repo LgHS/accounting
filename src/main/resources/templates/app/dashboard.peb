@@ -35,7 +35,7 @@
         </section>
         <section class="card align-center">
             <h4>Income per month</h4>
-            <table class="w-auto m-auto">
+            <table class="fluid m-auto">
                 <thead>
                 <tr>
                     <th>Month</th>
