@@ -19,10 +19,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MovementFixesController {
 
+    private static final String MONTH_PLACEHOLDER = "{month:[0-9]{4}-[0-9]{2}}";
+
     private final MovementRepository movementRepository;
 
     @Transactional(readOnly = true)
-    @GetMapping("/by-month/{month}/fix-categories")
+    @GetMapping("/by-month/" + MONTH_PLACEHOLDER + "/fix-categories")
     @Secured(Roles.ROLE_TREASURER)
     public String fixCategories(@PathVariable("month") YearMonth month,
                                 Model model) {
@@ -48,7 +50,7 @@ public class MovementFixesController {
     }
 
     @Transactional
-    @PostMapping("/by-month/{month}/fix-categories")
+    @PostMapping("/by-month/" + MONTH_PLACEHOLDER + "/fix-categories")
     @Secured(Roles.ROLE_TREASURER)
     public String fixCategories(@PathVariable("month") YearMonth month,
                                 @ModelAttribute CategoryFormList form) {
@@ -58,5 +60,21 @@ public class MovementFixesController {
         }
 
         return "redirect:/movements/by-month";
+    }
+
+    @Transactional(readOnly = true)
+    @RequestMapping("/by-month/" + MONTH_PLACEHOLDER + "/fix-subscriptions")
+    @Secured(Roles.ROLE_TREASURER)
+    public String fixSubscriptions(@PathVariable("month") YearMonth month,
+                                   Model model) {
+        var movements = movementRepository.missingSubscription(month);
+        var categories = movementRepository.categories();
+        var categoryNamesById = movementRepository.categoryNamesById();
+
+        model.addAttribute("movements", movements);
+        model.addAttribute("categories", categories);
+        model.addAttribute("categoryNamesById", categoryNamesById);
+
+        return "app/movements/list";
     }
 }

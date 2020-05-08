@@ -188,4 +188,33 @@ public class MovementRepository {
     public Result<MovementsRecord> missingCategories(YearMonth month) {
         return find(MOVEMENTS.CATEGORY_ID.isNull().and(MOVEMENTS.ENTRY_DATE.between(month.atDay(1), month.atEndOfMonth())));
     }
+
+    public Result<MovementsRecord> missingSubscription(YearMonth month) {
+        // in case you wonder, this is https://blog.jooq.org/2015/10/13/semi-join-and-anti-join-should-have-its-own-syntax-in-sql/
+        // return dsl
+        //     .selectFrom(
+        //         MOVEMENTS
+        //             .leftSemiJoin(MOVEMENT_CATEGORIES).on(
+        //                 MOVEMENTS.CATEGORY_ID.eq(MOVEMENT_CATEGORIES.ID)
+        //                     .and(MOVEMENT_CATEGORIES.NAME.eq("Cotisations"))
+        //             )
+        //             .leftAntiJoin(SUBSCRIPTIONS).onKey(Keys.SUBSCRIPTIONS__SUBSCRIPTIONS_MOVEMENT_ID_FKEY)
+        //     )
+        //     .where(
+        //         MOVEMENTS.ENTRY_DATE.between(month.atDay(1), month.atEndOfMonth()))
+        //     .fetch();
+
+        return dsl
+            .selectFrom(MOVEMENTS)
+            .where(
+                MOVEMENTS.CATEGORY_ID
+                    .eq(
+                        select(MOVEMENT_CATEGORIES.ID).from(MOVEMENT_CATEGORIES).where(MOVEMENT_CATEGORIES.NAME.eq("Cotisations"))
+                    )
+                    .and(MOVEMENTS.ENTRY_DATE.between(month.atDay(1), month.atEndOfMonth())))
+            .and(notExists(
+                select().from(SUBSCRIPTIONS).where(SUBSCRIPTIONS.MOVEMENT_ID.eq(MOVEMENTS.ID))
+            ))
+            .fetch();
+    }
 }
