@@ -11,7 +11,8 @@
 {% endblock %}
 
 {% block 'content' %}
-    <a href="{{ href('/movements/add') }}">Add Manual Movement</a>
+    <a href="{{ href('/movements/add') }}">Add Manual Movement</a> - 
+    <a href="{{ href('/movements/by-month') }}">By Month View</a>
     <table>
         <thead>
         <tr>
