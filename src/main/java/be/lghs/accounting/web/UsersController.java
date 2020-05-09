@@ -77,7 +77,7 @@ public class UsersController {
         return userDetails(loadAllPayments, oAuth2User.getId(), model);
     }
 
-    @GetMapping("/{user_id}")
+    @GetMapping("/{user_id:" + PathRegexes.UUID + "}")
     @Secured(Roles.ROLE_ADMIN)
     @Transactional(readOnly = true)
     public String userDetails(@RequestParam(value = "allPayments", defaultValue = "false") boolean loadAllPayments,
@@ -126,7 +126,7 @@ public class UsersController {
         return date.toEpochSecond(LocalTime.MIDNIGHT, ZoneOffset.UTC /* meh */) * 1000;
     }
 
-    @GetMapping(value = "/{user_id}/subscriptions/graph/monthly", produces = "image/svg+xml")
+    @GetMapping(value = "/{user_id:" + PathRegexes.UUID + "}/subscriptions/graph/monthly", produces = "image/svg+xml")
     @Secured(Roles.ROLE_ADMIN)
     @Transactional(readOnly = true)
     public void monthlyGraph(@PathVariable("user_id") UUID userId,
@@ -149,7 +149,7 @@ public class UsersController {
         }
     }
 
-    @GetMapping(value = "/{user_id}/subscriptions/graph/yearly", produces = "image/svg+xml")
+    @GetMapping(value = "/{user_id:" + PathRegexes.UUID + "}/subscriptions/graph/yearly", produces = "image/svg+xml")
     @Secured(Roles.ROLE_ADMIN)
     @Transactional(readOnly = true)
     public void yearlyGraph(@PathVariable("user_id") UUID userId,

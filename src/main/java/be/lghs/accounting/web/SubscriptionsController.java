@@ -34,7 +34,7 @@ public class SubscriptionsController {
         return "app/subscriptions/list";
     }
 
-    // @PostMapping({"/new", "/{id}"})
+    // @PostMapping({"/new", "/{id:" + PathRegexes.UUID + "}"})
     // @Transactional
     // @Secured(Roles.ROLE_TREASURER)
     // public String createSubscription(@PathVariable(value = "id", required = false) UUID subscriptionId,
@@ -48,7 +48,7 @@ public class SubscriptionsController {
     //     return "redirect:/subscriptions";
     // }
     //
-    // @GetMapping("/{id}")
+    // @GetMapping("/{id:" + PathRegexes.UUID + "}")
     // @Transactional
     // @Secured(Roles.ROLE_TREASURER)
     // public String subscriptionsForm(@PathVariable("id") UUID id, Model model) {

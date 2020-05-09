@@ -19,12 +19,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MovementFixesController {
 
-    private static final String MONTH_PLACEHOLDER = "{month:[0-9]{4}-[0-9]{2}}";
-
     private final MovementRepository movementRepository;
 
     @Transactional(readOnly = true)
-    @GetMapping("/by-month/" + MONTH_PLACEHOLDER + "/fix-categories")
+    @GetMapping("/by-month/{month:" + PathRegexes.YEAR_MONTH + "}/fix-categories")
     @Secured(Roles.ROLE_TREASURER)
     public String fixCategories(@PathVariable("month") YearMonth month,
                                 Model model) {
@@ -50,7 +48,7 @@ public class MovementFixesController {
     }
 
     @Transactional
-    @PostMapping("/by-month/" + MONTH_PLACEHOLDER + "/fix-categories")
+    @PostMapping("/by-month/{month:" + PathRegexes.YEAR_MONTH + "}/fix-categories")
     @Secured(Roles.ROLE_TREASURER)
     public String fixCategories(@PathVariable("month") YearMonth month,
                                 @ModelAttribute CategoryFormList form) {
@@ -63,7 +61,7 @@ public class MovementFixesController {
     }
 
     @Transactional(readOnly = true)
-    @RequestMapping("/by-month/" + MONTH_PLACEHOLDER + "/fix-subscriptions")
+    @RequestMapping("/by-month/{month:" + PathRegexes.YEAR_MONTH + "}/fix-subscriptions")
     @Secured(Roles.ROLE_TREASURER)
     public String fixSubscriptions(@PathVariable("month") YearMonth month,
                                    Model model) {

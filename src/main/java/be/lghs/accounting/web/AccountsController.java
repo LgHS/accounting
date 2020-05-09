@@ -47,7 +47,7 @@ public class AccountsController {
         return "app/accounts/form";
     }
 
-    @PostMapping({"/new", "/{id}"})
+    @PostMapping({"/new", "/{id:" + PathRegexes.UUID + "}"})
     @Transactional
     @Secured(Roles.ROLE_TREASURER)
     public String createAccount(@PathVariable(value = "id", required = false) UUID accountId,
@@ -61,7 +61,7 @@ public class AccountsController {
         return "redirect:/accounts";
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:" + PathRegexes.UUID + "}")
     @Transactional
     @Secured(Roles.ROLE_TREASURER)
     public String accountForm(@PathVariable("id") UUID id, Model model) {
@@ -71,7 +71,7 @@ public class AccountsController {
         return "app/accounts/form";
     }
 
-    @GetMapping("/{account_id}/movements")
+    @GetMapping("/{account_id:" + PathRegexes.UUID + "}/movements")
     @Transactional(readOnly = true)
     @Secured(Roles.ROLE_ADMIN)
     public String movementsByAccount(@PathVariable("account_id") UUID accountId,

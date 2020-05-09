@@ -49,7 +49,7 @@ public class MovementsController {
         return "app/movements/list";
     }
 
-    @GetMapping("/{movement_id}")
+    @GetMapping("/{movement_id:" + PathRegexes.UUID + "}")
     @Transactional(readOnly = true)
     @Secured(Roles.ROLE_ADMIN)
     public String movements(@PathVariable("movement_id") UUID movementId,
@@ -64,7 +64,7 @@ public class MovementsController {
     }
 
     @Transactional
-    @PostMapping("/{movement_id}/category")
+    @PostMapping("/{movement_id:" + PathRegexes.UUID + "}/category")
     @Secured(Roles.ROLE_TREASURER)
     public String setCategory(@PathVariable("movement_id") UUID movementId,
                               @RequestParam("category_id") UUID categoryId) {
@@ -110,7 +110,7 @@ public class MovementsController {
     }
 
     @Transactional(readOnly = true)
-    @GetMapping("/by-month/{month}")
+    @GetMapping("/by-month/{month:" + PathRegexes.YEAR_MONTH + "}")
     @Secured(Roles.ROLE_ADMIN)
     public String movementsByMonth(@PathVariable("month") YearMonth month,
                                    Model model) {
@@ -126,7 +126,7 @@ public class MovementsController {
     }
 
     @Transactional(readOnly = true)
-    @GetMapping("/by-category/{category_id}")
+    @GetMapping("/by-category/{category_id:" + PathRegexes.UUID + "}")
     @Secured(Roles.ROLE_TREASURER)
     public String movementsFromIban(@PathVariable("category_id") UUID categoryId,
                                     Model model) {
@@ -142,7 +142,7 @@ public class MovementsController {
     }
 
     @Transactional(readOnly = true)
-    @GetMapping("/{movement_id}/split")
+    @GetMapping("/{movement_id:" + PathRegexes.UUID + "}/split")
     @Secured(Roles.ROLE_TREASURER)
     public String splitMovementForm(@PathVariable("movement_id") UUID movementId,
                                     Model model) {
@@ -161,7 +161,7 @@ public class MovementsController {
     }
 
     @Transactional
-    @PostMapping("/{movement_id}/split")
+    @PostMapping("/{movement_id:" + PathRegexes.UUID + "}/split")
     @Secured(Roles.ROLE_TREASURER)
     public String splitMovement(@PathVariable("movement_id") UUID movementId,
                                 @RequestParam("communication") String communication,
@@ -179,7 +179,7 @@ public class MovementsController {
     }
 
     @Transactional(readOnly = true)
-    @GetMapping("/{movement_id}/subscription")
+    @GetMapping("/{movement_id:" + PathRegexes.UUID + "}/subscription")
     @Secured(Roles.ROLE_TREASURER)
     public String subscriptionForm(@PathVariable("movement_id") UUID movementId,
                                    Model model) {
