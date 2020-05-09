@@ -148,7 +148,11 @@ public class MovementRepository {
                 sum(MOVEMENTS.AMOUNT)
             )
             .from(MOVEMENTS)
-            .where(MOVEMENTS.ENTRY_DATE.greaterOrEqual(firstMonth))
+            .leftJoin(MOVEMENT_CATEGORIES).onKey(Keys.MOVEMENTS__MOVEMENTS_CATEGORY_ID_FKEY)
+            .where(
+                MOVEMENTS.ENTRY_DATE.greaterOrEqual(firstMonth)
+                    .and(MOVEMENT_CATEGORIES.NAME.notIn("Crédit interne", "Débit interne"))
+            )
             .groupBy(field("date"))
             .orderBy(field("date").desc())
             .fetch()
