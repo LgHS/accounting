@@ -13,4 +13,14 @@ header {
   height: unset;
   position: unset;
   padding: 0;
+
+  flex-wrap: wrap;
+}
+
+main {
+  width: 99%;
+}
+
+thead > tr {
+  top: 0;
 }
