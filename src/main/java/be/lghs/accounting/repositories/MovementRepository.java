@@ -116,18 +116,6 @@ public class MovementRepository {
             .fetchOne();
     }
 
-    public Result<MovementCategoriesRecord> credits() {
-        return dsl.selectFrom(MOVEMENT_CATEGORIES)
-            .where(MOVEMENT_CATEGORIES.TYPE.eq("CREDIT"))
-            .fetch();
-    }
-
-    public Result<MovementCategoriesRecord> debits() {
-        return dsl.selectFrom(MOVEMENT_CATEGORIES)
-            .where(MOVEMENT_CATEGORIES.TYPE.eq("DEBIT"))
-            .fetch();
-    }
-
     public void insertFromTemplate(MovementsRecord originMovement,
                                    String communication,
                                    BigDecimal amount,
@@ -152,6 +140,7 @@ public class MovementRepository {
         var firstMonth = LocalDate.now()
             .withDayOfMonth(1)
             .minusMonths(6);
+
         var date_trunc = function("date_trunc", LocalDate.class, inline("months"), MOVEMENTS.ENTRY_DATE);
         return dsl
             .select(

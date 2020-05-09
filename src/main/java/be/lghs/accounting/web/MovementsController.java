@@ -4,6 +4,7 @@ import be.lghs.accounting.configuration.Roles;
 import be.lghs.accounting.model.tables.records.MovementCategoriesRecord;
 import be.lghs.accounting.model.tables.records.MovementsRecord;
 import be.lghs.accounting.repositories.AccountRepository;
+import be.lghs.accounting.repositories.MovementCategoryRepository;
 import be.lghs.accounting.repositories.MovementRepository;
 import be.lghs.accounting.repositories.SubscriptionRepository;
 import be.lghs.accounting.services.MovementService;
@@ -30,6 +31,7 @@ import java.util.UUID;
 public class MovementsController {
 
     private final MovementRepository movementRepository;
+    private final MovementCategoryRepository movementCategoryRepository;
     private final MovementService movementService;
     private final SubscriptionRepository subscriptionRepository;
     private final AccountRepository accountRepository;
@@ -149,9 +151,9 @@ public class MovementsController {
         MovementsRecord movement = movementRepository.getOne(movementId);
         Result<MovementCategoriesRecord> categories;
         if (movement.getAmount().signum() > 0) {
-            categories = movementRepository.credits();
+            categories = movementCategoryRepository.credits();
         } else {
-            categories = movementRepository.debits();
+            categories = movementCategoryRepository.debits();
         }
 
         model.addAttribute("movement", movement);
