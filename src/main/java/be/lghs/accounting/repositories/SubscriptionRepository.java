@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static be.lghs.accounting.model.Tables.*;
+import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.max;
 
 @Repository
@@ -24,13 +25,16 @@ public class SubscriptionRepository {
 
     private final DSLContext dsl;
 
-    public Result<Record7<UUID,
+    public Result<Record10<UUID,
                           LocalDate,
                           LocalDate,
                           String,
                           String,
                           UUID,
-                          SubscriptionType>> findAll(SubscriptionType type) {
+                          SubscriptionType,
+                          LocalDate,
+                          BigDecimal,
+                          Boolean>> findAll(SubscriptionType type) {
         var query = dsl
             .select(
                 SUBSCRIPTIONS.ID,
@@ -39,13 +43,17 @@ public class SubscriptionRepository {
                 USERS.USERNAME,
                 USERS.NAME,
                 USERS.UUID,
-                SUBSCRIPTIONS.TYPE
+                SUBSCRIPTIONS.TYPE,
+                MOVEMENTS.ENTRY_DATE,
+                MOVEMENTS.AMOUNT,
+                field(MOVEMENTS.COUNTER_PARTY_NAME.likeIgnoreCase("sumup %")).as("sumup")
             )
             .from(SUBSCRIPTIONS)
+            .innerJoin(MOVEMENTS).onKey(Keys.SUBSCRIPTIONS__SUBSCRIPTIONS_MOVEMENT_ID_FKEY)
             .innerJoin(USERS).onKey(Keys.SUBSCRIPTIONS__SUBSCRIPTIONS_MEMBER_ID_FKEY);
 
 
-        SelectOrderByStep<Record7<UUID, LocalDate, LocalDate, String, String, UUID, SubscriptionType>> where = query;
+        SelectOrderByStep<Record10<UUID, LocalDate, LocalDate, String, String, UUID, SubscriptionType, LocalDate, BigDecimal, Boolean>> where = query;
         if (type != null) {
             where = query.where(SUBSCRIPTIONS.TYPE.eq(type));
         }

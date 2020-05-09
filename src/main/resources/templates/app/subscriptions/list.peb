@@ -1,10 +1,4 @@
-{# @pebvariable name="subscriptions" type="org.jooq.Result<org.jooq.Record7<UUID,
-                          java.time.LocalDate,
-                          java.time.LocalDate,
-                          String,
-                          String,
-                          UUID,
-                          SubscriptionType>>" #}
+{# @pebvariable name="subscriptions" type="org.jooq.Record9<UUID, LocalDate, LocalDate, String, String, UUID, SubscriptionType, LocalDate, BigDecimal>" #}
 {# @pebvariable name="selectedType" type="be.lghs.accounting.model.enums.SubscriptionType" #}
 
 {% extends '../../base' %}
@@ -15,12 +9,15 @@
 
 {% block 'content' %}
     <a href="{{ href('/subscriptions/new') }}">Create subscription</a>
-    <table>
+    <table class="fluid m-auto">
         <thead>
         <tr>
             <!--<th>id</th>-->
+            <th>entry date</th>
             <th>start</th>
             <th>end</th>
+            <th>Sumup?</th>
+            <th>amount</th>
             <th>user</th>
             <th>
                 type
@@ -34,8 +31,11 @@
         {% for subscription in subscriptions %}
             <tr>
                 <!--<td>{{ subscription.value("id") }}</td>-->
-                <td>{{ subscription.value("start_date") }}</td>
-                <td>{{ subscription.value("end_date") }}</td>
+                <td class="align-center">{{ subscription.value('entry_date') }}</td>
+                <td class="align-center">{{ subscription.value("start_date") }}</td>
+                <td class="align-center">{{ subscription.value("end_date") }}</td>
+                <td class="align-center">{{ subscription.value('sumup') ? '✓' : '' }}</td>
+                <td class="monospace align-right">{{ subscription.value('amount') }}</td>
                 <td>
                     <a href="{{ href("/users/#{subscription.value("uuid")}") }}">
                         {{ subscription.value("name") }}
