@@ -3,6 +3,7 @@ package be.lghs.accounting.repositories;
 import be.lghs.accounting.model.Keys;
 import be.lghs.accounting.model.tables.records.MovementCategoriesRecord;
 import be.lghs.accounting.model.tables.records.MovementsRecord;
+import be.lghs.accounting.repositories.utils.DateTrunc;
 import lombok.RequiredArgsConstructor;
 import org.jooq.*;
 import org.springframework.stereotype.Repository;
@@ -105,9 +106,9 @@ public class MovementRepository {
     }
 
     public Result<MovementsRecord> findForMonth(YearMonth yearMonth) {
-        var date_trunc = function("date_trunc", LocalDate.class, inline("months"), MOVEMENTS.ENTRY_DATE);
+        var dateTrunc = DateTrunc.dateTrunc(DateTrunc.DateTruncUnit.MONTHS, MOVEMENTS.ENTRY_DATE);
 
-        return find(date_trunc.eq(yearMonth.atDay(1)));
+        return find(dateTrunc.eq(yearMonth.atDay(1)));
     }
 
     public MovementsRecord getOne(UUID movementId) {
@@ -141,10 +142,10 @@ public class MovementRepository {
             .withDayOfMonth(1)
             .minusMonths(6);
 
-        var date_trunc = function("date_trunc", LocalDate.class, inline("months"), MOVEMENTS.ENTRY_DATE);
+        var dateTrunc = DateTrunc.dateTrunc(DateTrunc.DateTruncUnit.MONTHS, MOVEMENTS.ENTRY_DATE);
         return dsl
             .select(
-                date_trunc.as("date"),
+                dateTrunc.as("date"),
                 sum(MOVEMENTS.AMOUNT)
             )
             .from(MOVEMENTS)
@@ -160,7 +161,7 @@ public class MovementRepository {
     }
 
     public Result<Record5<LocalDate, Integer, Integer, Integer, BigDecimal>> monthsSummaries() {
-        var month = function("date_trunc", LocalDate.class, inline("months"), MOVEMENTS.ENTRY_DATE);
+        var month = DateTrunc.dateTrunc(DateTrunc.DateTruncUnit.MONTHS, MOVEMENTS.ENTRY_DATE);
 
         return dsl
             .select(
