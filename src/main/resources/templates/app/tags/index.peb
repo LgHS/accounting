@@ -1,0 +1,11 @@
+{# @pebvariable name="yearlySummaries" type="org.jooq.Result<org.jooq.Record3<LocalDate, String, BigDecimal>>" #}
+
+{% extends '../../base' %}
+
+{% block 'title' %}
+    Overview per tags
+{% endblock %}
+
+{% block 'content' %}
+    <pre>{{ yearlySummaries }}</pre>
+{% endblock %}
