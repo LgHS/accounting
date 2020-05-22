@@ -11,6 +11,10 @@
 
 {% block 'content' %}
     <a href="{{ href('/movements/add') }}">Add Manual Movement</a>
+    {% if has_treasurer_role() %}
+        - <a href="{{ href('/movements') }}">All movements</a>
+    {% endif %}
+
     <table class="fluid m-auto">
         <thead>
         <tr>
@@ -26,20 +30,20 @@
             <tr>
                 <td>
                     {% set month = monthlySummary.value1().format(monthFormatter) %}
-                    <a href="{{ href("/movements/by-month/#{month}") }}">
+                    {% if has_treasurer_role() %}<a href="{{ href("/movements/by-month/#{month}") }}">{% endif %}
                         {{ month }}
-                    </a>
+                    {% if has_treasurer_role() %}</a>{% endif %}
                 </td>
                 <td class="align-right monospace">{{ monthlySummary.value2() }}</td>
                 <td class="align-right monospace{% if monthlySummary.value3() > 0 %} red{% endif %}">
                     {{ monthlySummary.value3() }}
-                    {% if monthlySummary.value3() > 0 %}
+                    {% if has_treasurer_role() and monthlySummary.value3() > 0 %}
                         | <a href="{{ href("/movements/by-month/#{month}/fix-categories") }}">fix</a>
                     {% endif %}
                 </td>
                 <td class="align-right monospace{% if monthlySummary.value4() > 0 %} red{% endif %}">
                     {{ monthlySummary.value4() }}
-                    {% if monthlySummary.value4() > 0 %}
+                    {% if has_treasurer_role() and monthlySummary.value4() > 0 %}
                         | <a href="{{ href("/movements/by-month/#{month}/fix-subscriptions") }}">fix</a>
                     {% endif %}
                 </td>

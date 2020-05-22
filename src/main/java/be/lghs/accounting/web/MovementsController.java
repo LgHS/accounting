@@ -38,7 +38,7 @@ public class MovementsController {
 
     @GetMapping
     @Transactional(readOnly = true)
-    @Secured(Roles.ROLE_ADMIN)
+    @Secured(Roles.ROLE_TREASURER)
     public String movements(Model model) {
         var movements = movementRepository.findAll();
         var categories = movementRepository.categories();
@@ -53,7 +53,7 @@ public class MovementsController {
 
     @GetMapping("/{movement_id:" + PathRegexes.UUID + "}")
     @Transactional(readOnly = true)
-    @Secured(Roles.ROLE_ADMIN)
+    @Secured(Roles.ROLE_TREASURER)
     public String movements(@PathVariable("movement_id") UUID movementId,
                             Model model) {
         var movement = movementRepository.getOne(movementId);
@@ -113,7 +113,7 @@ public class MovementsController {
 
     @Transactional(readOnly = true)
     @GetMapping("/by-month/{month:" + PathRegexes.YEAR_MONTH + "}")
-    @Secured(Roles.ROLE_ADMIN)
+    @Secured(Roles.ROLE_TREASURER)
     public String movementsByMonth(@PathVariable("month") YearMonth month,
                                    Model model) {
         var movements = movementRepository.findForMonth(month);

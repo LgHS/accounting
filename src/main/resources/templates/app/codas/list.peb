@@ -7,8 +7,10 @@
 {% endblock %}
 
 {% block 'content' %}
-    <a href="{{ href('/codas/new') }}">Upload coda</a>
-    <table>
+    {%if has_treasurer_role() %}
+        <a href="{{ href('/codas/new') }}">Upload coda</a>
+    {% endif %}
+    <table class="fluid m-auto">
         <thead>
         <tr>
             <th>seq</th>

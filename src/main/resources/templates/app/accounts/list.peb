@@ -15,7 +15,9 @@
             <!--<th>id</th>-->
             <th>name</th>
             <th>balance</th>
-            <th>action</th>
+            {% if has_treasurer_role() %}
+                <th>action</th>
+            {% endif %}
         </tr>
         </thead>
         <tbody>
@@ -24,16 +26,20 @@
                 <!--<td>{{ account.id }}</td>-->
                 <td>{{ account.name }}</td>
                 <td class="align-right monospace">{{ account.currentBalance }}</td>
-                <td>
-                    <a href="{{ href("/accounts/#{account.id}") }}">Edit</a>
-                    <a href="{{ href("/accounts/#{account.id}/movements") }}">Movements</a>
-                </td>
+                {% if has_treasurer_role() %}
+                    <td>
+                        <a href="{{ href("/accounts/#{account.id}") }}">Edit</a>
+                        <a href="{{ href("/accounts/#{account.id}/movements") }}">Movements</a>
+                    </td>
+                {% endif %}
             </tr>
             {% if loop.last %}
                 <tr class="border-top-bold">
                     <td class="bold">Total</td>
                     <td class="align-right monospace">{{ total }}</td>
-                    <td></td>
+                    {% if has_treasurer_role() %}
+                        <td></td>
+                    {% endif %}
                 </tr>
             {% endif %}
         {% else %}

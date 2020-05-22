@@ -73,7 +73,7 @@ public class AccountsController {
 
     @GetMapping("/{account_id:" + PathRegexes.UUID + "}/movements")
     @Transactional(readOnly = true)
-    @Secured(Roles.ROLE_ADMIN)
+    @Secured(Roles.ROLE_TREASURER)
     public String movementsByAccount(@PathVariable("account_id") UUID accountId,
                                      Model model) {
         var movements = movementRepository.findByAccount(accountId);

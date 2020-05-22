@@ -46,7 +46,7 @@ public class CodasController {
 
     @GetMapping("/new")
     @Transactional(readOnly = true)
-    @Secured(Roles.ROLE_ADMIN)
+    @Secured(Roles.ROLE_TREASURER)
     public String codaForm(Model model) {
         Result<CodasRecord> codas = codaRepository.findAll();
         Result<AccountsRecord> accounts = accountRepository.findAll();
@@ -56,7 +56,7 @@ public class CodasController {
     }
 
     @PostMapping("/new")
-    @Secured(Roles.ROLE_ADMIN)
+    @Secured(Roles.ROLE_TREASURER)
     public String createCoda(@RequestParam("account_id") UUID accountId,
                              @RequestParam("codas") List<MultipartFile> files) {
         files.sort(Comparator.comparing(MultipartFile::getOriginalFilename));
