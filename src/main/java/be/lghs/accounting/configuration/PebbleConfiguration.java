@@ -49,6 +49,11 @@ public class PebbleConfiguration {
                         .map(authorities -> authorities.contains(Roles.ADMIN_AUTHORITY))
                         .orElse(false)),
 
+                    "is_old_member", function((args, self) -> userService.getCurrentUser()
+                        .map(OAuth2User::getAuthorities)
+                        .map(authorities -> authorities.contains(Roles.OLD_MEMBER_AUTHORITY))
+                        .orElse(false)),
+
                     "has_treasurer_role", function((args, self) -> userService.getCurrentUser()
                         .map(OAuth2User::getAuthorities)
                         .map(authorities -> authorities.contains(Roles.TREASURER_AUTHORITY))

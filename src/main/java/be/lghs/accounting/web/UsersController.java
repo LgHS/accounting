@@ -68,7 +68,7 @@ public class UsersController {
     }
 
     @GetMapping("/me")
-    @Secured(Roles.ROLE_MEMBER)
+    @Secured({ Roles.ROLE_MEMBER, Roles.ROLE_OLD_MEMBER })
     @Transactional(readOnly = true)
     public String userDetails(@RequestParam(value = "allPayments", defaultValue = "false") boolean loadAllPayments,
                               Model model) {
@@ -96,7 +96,7 @@ public class UsersController {
     }
 
     @GetMapping(value = "/me/subscriptions/graph/monthly", produces = "image/svg+xml")
-    @Secured(Roles.ROLE_MEMBER)
+    @Secured({ Roles.ROLE_MEMBER, Roles.ROLE_OLD_MEMBER })
     @Transactional(readOnly = true)
     public void monthlyGraph(@RequestParam(name = "width", required = false, defaultValue = "1200") int width,
                              @RequestParam(name = "height", required = false, defaultValue = "100") int height,
@@ -108,7 +108,7 @@ public class UsersController {
     }
 
     @GetMapping(value = "/me/subscriptions/graph/yearly", produces = "image/svg+xml")
-    @Secured(Roles.ROLE_MEMBER)
+    @Secured({ Roles.ROLE_MEMBER, Roles.ROLE_OLD_MEMBER })
     @Transactional(readOnly = true)
     public void yearlyGraph(@RequestParam(name = "width", required = false, defaultValue = "1200") int width,
                             @RequestParam(name = "height", required = false, defaultValue = "100") int height,
