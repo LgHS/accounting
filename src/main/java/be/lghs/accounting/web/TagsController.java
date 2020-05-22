@@ -1,7 +1,6 @@
 package be.lghs.accounting.web;
 
 import be.lghs.accounting.repositories.MovementByTagsRepository;
-import be.lghs.accounting.repositories.utils.DateTrunc;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,9 +16,8 @@ public class TagsController {
 
     @GetMapping
     public String index(Model model) {
-        var summaries = repository.summary(DateTrunc.DateTruncUnit.YEARS);
 
-        model.addAttribute("yearlySummaries", summaries);
+        model.addAttribute("summary", repository.summary());
 
         return "app/tags/index";
     }

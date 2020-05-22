@@ -1,4 +1,4 @@
-{# @pebvariable name="yearlySummaries" type="org.jooq.Result<org.jooq.Record3<LocalDate, String, BigDecimal>>" #}
+{# @pebvariable name="summary" type="org.jooq.Result<org.jooq.Record4<String, BigDecimal, BigDecimal, BigDecimal>>" #}
 
 {% extends '../../base' %}
 
@@ -7,5 +7,24 @@
 {% endblock %}
 
 {% block 'content' %}
-    <pre>{{ yearlySummaries }}</pre>
+    <table class="fluid m-auto">
+        <thead>
+        <tr>
+            <th>name</th>
+            <th>all time total</th>
+            <th>total last year</th>
+            <th>total this year</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for tag in summary %}
+        <tr>
+            <td>{{ tag.value1 }}</td>
+            <td class="align-right monospace">{{ tag.value2 }}</td>
+            <td class="align-right monospace">{{ tag.value3 }}</td>
+            <td class="align-right monospace">{{ tag.value4 }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
