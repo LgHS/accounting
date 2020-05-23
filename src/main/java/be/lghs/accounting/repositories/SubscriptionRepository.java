@@ -104,14 +104,14 @@ public class SubscriptionRepository {
             .fetch();
     }
 
-    public Result<SubscriptionsRecord> findSubscriptionsForYearlyGraph(UUID userId) {
+    public Result<SubscriptionsRecord> findSubscriptionsForYearlyGraph(UUID userId, LocalDate activeAfterThisDate) {
         return dsl.selectFrom(SUBSCRIPTIONS)
             .where(
                 SUBSCRIPTIONS.MEMBER_ID.eq(userId)
                     .and(SUBSCRIPTIONS.TYPE.eq(SubscriptionType.YEARLY))
+                    .and(SUBSCRIPTIONS.END_DATE.ge(activeAfterThisDate))
             )
             .orderBy(SUBSCRIPTIONS.START_DATE)
-            .limit(2)
             .fetch();
     }
 

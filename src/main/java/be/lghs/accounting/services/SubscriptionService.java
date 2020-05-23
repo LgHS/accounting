@@ -37,10 +37,12 @@ public class SubscriptionService {
                                             int width,
                                             int height,
                                             boolean drawTitle) throws IOException {
+        var dontDisplayBefore = LocalDate.now().minusYears(1).minusMonths(1);
         Result<SubscriptionsRecord> subscriptions = subscriptionRepository.findSubscriptionsForMonthlyGraph(userId, NUMBER_OF_MONTHS_TO_LOAD);
 
         generateGraphForUser(
                 subscriptions,
+                dontDisplayBefore,
                 "Months with a valid subscription paid",
                 new Color(0x5555ff),
                 output,
@@ -54,10 +56,12 @@ public class SubscriptionService {
                                            int width,
                                            int height,
                                            boolean drawTitle) throws IOException {
-        Result<SubscriptionsRecord> subscriptions = subscriptionRepository.findSubscriptionsForYearlyGraph(userId);
+        var dontDisplayBefore = LocalDate.now().minusYears(1).minusMonths(1);
+        Result<SubscriptionsRecord> subscriptions = subscriptionRepository.findSubscriptionsForYearlyGraph(userId, dontDisplayBefore);
 
         generateGraphForUser(
                 subscriptions,
+                dontDisplayBefore,
                 "Years with a valid subscription paid",
                 new Color(0x9D7146),
                 output,
@@ -67,6 +71,7 @@ public class SubscriptionService {
     }
 
     public void generateGraphForUser(Result<SubscriptionsRecord> subscriptions,
+                                     LocalDate dontDisplayBefore,
                                      String title,
                                      Color color,
                                      OutputStream output,
@@ -81,8 +86,10 @@ public class SubscriptionService {
             var currentMonth = startDate;
 
             while (currentMonth.isBefore(endDate)) {
-                var month = new Month(currentMonth.getMonthValue(), currentMonth.getYear());
-                payments.addOrUpdate(month, 1);
+                if (currentMonth.isAfter(dontDisplayBefore)) {
+                    var month = new Month(currentMonth.getMonthValue(), currentMonth.getYear());
+                    payments.addOrUpdate(month, 1);
+                }
 
                 currentMonth = currentMonth.plusMonths(1);
             }
