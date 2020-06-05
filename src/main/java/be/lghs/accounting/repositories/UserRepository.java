@@ -44,7 +44,10 @@ public class UserRepository {
 
     public Result<UsersRecord> findAll() {
         return dsl.selectFrom(Tables.USERS)
-            .orderBy(USERS.NAME)
+            .orderBy(
+                USERS.ROLES,
+                USERS.NAME
+            )
             .fetch();
     }
 }
