@@ -115,14 +115,16 @@ public class SubscriptionRepository {
             .fetch();
     }
 
-    public Result<Record4<LocalDate, BigDecimal, String, SubscriptionType>> findLastSubscriptionsForUser(UUID userId,
+    public Result<Record6<LocalDate, BigDecimal, String, SubscriptionType, LocalDate, LocalDate>> findLastSubscriptionsForUser(UUID userId,
                                                                                                          boolean loadAllPayments) {
         var query = dsl
             .select(
                 MOVEMENTS.ENTRY_DATE,
                 MOVEMENTS.AMOUNT,
                 MOVEMENTS.COMMUNICATION,
-                SUBSCRIPTIONS.TYPE
+                SUBSCRIPTIONS.TYPE,
+                SUBSCRIPTIONS.START_DATE,
+                SUBSCRIPTIONS.END_DATE
             )
             .from(SUBSCRIPTIONS)
             .innerJoin(MOVEMENTS).onKey(Keys.SUBSCRIPTIONS__SUBSCRIPTIONS_MOVEMENT_ID_FKEY)
@@ -132,7 +134,7 @@ public class SubscriptionRepository {
             )
             .orderBy(MOVEMENTS.ENTRY_DATE.desc());
 
-        ResultQuery<Record4<LocalDate, BigDecimal, String, SubscriptionType>> result = query;
+        ResultQuery<Record6<LocalDate, BigDecimal, String, SubscriptionType, LocalDate, LocalDate>> result = query;
         if (!loadAllPayments) {
             result = query.limit(10);
         }
