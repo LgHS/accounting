@@ -129,7 +129,7 @@ public class SubscriptionService {
 
         chart.getXYPlot().getRenderer().setSeriesPaint(0, color);
 
-        var dateFormat = new SimpleDateFormat("MMM YY");
+        var dateFormat = new SimpleDateFormat("MMM yy");
         ((DateAxis) chart.getXYPlot().getDomainAxis()).setTickUnit(new DateTickUnit(
             DateTickUnitType.MONTH, 2, // TODO this should be dynamic based on the width and the range displayed
             dateFormat));

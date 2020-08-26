@@ -107,7 +107,7 @@ public class GraphService {
         chart.setBackgroundPaint(Color.WHITE);
         chart.setBorderPaint(Color.BLACK);
         chart.setBorderVisible(false);
-        var dateFormat = new SimpleDateFormat("MMM YY");
+        var dateFormat = new SimpleDateFormat("MMM yy");
         var unit = new DateTickUnit(
             DateTickUnitType.MONTH, 6,
             dateFormat);
@@ -163,7 +163,7 @@ public class GraphService {
         chart.getXYPlot().getRenderer().setSeriesPaint(0, new Color(0x5555ff));
         chart.getXYPlot().getRenderer().setSeriesPaint(1, new Color(0xff5555));
 
-        var dateFormat = new SimpleDateFormat("MMM YY");
+        var dateFormat = new SimpleDateFormat("MMM yy");
         ((DateAxis) chart.getXYPlot().getDomainAxis()).setTickUnit(new DateTickUnit(
             DateTickUnitType.MONTH, 1,
             dateFormat));

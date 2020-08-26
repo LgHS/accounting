@@ -38,7 +38,7 @@ public class AppController {
             .setScale(0, RoundingMode.UNNECESSARY)
             .intValueExact();
 
-        var monthFormatter = DateTimeFormatter.ofPattern("MMMM YY");
+        var monthFormatter = DateTimeFormatter.ofPattern("MMMM yy");
 
         model.addAttribute("monthFormatter", monthFormatter);
         model.addAttribute("legalSummary", movementRepository.legalSummary());
