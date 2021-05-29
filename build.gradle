@@ -1,8 +1,8 @@
 plugins {
-    id 'org.springframework.boot' version '2.2.7.RELEASE'
+    id 'org.springframework.boot' version '2.5.0'
     id 'java'
-    id 'nu.studer.jooq' version '4.2'
-    id 'org.flywaydb.flyway' version '6.4.1'
+    id 'nu.studer.jooq' version '5.2.1'
+    id "org.flywaydb.flyway" version '7.9.1'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -30,37 +30,40 @@ springBoot {
 }
 
 jooq {
-    accounting(sourceSets.main) {
-        logging = 'TRACE'
-//        logging = 'WARN'
-        jdbc {
-            driver = "${database_driver}"
-            url = "${database_url}"
-            user = "${database_user}"
-            password = "${database_password}"
-            schema = "${database_schema}"
-        }
-        generator {
-            database {
-                name = 'org.jooq.meta.postgres.PostgresDatabase'
-                includes = '.*'
-                inputSchema = 'accounting'
-                // outputSchemaToDefault = true
-                schemaVersionProvider = 'SELECT \'accounting_\' || MAX(version) FROM accounting.flyway_schema_history'
-            }
-            generate {
-                deprecated = false
-            //     relations = true
-            //     records = true
-            //     immutablePojos = true
-            //     fluentSetters = true
-                javaTimeTypes = true
+    configurations {
+        main {
+            generationTool {
 
-            }
-            target {
-                packageName = 'be.lghs.accounting.model'
-                // should those be committed as sources?
-                directory = "${buildDir}/generated/sources/jooq/java"
+                jdbc {
+                    driver = "${database_driver}"
+                    url = "${database_url}"
+                    user = "${database_user}"
+                    password = "${database_password}"
+                    schema = "${database_schema}"
+                }
+                generator {
+                    database {
+                        name = 'org.jooq.meta.postgres.PostgresDatabase'
+                        includes = '.*'
+                        inputSchema = 'accounting'
+                        // outputSchemaToDefault = true
+                        schemaVersionProvider = 'SELECT \'accounting_\' || MAX(version) FROM accounting.flyway_schema_history'
+                    }
+                    generate {
+                        deprecated = false
+                        //     relations = true
+                        //     records = true
+                        //     immutablePojos = true
+                        //     fluentSetters = true
+                        javaTimeTypes = true
+
+                    }
+                    target {
+                        packageName = 'be.lghs.accounting.model'
+                        // should those be committed as sources?
+                        directory = "${buildDir}/generated/sources/jooq/java"
+                    }
+                }
             }
         }
     }
@@ -76,17 +79,13 @@ flyway {
 }
 
 task jooq(type: GradleBuild) {
-    tasks = ['flywayMigrate', 'generateAccountingJooqSchemaSource']
+    tasks = ['flywayMigrate', 'generateJooq']
 }
 
 task ghActionVersion {
     doLast {
         println "::set-output name=accounting_version::$version"
     }
-}
-
-generateAccountingJooqSchemaSource {
-    outputs.upToDateWhen { false }
 }
 
 
@@ -98,13 +97,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.security:spring-security-oauth2-client'
     // handlerbars sucks, I'd love rocker back... If only there was an IntelliJ plugin :(
-    implementation 'io.pebbletemplates:pebble:3.1.3'
-    implementation 'io.pebbletemplates:pebble-spring-boot-starter:3.1.3'
+    implementation 'io.pebbletemplates:pebble:3.1.5'
+    implementation 'io.pebbletemplates:pebble-spring-boot-starter:3.1.5'
 
-    implementation 'org.apache.commons:commons-lang3:3.10' // missing transitive dependency
+    //implementation 'org.apache.commons:commons-lang3:3.10' // missing transitive dependency
     implementation 'org.flywaydb:flyway-core'
 
-    implementation 'org.jfree:jfreechart:1.5.0'
+    implementation 'org.jfree:jfreechart:1.5.3'
     implementation 'org.jfree:jfreesvg:3.4'
 
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
@@ -113,6 +112,6 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     runtimeOnly 'org.postgresql:postgresql'
-    jooqRuntime 'org.postgresql:postgresql'
+    jooqGenerator 'org.postgresql:postgresql'
     flywayRuntime 'org.postgresql:postgresql'
 }
