@@ -1,0 +1,45 @@
+{# @pebvariable name="accountNumbers" type="org.jooq.Result<be.lghs.accounting.model.tables.records.UserAccountNumbersRecord>" #}
+
+{% extends "./base" %}
+
+{% import "../../../tools/csrf" %}
+
+{% block 'content' %}
+    {{ parent() }}
+
+    <section>
+        <h3>Account numbers</h3>
+
+        <table class="m-auto fluid">
+            <thead>
+            <tr>
+                <th>Number</th>
+                <th>Created</th>
+                <th>Validated</th>
+            </tr>
+            </thead>
+            {% for number in accountNumbers %}
+                <tr>
+                    <td class="monospace">{{ number.get("account_number") | format_iban }}</td>
+                    <td>{{ number.get("encoding_date") }}</td>
+                    <td>{{ number.get("validated") ? '✓' : '' }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <hr>
+
+        <form action="" method="post">
+            {{ csrf_input() }}
+
+            <label for="account_number">Link new account number (IBAN)</label>
+            <input type="text"
+                   id="account_number"
+                   name="account_number"
+                   minlength="15"
+                   maxlength="39">
+            <input type="submit">
+        </form>
+    </section>
+
+{% endblock %}

@@ -32,6 +32,7 @@
             </nav>
         </header>
         <main>
+            {% block "subnav-content" %}{% endblock %}
             {% block "content" %}{% endblock %}
         </main>
         <footer>

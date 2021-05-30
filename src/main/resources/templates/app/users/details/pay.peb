@@ -1,0 +1,33 @@
+{% extends './base' %}
+
+{% import '../../../tools/csrf' %}
+
+{% block 'content' %}
+    {{ parent() }}
+
+    <section>
+        <h3>Pay your monthly subscription</h3>
+        <form action="#">
+            {{ csrf_input() }}
+
+            <div>
+                <label for="">Month</label>
+                <input type="month" value="2020-02">
+            </div>
+
+            <div>
+                <label for="">Amount</label>
+                <input type="number" value="20" min="10">
+            </div>
+
+            <div>
+                <label for="">Message</label>
+                <textarea name=""></textarea>
+            </div>
+
+            <div>
+                <input type="submit" value="Pay (WIP)" disabled>
+            </div>
+        </form>
+    </section>
+{% endblock %}

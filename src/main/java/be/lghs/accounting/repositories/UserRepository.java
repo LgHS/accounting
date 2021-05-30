@@ -1,15 +1,22 @@
 package be.lghs.accounting.repositories;
 
+import be.lghs.accounting.model.Keys;
 import be.lghs.accounting.model.Tables;
+import be.lghs.accounting.model.enums.SubscriptionType;
 import be.lghs.accounting.model.tables.records.UsersRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
+import org.jooq.Record7;
 import org.jooq.Result;
+import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 
+import static be.lghs.accounting.model.Tables.*;
 import static be.lghs.accounting.model.tables.Users.USERS;
 
 @Repository
@@ -49,5 +56,31 @@ public class UserRepository {
                 USERS.NAME
             )
             .fetch();
+    }
+
+    public Record7<UUID, LocalDate, LocalDate, Integer, BigDecimal, LocalDate, LocalDate> statistics(UUID userId) {
+        return dsl
+            .select(
+                USERS.UUID,
+                DSL.min(MOVEMENTS.ENTRY_DATE).as("firstSeen"),
+                DSL.max(MOVEMENTS.ENTRY_DATE).as("lastSeen"),
+                DSL.count(MOVEMENTS.ID).as("movementCount"),
+                DSL.sum(MOVEMENTS.AMOUNT).as("totalAmount"),
+                DSL.max(SUBSCRIPTIONS.END_DATE).filterWhere(SUBSCRIPTIONS.TYPE.eq(SubscriptionType.MONTHLY)).as("endMonthly"),
+                DSL.max(SUBSCRIPTIONS.END_DATE).filterWhere(SUBSCRIPTIONS.TYPE.eq(SubscriptionType.YEARLY)).as("endYearly")
+            )
+            .from(USERS)
+            .leftJoin(USER_ACCOUNT_NUMBERS)
+                .onKey(Keys.USER_ACCOUNT_NUMBERS__USER_ACCOUNT_NUMBERS_USER_ID_FKEY)
+            .leftJoin(MOVEMENTS)
+                .on(USER_ACCOUNT_NUMBERS.ACCOUNT_NUMBER.eq(MOVEMENTS.COUNTER_PARTY_ACCOUNT_NUMBER))
+            .leftJoin(SUBSCRIPTIONS)
+                .onKey(Keys.SUBSCRIPTIONS__SUBSCRIPTIONS_MEMBER_ID_FKEY)
+            .where(
+                USERS.UUID.eq(userId)
+                    .and(USER_ACCOUNT_NUMBERS.VALIDATED)
+            )
+            .groupBy(USERS.UUID)
+            .fetchOne();
     }
 }

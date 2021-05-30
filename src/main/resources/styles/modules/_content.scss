@@ -2,3 +2,25 @@ main {
   width: 90vw;
   margin: 1em auto auto;
 }
+
+.subnav {
+  border-bottom: 1px solid #eee;
+  margin-bottom: 2em;
+  padding-bottom: 0.3em;
+
+  > ul {
+    margin: 0;
+    padding: 0;
+
+    > li {
+      display: inline-block;
+
+      &::after {
+        content: ' | ';
+      }
+      &:last-child::after {
+        content: '';
+      }
+    }
+  }
+}

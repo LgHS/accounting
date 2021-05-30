@@ -1,0 +1,43 @@
+{# @pebvariable name="accountNumbers" type="org.jooq.Result<org.jooq.Record6<String, String, BigDecimal, UUID, String, LocalDateTime>>" #}
+
+{% extends "../base" %}
+
+{% import '../../../tools/csrf' %}
+
+{% block "content" %}
+<form action="" method="post">
+    {{ csrf_input() }}
+
+    <table class="fluid m-auto">
+        <thead>
+        <tr>
+            <th>username</th>
+            <th>account number</th>
+            <th>last movement</th>
+            <th>last amount</th>
+            <th>validate?</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for number in accountNumbers %}
+            <tr>
+                <td>{{ number.get("username") }}</td>
+                <td>{{ number.get("account_number") }}</td>
+                <td>{{ number.getValue("communication", "/") }}</td>
+                <td>{{ number.getValue("amount", "/") }}</td>
+                <td class="align-center">
+                    <input type="hidden" name="numbers[{{ loop.index }}].accountNumber" value="{{ number.get("account_number") }}">
+                    <input type="checkbox" name="numbers[{{ loop.index }}].selected">
+                </td>
+            </tr>
+                {% else %}
+            <tr>
+                <td colspan="5" class="align-center">no numbers to validate</td>
+            </tr>
+                {% endfor %}
+        </tbody>
+    </table>
+
+    <input type="submit">
+</form>
+{% endblock %}

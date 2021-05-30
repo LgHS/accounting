@@ -1,6 +1,6 @@
 {# @pebvariable name="users" type="org.jooq.Result<be.lghs.accounting.model.tables.records.UsersRecord>" #}
 
-{% extends '../../base' %}
+{% extends './base' %}
 
 {% block 'title' %}
     User list
@@ -10,17 +10,13 @@
 <table>
     <thead>
     <tr>
-        <!--<th>id</th>-->
         <th>username</th>
         <th>roles</th>
-        <th>monthly</th>
-        <th>yearly</th>
     </tr>
     </thead>
     <tbody>
     {% for user in users %}
-    <tr>
-        <!--<td>{{ user.id }}</td>-->
+    <tr id="{{ user.id }}">
         <td>
             {{ user.name }}
             (<a href="{{ href("/users/#{user.uuid}") }}">{{ user.username }}</a>)
@@ -32,20 +28,10 @@
                 {{- role -}}
             {% endfor %}
         </td>
-        <td>
-            <img src="{{ href("/users/#{user.uuid}/subscriptions/graph/monthly") }}?width=600&height=50&title=false"
-                 width="600" height="50"
-                 alt="monthly subscription of {{ user.username }}">
-        </td>
-        <td>
-            <img src="{{ href("/users/#{user.uuid}/subscriptions/graph/yearly") }}?width=600&height=50&title=false"
-                 width="600" height="50"
-                 alt="yearly subscription of {{ user.username }}">
-        </td>
     </tr>
     {% else %}
     <tr>
-        <td colspan="4" class="align-center">no data yet</td>
+        <td colspan="2" class="align-center">no data yet</td>
     </tr>
     {% endfor %}
     </tbody>

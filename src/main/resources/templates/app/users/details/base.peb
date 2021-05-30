@@ -1,0 +1,30 @@
+{# @pebvariable name="user" type="be.lghs.accounting.model.tables.records.UsersRecord" #}
+
+{% extends '../../../base' %}
+
+{% block 'title' %}
+    {{ user.username }}
+{% endblock %}
+
+{% block 'subnav-content' %}
+<div class="subnav">
+    <ul>
+        <li><a href="{{ href("/users/#{has_admin_role() ? user.uuid : 'me'}") }}">Summary</a></li>
+        <li><a href="{{ href("/users/#{has_admin_role() ? user.uuid : 'me'}/movements") }}">Movements</a></li>
+        {# <li><a href="{{ href("/users/#{has_admin_role() ? user.uuid : 'me'}/pay") }}">Pay your subscription</a></li> #}
+        <li><a href="{{ href("/users/#{has_admin_role() ? user.uuid : 'me'}/account-numbers") }}">Account numbers</a></li>
+    </ul>
+</div>
+{% endblock %}
+
+
+
+{% block 'content' %}
+<div class="align-center">
+    <img src="{{ href("/users/#{has_admin_role() ? user.uuid : 'me'}/subscriptions/graph/monthly") }}">
+    <img src="{{ href("/users/#{has_admin_role() ? user.uuid : 'me'}/subscriptions/graph/yearly") }}">
+</div>
+
+<hr>
+
+{% endblock %}

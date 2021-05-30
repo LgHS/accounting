@@ -1,0 +1,129 @@
+{# @pebvariable name="loadAllSubscriptions" type="boolean" #}
+{# @pebvariable name="subscriptions" type="org.jooq.Result<org.jooq.Record6<
+                                            LocalDate,
+                                            BigDecimal,
+                                            String,
+                                            SubscriptionType,
+                                            LocalDate,
+                                            LocalDate>>" #}
+{# @pebvariable name="unlinkedSubscriptions" type="org.jooq.Result<be.lghs.accounting.model.tables.records.MovementsRecord>" #}
+
+{% extends "./base" %}
+
+{% block 'content' %}
+    {{ parent() }}
+
+    <section>
+        <h3>Your last subscriptions</h3>
+
+        <table class="fluid m-auto">
+            <thead>
+            <tr>
+                <th>entry date</th>
+                <th>amount</th>
+                <th>communication</th>
+                <th>type</th>
+                <th>start</th>
+                <th>end</th>
+            </tr>
+            </thead>
+            {% for subscription in subscriptions %}
+                <tr>
+                    <td class="monospace">{{ subscription.get("entry_date") }}</td>
+                    <td class="monospace align-right">{{ subscription.get("amount") }}</td>
+                    <td>{{ subscription.get("communication") }}</td>
+                    <td>{{ subscription.get("type") }}</td>
+                    <td>{{ subscription.get("start_date") }}</td>
+                    <td>{{ subscription.get("end_date") }}</td>
+                </tr>
+            {% endfor %}
+
+            {% if not loadAllSubscriptions %}
+                <tr>
+                    <td colspan="6">
+                        <a href="{{ href("?allSubscriptions=true") }}">load all subscriptions</a>
+                    </td>
+                </tr>
+            {% endif %}
+        </table>
+
+        <h3>Unhandled subscriptions</h3>
+
+        <table class="fluid m-auto">
+            <thead>
+            <tr>
+                <th>entry date</th>
+                <th>amount</th>
+                <th>communication</th>
+            </tr>
+            </thead>
+            {% for subscription in unlinkedSubscriptions %}
+                <tr>
+                    <td class="monospace">{{ subscription.get("entry_date") }}</td>
+                    <td class="monospace align-right">{{ subscription.get("amount") }}</td>
+                    <td>{{ subscription.get("communication") }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td class="align-center" colspan="3">no data</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </section>
+
+    {#
+    <div class="flex horizontal">
+        <section>
+            <h3>Your last tab transactions</h3>
+            <table>
+                <tr>
+                    <td><pre>2020-01-03</pre></td>
+                    <td><pre>-2€</pre></td>
+                    <td>Lorem</td>
+                </tr>
+                <tr>
+                    <td><pre>2020-01-02</pre></td>
+                    <td><pre>-2€</pre></td>
+                    <td>Ipsum</td>
+                </tr>
+                <tr>
+                    <td><pre>2020-01-02</pre></td>
+                    <td><pre>-0.5€</pre></td>
+                    <td>Dolor</td>
+                </tr>
+            </table>
+        </section>
+
+        <section>
+            <h3>Your Tab</h3>
+            <div>
+                You currently have <strong>12€</strong> on your tab.
+            </div>
+
+            <form action="#">
+                {{ csrf_input() }}
+
+                <div>
+                    <label for="">Month</label>
+                    <input type="month" value="2020-02">
+                </div>
+
+                <div>
+                    <label for="">Amount</label>
+                    <input type="number" value="20" min="10">
+                </div>
+
+                <div>
+                    <label for="">Message</label>
+                    <textarea name=""></textarea>
+                </div>
+
+                <div>
+                    <input type="submit" value="Pay (WIP)" disabled>
+                </div>
+            </form>
+        </section>
+    </div>
+    #}
+
+{% endblock %}

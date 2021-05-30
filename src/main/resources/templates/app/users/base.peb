@@ -1,0 +1,11 @@
+{% extends '../../base' %}
+
+{% block 'subnav-content' %}
+<div class="subnav">
+    <ul>
+        <li><a href="{{ href('/users') }}">User list</a></li>
+        <li><a href="{{ href('/users/subscriptions') }}">User subscriptions</a></li>
+        <li><a href="{{ href('/users/account-numbers') }}">Account number pending validation</a></li>
+    </ul>
+</div>
+{% endblock %}

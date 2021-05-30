@@ -211,4 +211,14 @@ public class MovementRepository {
             ))
             .fetch();
     }
+
+    public Result<MovementsRecord> unlinkedSubscriptions(UUID userId) {
+        return dsl
+            .select()
+            .from(MOVEMENTS)
+            .join(USER_ACCOUNT_NUMBERS)
+                .on(USER_ACCOUNT_NUMBERS.ACCOUNT_NUMBER.eq(MOVEMENTS.COUNTER_PARTY_ACCOUNT_NUMBER))
+            .where(USER_ACCOUNT_NUMBERS.VALIDATED)
+            .fetchInto(MOVEMENTS);
+    }
 }

@@ -1,0 +1,40 @@
+{% extends "./base" %}
+
+{% block 'content' %}
+    {{ parent() }}
+
+    <section>
+        <h3>User statistics for {{ user.username }}</h3>
+
+        <table class="fluid">
+            <tbody>
+            <tr>
+                <td>First seen</td>
+                <td>{{ firstSeen }}</td>
+            </tr>
+            <tr>
+                <td>Last seen</td>
+                <td>{{ lastSeen }}</td>
+            </tr>
+            <tr>
+                <td>Movements</td>
+                <td>{{ movementCount }}</td>
+            </tr>
+            <tr>
+                <td>Total balance</td>
+                <td>{{ totalAmount }}</td>
+            </tr>
+            <tr>
+                <td>Longest subscription</td>
+                <td>todo</td>
+            </tr>
+            <tr>
+                <td>Current subscription</td>
+                <td>
+                    yearly -> {{ endYearly }} / monthly -> {{ endMonthly }}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

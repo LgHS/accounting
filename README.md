@@ -4,6 +4,13 @@
 
 You'll need a postgresql database and a compiled version of [coda-rs](https://github.com/bendem/coda-rs/tree/develop).
 
+You can start a transient database using postgresql, you'll have to insert an account and a first movement manually
+before being able to access the dashboard:
+```shell
+# works with docker too
+podman run --rm -it -e POSTGRES_HOST_AUTH_METHOD=trust -p 127.0.0.1:5432:5432 docker.io/postgres:13
+```
+
 Make sure you provide the path to the coda-rs executable through the config param `lghs.accounting.coda-rs`.
 
 ## Setup

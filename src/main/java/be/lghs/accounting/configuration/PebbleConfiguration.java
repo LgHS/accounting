@@ -8,6 +8,7 @@ import com.mitchellbosecke.pebble.extension.Filter;
 import com.mitchellbosecke.pebble.extension.Function;
 import com.mitchellbosecke.pebble.template.EvaluationContext;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
+import nl.garvelink.iban.IBAN;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.AuthenticatedPrincipal;
@@ -77,6 +78,8 @@ public class PebbleConfiguration {
                         var date = (LocalDate) input;
                         return date.withDayOfMonth(1);
                     }),
+
+                    "format_iban", filter(input -> IBAN.parse(input.toString()).toString()),
 
                     "last_day_of_month", filter(input -> {
                         var date = (LocalDate) input;

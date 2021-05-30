@@ -48,6 +48,20 @@ main {
   width: 90vw;
   margin: 1em auto auto; }
 
+.subnav {
+  border-bottom: 1px solid #eee;
+  margin-bottom: 2em;
+  padding-bottom: 0.3em; }
+  .subnav > ul {
+    margin: 0;
+    padding: 0; }
+    .subnav > ul > li {
+      display: inline-block; }
+      .subnav > ul > li::after {
+        content: ' | '; }
+      .subnav > ul > li:last-child::after {
+        content: ''; }
+
 footer {
   margin-top: 1em;
   padding: 0 2ch; }

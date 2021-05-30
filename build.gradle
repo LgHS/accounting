@@ -106,6 +106,8 @@ dependencies {
     implementation 'org.jfree:jfreechart:1.5.3'
     implementation 'org.jfree:jfreesvg:3.4'
 
+    implementation 'nl.garvelink.oss:iban:1.9.0'
+
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
     compileOnly 'org.projectlombok:lombok'
