@@ -219,6 +219,7 @@ public class MovementRepository {
             .join(USER_ACCOUNT_NUMBERS)
                 .on(USER_ACCOUNT_NUMBERS.ACCOUNT_NUMBER.eq(MOVEMENTS.COUNTER_PARTY_ACCOUNT_NUMBER))
             .where(USER_ACCOUNT_NUMBERS.VALIDATED)
+            .orderBy(MOVEMENTS.ENTRY_DATE)
             .fetchInto(MOVEMENTS);
     }
 }
