@@ -64,7 +64,7 @@ public class UserRepository {
                 USERS.UUID,
                 DSL.min(MOVEMENTS.ENTRY_DATE).as("firstSeen"),
                 DSL.max(MOVEMENTS.ENTRY_DATE).as("lastSeen"),
-                DSL.countDistinct(MOVEMENTS.ID).as("movementCount"),
+                DSL.count(MOVEMENTS.ID).as("movementCount"),
                 DSL.sum(MOVEMENTS.AMOUNT).as("totalAmount"),
                 DSL.max(SUBSCRIPTIONS.END_DATE).filterWhere(SUBSCRIPTIONS.TYPE.eq(SubscriptionType.MONTHLY)).as("endMonthly"),
                 DSL.max(SUBSCRIPTIONS.END_DATE).filterWhere(SUBSCRIPTIONS.TYPE.eq(SubscriptionType.YEARLY)).as("endYearly")
@@ -75,7 +75,7 @@ public class UserRepository {
             .leftJoin(MOVEMENTS)
                 .on(USER_ACCOUNT_NUMBERS.ACCOUNT_NUMBER.eq(MOVEMENTS.COUNTER_PARTY_ACCOUNT_NUMBER))
             .leftJoin(SUBSCRIPTIONS)
-                .onKey(Keys.SUBSCRIPTIONS__SUBSCRIPTIONS_MEMBER_ID_FKEY)
+                .onKey(Keys.SUBSCRIPTIONS__SUBSCRIPTIONS_MOVEMENT_ID_FKEY)
             .where(
                 USERS.UUID.eq(userId)
             )
