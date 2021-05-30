@@ -64,7 +64,7 @@ public class UserRepository {
                 USERS.UUID,
                 DSL.min(MOVEMENTS.ENTRY_DATE).as("firstSeen"),
                 DSL.max(MOVEMENTS.ENTRY_DATE).as("lastSeen"),
-                DSL.count(MOVEMENTS.ID).as("movementCount"),
+                DSL.countDistinct(MOVEMENTS.ID).as("movementCount"),
                 DSL.sum(MOVEMENTS.AMOUNT).as("totalAmount"),
                 DSL.max(SUBSCRIPTIONS.END_DATE).filterWhere(SUBSCRIPTIONS.TYPE.eq(SubscriptionType.MONTHLY)).as("endMonthly"),
                 DSL.max(SUBSCRIPTIONS.END_DATE).filterWhere(SUBSCRIPTIONS.TYPE.eq(SubscriptionType.YEARLY)).as("endYearly")
