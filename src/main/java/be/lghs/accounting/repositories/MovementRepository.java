@@ -218,8 +218,11 @@ public class MovementRepository {
             .from(MOVEMENTS)
             .join(USER_ACCOUNT_NUMBERS)
                 .on(USER_ACCOUNT_NUMBERS.ACCOUNT_NUMBER.eq(MOVEMENTS.COUNTER_PARTY_ACCOUNT_NUMBER))
-            .where(USER_ACCOUNT_NUMBERS.VALIDATED)
-            .orderBy(MOVEMENTS.ENTRY_DATE)
+            .where(
+                USER_ACCOUNT_NUMBERS.USER_ID.eq(userId)
+                    .and(USER_ACCOUNT_NUMBERS.VALIDATED)
+            )
+            .orderBy(MOVEMENTS.ENTRY_DATE.desc())
             .fetchInto(MOVEMENTS);
     }
 }
