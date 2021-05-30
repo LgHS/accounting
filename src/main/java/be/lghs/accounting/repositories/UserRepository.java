@@ -71,14 +71,13 @@ public class UserRepository {
             )
             .from(USERS)
             .leftJoin(USER_ACCOUNT_NUMBERS)
-                .onKey(Keys.USER_ACCOUNT_NUMBERS__USER_ACCOUNT_NUMBERS_USER_ID_FKEY)
+                .on(USER_ACCOUNT_NUMBERS.USER_ID.eq(USERS.UUID).and(USER_ACCOUNT_NUMBERS.VALIDATED))
             .leftJoin(MOVEMENTS)
                 .on(USER_ACCOUNT_NUMBERS.ACCOUNT_NUMBER.eq(MOVEMENTS.COUNTER_PARTY_ACCOUNT_NUMBER))
             .leftJoin(SUBSCRIPTIONS)
                 .onKey(Keys.SUBSCRIPTIONS__SUBSCRIPTIONS_MEMBER_ID_FKEY)
             .where(
                 USERS.UUID.eq(userId)
-                    .and(USER_ACCOUNT_NUMBERS.VALIDATED)
             )
             .groupBy(USERS.UUID)
             .fetchOne();
