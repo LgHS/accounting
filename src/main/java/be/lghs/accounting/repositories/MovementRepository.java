@@ -206,9 +206,9 @@ public class MovementRepository {
                         select(MOVEMENT_CATEGORIES.ID).from(MOVEMENT_CATEGORIES).where(MOVEMENT_CATEGORIES.NAME.eq("Cotisations"))
                     )
                     .and(MOVEMENTS.ENTRY_DATE.between(month.atDay(1), month.atEndOfMonth())))
-            .and(notExists(
+            .andNotExists(
                 select().from(SUBSCRIPTIONS).where(SUBSCRIPTIONS.MOVEMENT_ID.eq(MOVEMENTS.ID))
-            ))
+            )
             .fetch();
     }
 
@@ -223,6 +223,11 @@ public class MovementRepository {
             .where(
                 USER_ACCOUNT_NUMBERS.USER_ID.eq(userId)
                     .and(USER_ACCOUNT_NUMBERS.VALIDATED)
+                    .andNotExists(
+                        select()
+                            .from(SUBSCRIPTIONS)
+                            .where(SUBSCRIPTIONS.MOVEMENT_ID.eq(MOVEMENTS.ID))
+                    )
                     .and(MOVEMENT_CATEGORIES.ID.isNull().or(MOVEMENT_CATEGORIES.NAME.eq("Cotisations")))
             )
             .orderBy(MOVEMENTS.ENTRY_DATE.desc())
