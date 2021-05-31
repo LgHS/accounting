@@ -18,7 +18,13 @@ public class WebConfiguration implements WebMvcConfigurer {
             // .mustRevalidate()
             .staleWhileRevalidate(Duration.ofMinutes(1));
 
-        registry.addResourceHandler("/public/**")
+        registry
+            .addResourceHandler("/favicon.ico")
+            .addResourceLocations("classpath:/public/")
+            .setCacheControl(staticCacheControl);
+
+        registry
+            .addResourceHandler("/public/**")
             .addResourceLocations("classpath:/public/")
             .setCacheControl(staticCacheControl);
     }
