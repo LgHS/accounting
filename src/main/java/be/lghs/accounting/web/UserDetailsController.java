@@ -7,6 +7,7 @@ import be.lghs.accounting.repositories.SubscriptionRepository;
 import be.lghs.accounting.repositories.UserAccountNumberRepository;
 import be.lghs.accounting.repositories.UserRepository;
 import be.lghs.accounting.services.SubscriptionService;
+import be.lghs.accounting.services.UserAccountNumberService;
 import be.lghs.accounting.services.UserService;
 import lombok.RequiredArgsConstructor;
 import nl.garvelink.iban.IBAN;
@@ -65,6 +66,7 @@ public class UserDetailsController {
     private final SubscriptionRepository subscriptionRepository;
     private final MovementRepository movementRepository;
     private final SubscriptionService subscriptionService;
+    private final UserAccountNumberService userAccountNumberService;
     private final UserAccountNumberRepository userAccountNumberRepository;
 
     @GetMapping("/me")
@@ -179,7 +181,7 @@ public class UserDetailsController {
         }
 
         IBAN iban = IBAN.parse(accountNumber);
-        userAccountNumberRepository.addAccountNumber(userId, iban.toPlainString());
+        userAccountNumberService.addAccountNumber(userId, iban.toPlainString());
 
         return userAccountNumbers(userId, model);
     }

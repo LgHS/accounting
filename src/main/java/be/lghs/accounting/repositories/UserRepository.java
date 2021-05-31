@@ -3,6 +3,7 @@ package be.lghs.accounting.repositories;
 import be.lghs.accounting.model.Keys;
 import be.lghs.accounting.model.Tables;
 import be.lghs.accounting.model.enums.SubscriptionType;
+import be.lghs.accounting.model.enums.UserRole;
 import be.lghs.accounting.model.tables.records.UsersRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -81,5 +83,15 @@ public class UserRepository {
             )
             .groupBy(USERS.UUID)
             .fetchOne();
+    }
+
+    public List<String> findAdminEmails() {
+        return dsl
+            .select(USERS.EMAIL)
+            .from(USERS)
+            .where(
+                DSL.val(UserRole.ROLE_ADMIN).eq(DSL.any(USERS.ROLES))
+            )
+            .fetch(USERS.EMAIL);
     }
 }

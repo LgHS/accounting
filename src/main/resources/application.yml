@@ -7,6 +7,7 @@ logging.config: classpath:logback-spring.xml
 lghs.accounting:
   average-monthly-rent: 855
   coda-rs: "../coda-rs"
+  deploy-url: "http://localhost:${server.port:8080}"
 
 spring:
   profiles:
@@ -39,6 +40,14 @@ spring:
             client-secret: "change-me"
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             authorization-grant-type: "authorization_code"
+
+  mail:
+    port: 465
+    protocol: smtps
+    properties:
+      "[mail.smtp.connectiontimeout]": 1000
+      "[mail.smtp.timeout]": 1000
+      "[mail.smtp.writetimeout]": 1000
 
 handlebars:
   cache: false
