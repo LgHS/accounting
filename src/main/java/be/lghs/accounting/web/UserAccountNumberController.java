@@ -3,7 +3,6 @@ package be.lghs.accounting.web;
 import be.lghs.accounting.repositories.UserAccountNumberRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -23,7 +22,7 @@ public class UserAccountNumberController {
     @Transactional(readOnly = true)
     public String listWaitingValidation(Model model) {
         model.addAttribute("accountNumbers", userAccountNumberRepository.listWaitingValidation());
-        return "app/users/account-numbers/list";
+        return "app/users/account-numbers/validation";
     }
 
     @Data

@@ -1,4 +1,4 @@
-{# @pebvariable name="accountNumbers" type="org.jooq.Result<org.jooq.Record6<String, String, BigDecimal, UUID, String, LocalDateTime>>" #}
+{# @pebvariable name="accountNumbers" type="org.jooq.Result<org.jooq.Record7<String, String, String, BigDecimal, UUID, String, LocalDateTime>>" #}
 
 {% extends "../base" %}
 
@@ -13,7 +13,8 @@
         <tr>
             <th>username</th>
             <th>account number</th>
-            <th>last movement</th>
+            <th>last movement counter party name</th>
+            <th>last movement communication</th>
             <th>last amount</th>
             <th>validate?</th>
         </tr>
@@ -22,9 +23,10 @@
         {% for number in accountNumbers %}
             <tr>
                 <td>{{ number.get("username") }}</td>
-                <td>{{ number.get("account_number") }}</td>
-                <td>{{ number.getValue("communication", "/") }}</td>
-                <td>{{ number.getValue("amount", "/") }}</td>
+                <td>{{ number.get("account_number") | format_iban }}</td>
+                <td>{{ number.getValue("counter_party_name", "<none>") }}</td>
+                <td>{{ number.getValue("communication", "<none>") }}</td>
+                <td>{{ number.getValue("amount", "<none>") }}</td>
                 <td class="align-center">
                     <input type="hidden" name="numbers[{{ loop.index }}].accountNumber" value="{{ number.get("account_number") }}">
                     <input type="checkbox" name="numbers[{{ loop.index }}].selected">

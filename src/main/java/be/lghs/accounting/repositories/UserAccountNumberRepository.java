@@ -4,7 +4,7 @@ import be.lghs.accounting.model.Keys;
 import be.lghs.accounting.model.tables.records.UserAccountNumbersRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.jooq.Record6;
+import org.jooq.Record7;
 import org.jooq.Result;
 import org.springframework.stereotype.Repository;
 
@@ -26,10 +26,11 @@ public class UserAccountNumberRepository {
                 .fetch();
     }
 
-    public Result<Record6<String, String, BigDecimal, UUID, String, LocalDateTime>> listWaitingValidation() {
+    public Result<Record7<String, String, String, BigDecimal, UUID, String, LocalDateTime>> listWaitingValidation() {
         return dsl
             .select(
                 USERS.USERNAME,
+                MOVEMENTS.COUNTER_PARTY_NAME,
                 MOVEMENTS.COMMUNICATION,
                 MOVEMENTS.AMOUNT,
                 USER_ACCOUNT_NUMBERS.USER_ID,
