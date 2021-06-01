@@ -1,13 +1,13 @@
 package be.lghs.accounting.web;
 
+import be.lghs.accounting.configuration.OAuth2UserImpl;
 import be.lghs.accounting.configuration.Roles;
+import be.lghs.accounting.model.enums.SubscriptionType;
 import be.lghs.accounting.model.tables.records.MovementCategoriesRecord;
 import be.lghs.accounting.model.tables.records.MovementsRecord;
-import be.lghs.accounting.repositories.AccountRepository;
-import be.lghs.accounting.repositories.MovementCategoryRepository;
-import be.lghs.accounting.repositories.MovementRepository;
-import be.lghs.accounting.repositories.SubscriptionRepository;
+import be.lghs.accounting.repositories.*;
 import be.lghs.accounting.services.MovementService;
+import be.lghs.accounting.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.jooq.Result;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -35,6 +35,8 @@ public class MovementsController {
     private final MovementService movementService;
     private final SubscriptionRepository subscriptionRepository;
     private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
+    private final UserService userService;
 
     @GetMapping
     @Transactional(readOnly = true)
@@ -185,12 +187,33 @@ public class MovementsController {
     @Secured(Roles.ROLE_TREASURER)
     public String subscriptionForm(@PathVariable("movement_id") UUID movementId,
                                    Model model) {
+        var movement = movementRepository.getOne(movementId);
         var subscription = subscriptionRepository.getForMovement(movementId);
+        var users = userRepository.findUsersWithLastSubscriptions();
 
+        model.addAttribute("users", users);
+        model.addAttribute("movement", movement);
         model.addAttribute("subscription", subscription);
         model.addAttribute("monthFormatter", DateTimeFormatter.ofPattern("yyyy-MM"));
 
         return "app/subscriptions/form";
+    }
+
+    @Transactional
+    @PostMapping("/{movement_id:" + PathRegexes.UUID + "}/subscription")
+    @Secured(Roles.ROLE_TREASURER)
+    public String subscriptionForm(@PathVariable("movement_id") UUID movementId,
+                                   @RequestParam("username") String username,
+                                   @RequestParam("type") SubscriptionType type,
+                                   @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                   @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+                                   @RequestParam("comment") String comment,
+                                   Model model) {
+        subscriptionRepository.linkMovement(
+            userService.getCurrentUser().map(OAuth2UserImpl::getId).orElseThrow(),
+            movementId, username, type, startDate, endDate, comment.isBlank() ? null : comment);
+
+        return subscriptionForm(movementId, model);
     }
 
     @Transactional(readOnly = true)

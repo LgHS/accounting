@@ -2,6 +2,7 @@
 
 {% import '../../tools/csrf' %}
 
+{# @pebvariable name="movement" type="be.lghs.accounting.model.tables.records.MovementsRecord" #}
 {# @pebvariable name="subscription" type="org.jooq.Record9<java.util.UUID,
                    java.time.LocalDate,
                    java.time.LocalDate,
@@ -11,64 +12,79 @@
                    java.time.LocalDate,
                    java.math.BigDecimal,
                    java.lang.String>" #}
-{# @pebvariable name="monthFormatter" type="java.time.format.DateTimeFormatter" #}
+{# @pebvariable name="users" type="org.jooq.Result<org.jooq.Record4<java.util.UUID, String, java.time.LocalDate, java.time.LocalDate>>" #}
 
 {% block 'title' %}
 Account form
 {% endblock %}
 
 {% block 'content' %}
+
+
+<datalist id="users-and-subscriptions">
+    {% for user in users %}
+        <option value="{{ user.get("username") }}">{{ user.get("username") }} (m: {{ user.getValue("last_monthly", "none") }} / y: {{ user.getValue("last_yearly", "none") }})</option>
+    {% endfor %}
+</datalist>
+
 <form method="post" class="form-grid">
-{{ csrf_input() }}
+    {{ csrf_input() }}
 
     <label for="username">User</label>
     <input type="text"
            id="username"
            name="username"
+           list="users-and-subscriptions"
     {% if subscription is defined -%}
-           value="{{ subscription.value9 }}"
+           readonly
+           value="{{ subscription.get("username") }}"
     {%- endif %}>
 
     <label for="amount">Amount</label>
     <input type="text"
            id="amount"
            name="amount"
-    {% if subscription is defined -%}
-           value="{{ subscription.value8 }}"
-    {%- endif %}>
+           value="{{ movement.amount }}"
+           readonly>
 
     <span>&nbsp;</span><span></span>
 
     <label for="type">Type</label>
-    <select name="type" id="type">
-        <option value="MONTHLY"{% if subscription is defined and subscription.value4.literal == 'MONTHLY' %}
-                selected{% endif %}>Monthly
-        </option>
-        <option value="YEARLY"{% if subscription is defined and subscription.value4.literal == 'YEARLY' %}
-                selected{% endif %}>Yearly
-        </option>
-    </select>
+    {% if subscription is defined %}
+        <input type="text" id="type" value="{{ subscription.getValue("type") }}" readonly>
+    {% else %}
+        <select name="type" id="type">
+            <option value="MONTHLY">Monthly</option>
+            <option value="YEARLY">Yearly</option>
+        </select>
+    {% endif %}
 
     <label for="start">Start (inclusive)</label>
-    <input type="month"
+    <input type="date"
            id="start"
            name="start"
-           value="{{ subscription is defined ? subscription.value2.format(monthFormatter) : '' }}">
+           {% if subscription is defined %}readonly{% endif %}
+           value="{{ subscription is defined ? subscription.get("start_date") : day_of_month(first=true, date=movement.entryDate) }}">
 
     <label for="end">End (inclusive)</label>
-    <input type="month"
+    <input type="date"
            id="end"
            name="end"
-           value="{{ subscription is defined ? subscription.value3.format(monthFormatter) : '' }}">
+           {% if subscription is defined %}readonly{% endif %}
+           value="{{ subscription is defined ? subscription.get("end_date") : day_of_month(last=true, date=movement.entryDate) }}">
 
     <label for="comment">Comment</label>
-    <textarea id="comment" name="comment">
+    <textarea id="comment" name="comment"{% if subscription is defined %} readonly{% endif %}>
     {%- if subscription is defined -%}
-        {{ subscription.value5 }}
+        {{ subscription.get("comment") }}
+    {%- else -%}
+        {{ movement.communication }}
     {%- endif -%}
     </textarea>
 
+    <span>&nbsp;</span><span></span>
     <span></span>
-    <input type="submit">
+
+    <input type="submit" {% if subscription is defined %}disabled{% endif %}>
 </form>
 {% endblock %}

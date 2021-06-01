@@ -10,12 +10,10 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Map;
 import java.util.UUID;
 
 import static be.lghs.accounting.model.Tables.*;
-import static org.jooq.impl.DSL.field;
-import static org.jooq.impl.DSL.max;
+import static org.jooq.impl.DSL.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -63,32 +61,32 @@ public class SubscriptionRepository {
             .fetch();
     }
 
-    // public Record9<UUID,
-    //                LocalDate,
-    //                LocalDate,
-    //                SubscriptionType,
-    //                String,
-    //                UUID,
-    //                LocalDate,
-    //                BigDecimal,
-    //                String> getForMovement(UUID movementId) {
-    public SubscriptionsRecord getForMovement(UUID movementId) {
+     public Record9<UUID,
+                    LocalDate,
+                    LocalDate,
+                    SubscriptionType,
+                    String,
+                    UUID,
+                    LocalDate,
+                    BigDecimal,
+                    String> getForMovement(UUID movementId) {
+    // public SubscriptionsRecord getForMovement(UUID movementId) {
         return dsl
-            .selectFrom(SUBSCRIPTIONS)
-            // .select(
-            //     SUBSCRIPTIONS.ID,
-            //     SUBSCRIPTIONS.START_DATE,
-            //     SUBSCRIPTIONS.END_DATE,
-            //     SUBSCRIPTIONS.TYPE,
-            //     SUBSCRIPTIONS.COMMENT,
-            //     SUBSCRIPTIONS.MOVEMENT_ID,
-            //     MOVEMENTS.ENTRY_DATE,
-            //     MOVEMENTS.AMOUNT,
-            //     USERS.USERNAME
-            // )
-            // .from(SUBSCRIPTIONS)
-            // .innerJoin(MOVEMENTS).onKey(Keys.SUBSCRIPTIONS__SUBSCRIPTIONS_MOVEMENT_ID_FKEY)
-            // .innerJoin(USERS).onKey(Keys.SUBSCRIPTIONS__SUBSCRIPTIONS_MEMBER_ID_FKEY)
+            // .selectFrom(SUBSCRIPTIONS)
+            .select(
+                SUBSCRIPTIONS.ID,
+                SUBSCRIPTIONS.START_DATE,
+                SUBSCRIPTIONS.END_DATE,
+                SUBSCRIPTIONS.TYPE,
+                SUBSCRIPTIONS.COMMENT,
+                SUBSCRIPTIONS.MOVEMENT_ID,
+                MOVEMENTS.ENTRY_DATE,
+                MOVEMENTS.AMOUNT,
+                USERS.USERNAME
+            )
+            .from(SUBSCRIPTIONS)
+            .innerJoin(MOVEMENTS).onKey(Keys.SUBSCRIPTIONS__SUBSCRIPTIONS_MOVEMENT_ID_FKEY)
+            .innerJoin(USERS).onKey(Keys.SUBSCRIPTIONS__SUBSCRIPTIONS_MEMBER_ID_FKEY)
             .where(SUBSCRIPTIONS.MOVEMENT_ID.eq(movementId))
             .fetchOne();
     }
@@ -153,5 +151,44 @@ public class SubscriptionRepository {
                     .and(SUBSCRIPTIONS.MEMBER_ID.eq(userId))
             )
             .fetchOne(max);
+    }
+
+    public void linkMovement(UUID encoderId, UUID movementId, String username, SubscriptionType type, LocalDate startDate, LocalDate endDate, String comment) {
+        dsl.insertInto(SUBSCRIPTIONS)
+            .columns(
+                SUBSCRIPTIONS.ID,
+                SUBSCRIPTIONS.MOVEMENT_ID,
+                SUBSCRIPTIONS.MEMBER_ID,
+                SUBSCRIPTIONS.ENCODER_ID,
+                SUBSCRIPTIONS.TYPE,
+                SUBSCRIPTIONS.START_DATE,
+                SUBSCRIPTIONS.END_DATE,
+                SUBSCRIPTIONS.COMMENT
+            )
+            .select(
+                select(
+                        inline(UUID.randomUUID()), // todo, default id to uuid_generate_v4(), this is ugly
+                        inline(movementId),
+                        USERS.UUID,
+                        inline(encoderId),
+                        inline(type),
+                        inline(startDate),
+                        inline(endDate),
+                        inline(comment)
+                    )
+                    .from(USERS)
+                    .where(USERS.USERNAME.eq(username))
+            )
+            // .values(
+            //     movementId,
+            //     select(USERS.UUID)
+            //         .from(USERS)
+            //         .where(USERS.USERNAME.eq("username")),
+            //     encoderId,
+            //     type,
+            //     startDate,
+            //     endDate
+            // )
+            .execute();
     }
 }

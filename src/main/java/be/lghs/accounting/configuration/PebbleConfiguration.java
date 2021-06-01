@@ -33,6 +33,17 @@ public class PebbleConfiguration {
                 return Map.of(
                     "current_date", function((args, self) -> LocalDate.now()),
 
+                    "day_of_month", function((args, self) -> {
+                        var base = (LocalDate) args.getOrDefault("date", LocalDate.now());
+                        if (args.getOrDefault("first", Boolean.FALSE) == Boolean.TRUE) {
+                            return base.withDayOfMonth(1);
+                        }
+                        if (args.getOrDefault("last", Boolean.FALSE) == Boolean.TRUE) {
+                            return base.withDayOfMonth(1).plusMonths(1).minusDays(1);
+                        }
+                        return base;
+                    }, "first", "last", "date"),
+
                     "username", function((args, self) -> userService.getCurrentUser()
                         .map(AuthenticatedPrincipal::getName)
                         .orElse("anonymous")),

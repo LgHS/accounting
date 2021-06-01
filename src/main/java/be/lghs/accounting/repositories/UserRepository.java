@@ -7,6 +7,7 @@ import be.lghs.accounting.model.enums.UserRole;
 import be.lghs.accounting.model.tables.records.UsersRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
+import org.jooq.Record4;
 import org.jooq.Record7;
 import org.jooq.Result;
 import org.jooq.impl.DSL;
@@ -93,5 +94,22 @@ public class UserRepository {
                 DSL.val(UserRole.ROLE_ADMIN).eq(DSL.any(USERS.ROLES))
             )
             .fetch(USERS.EMAIL);
+    }
+
+    public Result<Record4<UUID, String, LocalDate, LocalDate>> findUsersWithLastSubscriptions() {
+        return dsl
+            .select(
+                USERS.UUID,
+                USERS.USERNAME,
+                DSL.max(SUBSCRIPTIONS.END_DATE).filterWhere(SUBSCRIPTIONS.TYPE.eq(SubscriptionType.MONTHLY)).as("last_monthly"),
+                DSL.max(SUBSCRIPTIONS.END_DATE).filterWhere(SUBSCRIPTIONS.TYPE.eq(SubscriptionType.YEARLY)).as("last_yearly")
+            )
+            .from(USERS)
+            .leftJoin(SUBSCRIPTIONS)
+                .onKey(Keys.SUBSCRIPTIONS__SUBSCRIPTIONS_MEMBER_ID_FKEY)
+            .groupBy(USERS.UUID, USERS.USERNAME)
+            .orderBy(USERS.USERNAME)
+            .fetch()
+            ;
     }
 }
