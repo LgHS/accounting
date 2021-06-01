@@ -64,8 +64,7 @@ pebble:
   suffix: '.peb'
 
 ---
-spring:
-  profiles: prd
+spring.config.activate.on-profile: prd
 
 handlebars:
   cache: true
