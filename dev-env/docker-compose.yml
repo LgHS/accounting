@@ -1,0 +1,27 @@
+version: "2"
+
+services:
+
+  apache:
+    build: apache
+    ports:
+      - 80:80
+      - 443:443
+
+  app:
+    image: registry.gitlab.com/lghs/accounting/accounting-build-docker
+    volumes:
+      - ..:/src
+      - $HOME/.gradle:/gradle/.gradle
+    user: $UID
+    working_dir: /src
+    command: ["gradle","--stacktrace","bootRun"]
+    ports:
+      - 8080:8080
+
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+
+
