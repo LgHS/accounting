@@ -8,27 +8,19 @@
 alias dcacc='docker-compose -p lghs-accounting -f path/to/accounting/dev-env/docker-compose.yml'
 ```
 
-2. launch db and keycloak
+2. start and init the dev-env
 ```bash
-dcacc up -d db keycloak
+./dev-env/init.sh
 ```
 
-3. init db (only the first time you launch the db)
-```bash
-cat prepare_db.sql | dcacc exec -T db psql -Upostgres
-```
-
-4. generate jook tables
-```bash
-dcacc run --rm app gradle --stacktrace jooq
-```
-
-5. launch app
+3. launch app
 ```bash
 dcacc up -d
 ```
 
-7. add entry to host `127.0.0.1   accounting.local` and connect to https://accounting.local or connect to http://localhost:8080
+4. add entry to host `127.0.0.1   keycloak` and connect to https://localhost or to http://localhost:80 (use user foobar/pwd)
+
+
 
 
 
