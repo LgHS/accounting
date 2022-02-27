@@ -28,10 +28,10 @@ public class UserRepository {
 
     private final DSLContext dsl;
 
-    public UsersRecord ensureUserExists(int id, UUID uuid, String name, String username, String email) {
+    public UsersRecord ensureUserExists(UUID uuid, String name, String username, String email) {
         return dsl.insertInto(Tables.USERS)
-            .columns(USERS.ID, USERS.UUID, USERS.NAME, USERS.USERNAME, USERS.EMAIL)
-            .values(id, uuid, name, username, email)
+            .columns(USERS.UUID, USERS.NAME, USERS.USERNAME, USERS.EMAIL)
+            .values(uuid, name, username, email)
             .onDuplicateKeyUpdate()
             .set(USERS.NAME, name)
             .set(USERS.USERNAME, username)

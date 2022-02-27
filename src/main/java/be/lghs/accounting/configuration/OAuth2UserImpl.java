@@ -1,6 +1,7 @@
 package be.lghs.accounting.configuration;
 
 import be.lghs.accounting.model.enums.UserRole;
+import be.lghs.accounting.model.tables.records.UsersRecord;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 
@@ -21,9 +22,9 @@ public class OAuth2UserImpl extends DefaultOAuth2User {
 
     private final UUID id;
 
-    public OAuth2UserImpl(UserRole[] roles, Map<String, Object> attributes) {
-        super(getAuthorities(roles), attributes, "username");
-        this.id = UUID.fromString((String) attributes.get("uuid"));
+    public OAuth2UserImpl(UserRole[] roles, Map<String, Object> attributes, UsersRecord record) {
+        super(getAuthorities(roles), attributes, "preferred_username");
+        this.id = record.getUuid();
     }
 
     public UUID getId() {
