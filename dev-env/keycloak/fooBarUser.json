@@ -1,0 +1,18 @@
+{"firstName":"foo",
+ "lastName":"bar", 
+ "email":"foo@bar.com", 
+ "enabled":"true", 
+ "credentials": [ {
+    "type" : "password",
+    "hashedSaltedValue" : "26g/2ah/a+FR1NyRZw762fiu1q3vToa50El8AdXDKOZacF13v5FZ3S6dqgj9wTq9QUBA8CbCCPQdzRKozK1+hQ==",
+    "salt" : "rERt21H5qyALrIAghSi4Ow==",
+    "hashIterations" : 27500,
+    "counter" : 0,
+    "algorithm" : "pbkdf2-sha256",
+    "digits" : 0,
+    "period" : 0,
+    "createdDate" : 1645982432000,
+    "config" : { }
+  } ],
+ "username":"foobar"
+}

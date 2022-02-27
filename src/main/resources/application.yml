@@ -7,21 +7,21 @@ logging.config: classpath:logback-spring.xml
 lghs.accounting:
   average-monthly-rent: 855
   coda-rs: "../coda-rs"
-  deploy-url: "http://localhost:${server.port:8080}"
+  deploy-url: "https://accounting.local:${server.port:''}"
 
 spring:
   profiles:
     active: dev
 
   datasource:
-    url: jdbc:postgresql:lghs_accounting
+    url: jdbc:postgresql://db/lghs_accounting
     username: lghs_accounting_app
-    password: 'change-me'
+    password: 'lghs_accounting_app_password'
 
   flyway:
     url: ${spring.datasource.url}
     user: lghs_accounting_root
-    password: 'change-me'
+    password: 'lghs_accounting_root_password'
     schemas: accounting
 
   security:

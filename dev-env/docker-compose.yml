@@ -1,0 +1,34 @@
+version: "2"
+
+services:
+
+  apache:
+    build: apache
+    ports:
+      - 443:443
+
+  app:
+    image: registry.gitlab.com/lghs/accounting/accounting-build-docker
+    volumes:
+      - ..:/src
+      - $HOME/.gradle:/gradle/.gradle
+    ports:
+      - 80:8080
+    user: $UID
+    working_dir: /src
+    command: ["gradle","--stacktrace","bootRun"]
+
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:15.0.2
+    ports:
+      - 8080:8080
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=pwd
+      - KEYCLOAK_FRONTEND_URL=http://keycloak:8080/auth/

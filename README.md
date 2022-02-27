@@ -1,5 +1,30 @@
 # Accounting application for the LgHS
 
+
+## Devenv, compile and run
+
+1. create an alias for docker-compose
+```bash
+alias dcacc='docker-compose -p lghs-accounting -f path/to/accounting/dev-env/docker-compose.yml'
+```
+
+2. start and init the dev-env
+```bash
+./dev-env/init.sh
+```
+
+3. launch app
+```bash
+dcacc up -d
+```
+
+4. add entry to host `127.0.0.1   keycloak` and connect to https://localhost or to http://localhost:80 (use user foobar/pwd)
+
+
+
+
+
+
 ## Dependencies
 
 You'll need a postgresql database and a compiled version of [coda-rs](https://github.com/bendem/coda-rs/tree/develop).
