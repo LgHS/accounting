@@ -1,6 +1,9 @@
-server.error:
-  include-stacktrace: always
-  include-exception: true
+server:
+  error:
+    include-stacktrace: always
+    include-exception: true
+
+  forward-headers-strategy: framework
 
 logging.config: classpath:logback-spring.xml
 
@@ -16,30 +19,25 @@ spring:
   datasource:
     url: jdbc:postgresql:lghs_accounting
     username: lghs_accounting_app
-    password: 'change-me'
+    password: ${DB_APP_PWD}
 
   flyway:
     url: ${spring.datasource.url}
     user: lghs_accounting_root
-    password: 'change-me'
+    password: ${DB_ROOT_PWD}
     schemas: accounting
 
   security:
     oauth2:
       client:
-        provider:
-          members:
-            client-id: "${spring.security.oauth2.client.registration.members.client-id}"
-            authorization-uri: "https://members.lghs.be/oauth/authorize"
-            token-uri: "https://members.lghs.be/oauth/token"
-            user-info-uri: "https://members.lghs.be/api/me"
-            user-name-attribute: "username"
         registration:
           members:
-            client-id: "change-me"
-            client-secret: "change-me"
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            authorization-grant-type: "authorization_code"
+            client-id: "accounting"
+            client-secret: "${OAUTH2_CLIENT_SECRET}"
+            user-name-attribute: "username"
+        provider:
+          members:
+            issuer-uri: "${OAUTH2_ISSUER_URI}"
 
   mail:
     port: 465
@@ -62,7 +60,7 @@ pebble:
   cache: false
   strict-variables: true
   suffix: '.peb'
-
+  
 ---
 spring.config.activate.on-profile: prd
 
